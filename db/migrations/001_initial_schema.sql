@@ -41,6 +41,7 @@ CREATE TABLE games (
     content JSONB NOT NULL,
     points INTEGER DEFAULT 10,
     time_limit INTEGER, -- in seconds
+    is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
