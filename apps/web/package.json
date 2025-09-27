@@ -10,11 +10,12 @@
     "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
-    "@fuzzy/game-engine": "file:../../packages/game-engine",
     "@fullcalendar/daygrid": "^6.1.10",
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/react": "^6.1.10",
+    "@fuzzy/game-engine": "file:../../packages/game-engine",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
     "@supabase/supabase-js": "^2.39.0",
     "@tanstack/react-query": "^4.36.1",
