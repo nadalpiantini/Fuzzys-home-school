@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { BookOpen, GameController2, Map, Users, Brain, Globe } from 'lucide-react'
+import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react'
 import { LanguageToggle } from '@/components/layout/LanguageToggle'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -118,7 +118,7 @@ export default function HomePage() {
               : 'Smart assistant that answers questions instantly'}
           />
           <FeatureCard
-            icon={<GameController2 />}
+            icon={<Gamepad2 />}
             title={language === 'es' ? '20+ Tipos de Juegos' : '20+ Game Types'}
             description={language === 'es'
               ? 'Desde quiz hasta rompecabezas interactivos'

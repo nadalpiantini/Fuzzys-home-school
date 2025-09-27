@@ -3,16 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: ['@fuzzys/ui', '@fuzzys/schemas', '@fuzzys/game-engine'],
-  experimental: {
-    serverActions: true,
-  },
   images: {
     domains: ['localhost', 'supabase.co'],
   },
   i18n: {
     locales: ['es', 'en'],
     defaultLocale: 'es',
-    localeDetection: true,
+    localeDetection: false,
   },
   webpack: (config) => {
     config.resolve.fallback = {

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import {
   Brain,
   BookOpen,
-  GameController2,
+  Gamepad2,
   Trophy,
   Calendar,
   TrendingUp,
@@ -82,7 +82,7 @@ export default function StudentDashboard() {
           <Card className="card-hover cursor-pointer bg-gradient-to-br from-green-500 to-green-600 text-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <GameController2 className="w-5 h-5" />
+                <Gamepad2 className="w-5 h-5" />
                 {t('student.practice')}
               </CardTitle>
             </CardHeader>
