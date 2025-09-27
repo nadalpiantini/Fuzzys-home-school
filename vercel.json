@@ -45,8 +45,7 @@
         }
       ],
       "destination": "https://fuzzyandfriends.com",
-      "permanent": true,
-      "statusCode": 301
+      "permanent": true
     }
   ]
 }
