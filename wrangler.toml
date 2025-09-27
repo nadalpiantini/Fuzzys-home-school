@@ -1,0 +1,34 @@
+name = "fuzzys-home-school"
+compatibility_date = "2024-09-27"
+
+# Cloudflare Pages configuration
+pages_build_output_dir = "apps/web/.next"
+
+[site]
+bucket = "./apps/web/.next"
+
+[env.production]
+vars = { NODE_ENV = "production" }
+
+[env.preview]
+vars = { NODE_ENV = "preview" }
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "./"
+watch_paths = ["apps/web/src/**/*", "packages/**/*"]
+
+[build.upload]
+format = "service-worker"
+
+# Define the deployment settings
+[[deploy]]
+name = "production"
+route = "fuzzyandfriends.com/*"
+
+# Compatibility flags for Next.js on Cloudflare Pages
+compatibility_flags = ["nodejs_compat"]
+
+# Enable Node.js compatibility for Next.js
+node_compat = true

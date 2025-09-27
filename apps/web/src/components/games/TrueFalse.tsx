@@ -4,13 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
-interface TrueFalseGame {
-  id: string;
-  title: string;
-  question: string;
-  correctAnswer: boolean;
-  explanation?: string;
-}
+import type { TrueFalseGame } from '@fuzzy/game-engine';
 
 interface TrueFalseProps {
   game: TrueFalseGame;
@@ -65,7 +59,7 @@ export const TrueFalse: React.FC<TrueFalseProps> = ({
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-6">
         <div className="text-lg font-medium text-gray-900">
-          {game.question}
+          {game.statement}
         </div>
 
         <div className="grid grid-cols-2 gap-4">

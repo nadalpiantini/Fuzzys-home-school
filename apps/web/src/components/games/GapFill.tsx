@@ -4,13 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-interface GapFillGame {
-  id: string;
-  title: string;
-  text: string;
-  gaps: Array<{ id: string; correctAnswer: string; options?: string[] }>;
-  caseSensitive?: boolean;
-}
+import type { GapFillGame } from '@fuzzy/game-engine';
 
 interface GapFillProps {
   game: GapFillGame;

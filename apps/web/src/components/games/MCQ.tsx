@@ -4,15 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
-interface MCQGame {
-  id: string;
-  title: string;
-  question: string;
-  options: Array<{ id: string; text: string; correct: boolean }>;
-  explanation?: string;
-  multipleAnswers?: boolean;
-  choices?: Array<{ id: string; text: string; correct: boolean }>;
-}
+import type { MCQGame } from '@fuzzy/game-engine';
 
 interface MCQProps {
   game: MCQGame;
@@ -90,7 +82,7 @@ export const MCQ: React.FC<MCQProps> = ({
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-4">
         <div className="text-lg font-medium text-gray-900">
-          {game.question}
+          {game.stem}
         </div>
 
         {isMultiple && !showFeedback && (
@@ -100,7 +92,7 @@ export const MCQ: React.FC<MCQProps> = ({
         )}
 
         <div className="space-y-3">
-          {(game.choices || game.options).map((choice) => (
+          {game.choices.map((choice) => (
             <button
               key={choice.id}
               onClick={() => handleSelect(choice.id)}

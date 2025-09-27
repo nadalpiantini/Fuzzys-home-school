@@ -3,12 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-interface DragDropGame {
-  id: string;
-  title: string;
-  items: Array<{ id: string; content: string; targetZone: string }>;
-  zones: Array<{ id: string; label: string }>;
-}
+import type { DragDropGame } from '@fuzzy/game-engine';
 
 interface DragDropProps {
   game: DragDropGame;

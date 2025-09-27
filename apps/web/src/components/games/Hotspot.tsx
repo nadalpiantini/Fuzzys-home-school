@@ -3,14 +3,8 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-interface HotspotGame {
-  id: string;
-  title: string;
-  image: string;
-  hotspots: Array<{ id: string; x: number; y: number; width: number; height: number; correct: boolean }>;
-  targets?: Array<{ x: number; y: number; correct: boolean; radius?: number }>;
-}
 import { Target } from 'lucide-react';
+import type { HotspotGame } from '@fuzzy/game-engine';
 
 interface HotspotProps {
   game: HotspotGame;
@@ -56,13 +50,13 @@ export const Hotspot: React.FC<HotspotProps> = ({
   const isClickCorrect = (click: { x: number; y: number }) => {
     if (!showFeedback) return false;
 
-    return game.targets?.some(target => {
+    return game.targets.some(target => {
       if (!target.correct) return false;
       const distance = Math.sqrt(
         Math.pow(click.x - target.x, 2) +
         Math.pow(click.y - target.y, 2)
       );
-      return distance <= (target.radius || 20);
+      return distance <= target.radius;
     });
   };
 
@@ -74,7 +68,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
         </div>
 
         <p className="text-sm text-gray-600">
-          Necesitas encontrar {game.targets?.filter(t => t.correct).length || 0} área(s) correcta(s)
+          Necesitas encontrar {game.targets.filter(t => t.correct).length} área(s) correcta(s)
         </p>
 
         <div
@@ -108,7 +102,6 @@ export const Hotspot: React.FC<HotspotProps> = ({
 
           {/* Show correct areas when feedback is shown */}
           {showFeedback &&
-            game.targets &&
             game.targets
               .filter(target => target.correct)
               .map((target, index) => (
@@ -116,10 +109,10 @@ export const Hotspot: React.FC<HotspotProps> = ({
                   key={`target-${index}`}
                   className="absolute border-2 border-green-500 bg-green-500 bg-opacity-20 rounded-full"
                   style={{
-                    left: `${target.x - (target.radius || 20)}%`,
-                    top: `${target.y - (target.radius || 20)}%`,
-                    width: `${(target.radius || 20) * 2}%`,
-                    height: `${(target.radius || 20) * 2}%`
+                    left: `${target.x - target.radius}%`,
+                    top: `${target.y - target.radius}%`,
+                    width: `${target.radius * 2}%`,
+                    height: `${target.radius * 2}%`
                   }}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">

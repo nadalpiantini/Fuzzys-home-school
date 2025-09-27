@@ -18,7 +18,7 @@ export default function HomePage() {
         <div className="flex items-center gap-2">
           <Brain className="w-8 h-8 text-fuzzy-purple" />
           <h1 className="text-2xl font-bold fuzzy-text-gradient">
-            Fuzzy's Home School
+            Fuzzy&apos;s Home School
           </h1>
         </div>
         <LanguageToggle language={language} onToggle={() => setLanguage(language === 'es' ? 'en' : 'es')} />
