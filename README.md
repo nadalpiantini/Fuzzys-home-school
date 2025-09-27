@@ -2,68 +2,75 @@
 
 Educational platform with AI tutoring, gamified learning, and AR/QR Colonial Zone exploration.
 
-## Features
+## 🚀 Quick Start
 
-- 🧠 **AI Tutor 24/7** - DeepSeek-powered intelligent assistant in Spanish/English
-- 🎮 **20+ Game Types** - Interactive educational games (H5P, JClic, ClassQuiz, etc.)
-- 🗺️ **Colonial Zone Rally** - AR/QR exploration for family weekend activities
-- 🌐 **Multi-language** - Full Spanish/English support with one-click switching
-- 📊 **Teacher Dashboard** - Class management, content creation, analytics
-- 🏆 **Gamification** - Points, streaks, achievements, leaderboards
-
-## Tech Stack
-
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
-- **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime)
-- **AI**: DeepSeek API for intelligent tutoring
-- **AR/Maps**: AR.js, Three.js, Leaflet, OpenStreetMap
-- **Games**: H5P, JClic, ClassQuiz integrations
-- **Deployment**: Vercel + Supabase Cloud
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm 9+
-- Supabase account (free tier works)
-- DeepSeek API key
-
-### Installation
-
-1. Clone the repository:
+### Local Development
 ```bash
-git clone https://github.com/nadalpiantini/Fuzzys-home-school.git
-cd Fuzzys-home-school
-```
-
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Set up environment variables:
-```bash
-cp apps/web/.env.local.example apps/web/.env.local
-```
-
-Edit `.env.local` with your credentials:
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
-- `DEEPSEEK_API_KEY` - Your DeepSeek API key
-
-4. Set up Supabase:
-- Create a new Supabase project
-- Run the migration in `db/migrations/001_initial_schema.sql`
-- Enable the `vector` extension for AI/RAG features
-
-5. Run the development server:
-```bash
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the app.
+### Production Deployment
 
-## Project Structure
+#### Option 1: Vercel (Recommended)
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to Vercel
+npm run deploy:vercel
+```
+
+#### Option 2: Netlify
+```bash
+# Install Netlify CLI
+npm i -g netlify-cli
+
+# Deploy to Netlify
+npm run deploy:netlify
+```
+
+#### Option 3: Manual Deploy
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm run start
+```
+
+## 🔧 Environment Variables
+
+Create a `.env.local` file in `apps/web/`:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# DeepSeek AI Configuration
+DEEPSEEK_API_KEY=your_deepseek_api_key
+OPENAI_API_KEY=your_deepseek_api_key
+OPENAI_BASE_URL=https://api.deepseek.com
+```
+
+## 🗄️ Database Setup
+
+1. Create a Supabase project
+2. Run the migration in `db/migrations/001_initial_schema.sql`
+3. Enable the `vector` extension for AI/RAG features
+4. Update your environment variables
+
+## 📁 Project Structure
 
 ```
 fuzzys-home-school/
@@ -87,43 +94,42 @@ fuzzys-home-school/
 └── docs/                   # Documentation
 ```
 
-## Available Scripts
+## 🎯 Features
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests
+- 🧠 **AI Tutor 24/7** - DeepSeek-powered intelligent assistant
+- 🎮 **20+ Game Types** - Interactive educational games
+- 🗺️ **Colonial Zone Rally** - AR/QR exploration
+- 🌐 **Multi-language** - Spanish/English support
+- 📊 **Teacher Dashboard** - Class management and analytics
+- 🏆 **Gamification** - Points, streaks, achievements
 
-## Core Modules
+## 🛠️ Tech Stack
 
-### 1. Student Dashboard
-- AI tutor chat interface
-- Practice games and quizzes
-- Progress tracking
-- Daily challenges
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime)
+- **AI**: DeepSeek API for intelligent tutoring
+- **AR/Maps**: AR.js, Three.js, Leaflet, OpenStreetMap
+- **Games**: H5P, JClic, ClassQuiz integrations
+- **Deployment**: Vercel + Supabase Cloud
 
-### 2. Teacher Dashboard
-- Class management
-- Content creation tools
-- Student analytics
-- Assignment management
+## 📊 API Endpoints
 
-### 3. Colonial Zone Rally
-- QR code scanning
-- AR overlays for historical sites
-- Team competitions
-- Real-world rewards integration
+- `POST /api/deepseek` - Chat with AI tutor
+- `GET /api/games` - Get games
+- `POST /api/games` - Submit game answers
+- `POST /api/quiz/generate` - Generate quiz
+- `GET /api/trpc/*` - tRPC queries/mutations
 
-### 4. Educational Games
-- Multiple choice quizzes
-- Drag and drop exercises
-- Memory games
-- Crossword puzzles
-- Interactive videos
-- Branching scenarios
+## 🚀 Deployment URLs
 
-## Contributing
+- **Local**: http://localhost:3000
+- **Production**: [Your deployment URL]
+
+## 📝 License
+
+MIT License - see LICENSE file for details.
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -131,26 +137,6 @@ fuzzys-home-school/
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## Open Source Repositories Used
+## 📞 Support
 
-- **H5P** - Interactive HTML5 content
-- **JClic** - Educational activities
-- **ClassQuiz** - Live quiz competitions
-- **GeoHub** - Geographic guessing games
-- **AR.js** - Augmented reality
-- **And many more...**
-
-## License
-
-MIT License - see LICENSE file for details
-
-## Acknowledgments
-
-- All the open source projects that made this possible
-- The educational community for feedback and support
-- DeepSeek for AI capabilities
-- Supabase for the backend infrastructure
-
----
-
-Made with ❤️ for education
+For support, email support@fuzzyshomeschool.com or join our Discord community.

@@ -16,7 +16,7 @@ const nextConfig = {
   output: 'standalone',
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
-    runtime: 'edge',
+    // runtime: 'edge', // Removed as it's not supported in this Next.js version
   },
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {
