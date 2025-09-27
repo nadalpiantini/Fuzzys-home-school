@@ -1,18 +1,52 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
+  "buildCommand": "cd apps/web && npm run build",
+  "outputDirectory": "apps/web/.next",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://ggntuptvqxditgxtnsex.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnbnR1cHR2cXhkaXRneHRuc2V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMTAxMTYsImV4cCI6MjA3NDU4NjExNn0.pVVcvkFYRWb8STJB5OV-EQKSiPqSVO0gjfcbnCcTrt8",
-    "DEEPSEEK_API_KEY": "sk-ecb8d6540d9e468f8393cf5cfe79d382",
-    "OPENAI_API_KEY": "sk-ecb8d6540d9e468f8393cf5cfe79d382",
-    "OPENAI_BASE_URL": "https://api.deepseek.com"
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "preview": true
+    }
   },
   "functions": {
     "apps/web/src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.fuzzyandfriends.com"
+        }
+      ],
+      "destination": "https://fuzzyandfriends.com",
+      "permanent": true,
+      "statusCode": 301
+    }
+  ]
 }
