@@ -12,7 +12,7 @@ export default function HomePage() {
   const { t, language, setLanguage } = useTranslation()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50" style={{background: 'linear-gradient(135deg, #f3e8ff 0%, #ecfdf5 100%)'}}>
       {/* Header */}
       <header className="flex justify-between items-center p-6">
         <div className="flex items-center gap-2">

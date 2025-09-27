@@ -74,4 +74,37 @@
   .game-card {
     @apply rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md;
   }
+
+  /* Asegurar que los colores fuzzy estén disponibles */
+  .text-fuzzy-purple {
+    color: #8B5CF6;
+  }
+  
+  .text-fuzzy-green {
+    color: #10B981;
+  }
+  
+  .text-fuzzy-blue {
+    color: #3B82F6;
+  }
+  
+  .text-fuzzy-yellow {
+    color: #F59E0B;
+  }
+  
+  .bg-fuzzy-purple {
+    background-color: #8B5CF6;
+  }
+  
+  .bg-fuzzy-green {
+    background-color: #10B981;
+  }
+  
+  .bg-fuzzy-blue {
+    background-color: #3B82F6;
+  }
+  
+  .bg-fuzzy-yellow {
+    background-color: #F59E0B;
+  }
 }
