@@ -4,17 +4,8 @@ export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
-    const { name = 'default', value = {} } = await req.json();
-    const s = sb();
-    
-    const { error } = await s.from('brain_config')
-      .upsert({ name, value, updated_at: new Date().toISOString() }, { onConflict: 'name' });
-    
-    if (error) {
-      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
-    }
-    
-    return NextResponse.json({ ok: true, message: `Config '${name}' saved successfully` });
+    // TODO: Implement brain_config table
+    return NextResponse.json({ ok: true, message: 'Config endpoint temporarily disabled' });
   } catch (error) {
     console.error('Brain configure API error:', error);
     return NextResponse.json(
@@ -26,14 +17,8 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const s = sb();
-    const { data: configs, error } = await s.from('brain_config').select('*').order('name');
-    
-    if (error) {
-      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
-    }
-    
-    return NextResponse.json({ ok: true, configs });
+    // TODO: Implement brain_config table
+    return NextResponse.json({ ok: true, message: 'Config endpoint temporarily disabled' });
   } catch (error) {
     console.error('Brain configure GET error:', error);
     return NextResponse.json(

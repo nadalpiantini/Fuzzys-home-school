@@ -76,7 +76,7 @@ CREATE INDEX IF NOT EXISTS idx_brain_runs_created_at ON brain_runs(created_at);
 
 -- 6. Crear índice único para anti-duplicados
 CREATE UNIQUE INDEX IF NOT EXISTS uq_games_tsg
-  ON games (lower(title), lower(subject), grade_level);
+  ON games (lower(title), subject_id, grade_level);
 
 -- 7. Insertar configuraciones por defecto
 INSERT INTO brain_config (name, value) VALUES
