@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useRef, useCallback } from 'react';
 import { DragDropAdvancedSchema, H5PEvent } from '../types';
 import { z } from 'zod';

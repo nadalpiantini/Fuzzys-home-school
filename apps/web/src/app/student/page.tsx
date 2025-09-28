@@ -12,7 +12,12 @@ import {
   Calendar,
   TrendingUp,
   MessageCircle,
-  Target
+  Target,
+  Sparkles,
+  Atom,
+  Blocks,
+  Music,
+  MapPin
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -91,8 +96,8 @@ export default function StudentDashboard() {
             <CardContent>
               <p className="text-green-100">
                 {language === 'es'
-                  ? 'Juega y aprende con retos divertidos'
-                  : 'Play and learn with fun challenges'}
+                  ? 'Más de 100 juegos y actividades disponibles'
+                  : '100+ games and activities available'}
               </p>
               <Button
                 className="mt-4 bg-white text-green-600 hover:bg-gray-100"
@@ -121,6 +126,95 @@ export default function StudentDashboard() {
               </Button>
             </CardContent>
           </Card>
+        </div>
+
+        {/* External Resources Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-6 h-6 text-fuzzy-yellow" />
+            <h3 className="text-2xl font-bold">
+              {language === 'es' ? '🌟 Recursos Especiales' : '🌟 Special Resources'}
+            </h3>
+          </div>
+          <p className="text-gray-600 mb-6">
+            {language === 'es'
+              ? 'Más de 100 actividades interactivas disponibles'
+              : '100+ interactive activities available'}
+          </p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card
+              className="card-hover cursor-pointer border-2 border-blue-200 hover:border-blue-400 transition-all"
+              onClick={() => router.push('/games/external?type=phet')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Atom className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-semibold mb-1">PhET</h4>
+                <p className="text-xs text-gray-600">
+                  {language === 'es' ? 'Simulaciones' : 'Simulations'}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              className="card-hover cursor-pointer border-2 border-orange-200 hover:border-orange-400 transition-all"
+              onClick={() => router.push('/games/external?type=blockly')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Blocks className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-semibold mb-1">Blockly</h4>
+                <p className="text-xs text-gray-600">
+                  {language === 'es' ? 'Programación' : 'Programming'}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              className="card-hover cursor-pointer border-2 border-purple-200 hover:border-purple-400 transition-all"
+              onClick={() => router.push('/games/external?type=music')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Music className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-semibold mb-1">Music Blocks</h4>
+                <p className="text-xs text-gray-600">
+                  {language === 'es' ? 'Música' : 'Music'}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card
+              className="card-hover cursor-pointer border-2 border-green-200 hover:border-green-400 transition-all"
+              onClick={() => router.push('/games/external?type=colonial')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="font-semibold mb-1">AR Colonial</h4>
+                <p className="text-xs text-gray-600">
+                  {language === 'es' ? 'Exploración' : 'Exploration'}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Button
+              variant="outline"
+              onClick={() => router.push('/games')}
+              className="px-6"
+            >
+              {language === 'es'
+                ? 'Ver todos los recursos →'
+                : 'View all resources →'}
+            </Button>
+          </div>
         </div>
 
         {/* Progress Overview */}

@@ -119,10 +119,10 @@ export default function HomePage() {
           />
           <FeatureCard
             icon={<Gamepad2 />}
-            title={language === 'es' ? '20+ Tipos de Juegos' : '20+ Game Types'}
+            title={language === 'es' ? '100+ Recursos Educativos' : '100+ Educational Resources'}
             description={language === 'es'
-              ? 'Desde quiz hasta rompecabezas interactivos'
-              : 'From quizzes to interactive puzzles'}
+              ? 'PhET, Blockly, Music Blocks, AR Colonial y más'
+              : 'PhET, Blockly, Music Blocks, AR Colonial and more'}
           />
           <FeatureCard
             icon={<Map />}

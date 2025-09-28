@@ -65,35 +65,29 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
       recognition.current = new (window as any).webkitSpeechRecognition();
-      recognition.current.continuous = false;
-      recognition.current.interimResults = false;
-      recognition.current.lang = 'es-DO'; // Dominican Spanish
+      if (recognition.current) {
+        recognition.current.continuous = false;
+        recognition.current.interimResults = false;
+        recognition.current.lang = 'es-DO'; // Dominican Spanish
+      }
 
-      recognition.current.onresult = (event: SpeechRecognitionEvent) => {
-        const transcript = event.results[0][0].transcript;
-        setInputText(transcript);
-        setIsListening(false);
-      };
+      if (recognition.current) {
+        (recognition.current as any).onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInputText(transcript);
+          setIsListening(false);
+        };
 
-      recognition.current.onerror = () => {
-        setIsListening(false);
-      };
+        (recognition.current as any).onerror = () => {
+          setIsListening(false);
+        };
 
-      recognition.current.onend = () => {
-        setIsListening(false);
-      };
+        (recognition.current as any).onend = () => {
+          setIsListening(false);
+        };
+      }
     }
   }, []);
-
-  // Start session on mount
-  useEffect(() => {
-    startSession();
-  }, [startSession]);
-
-  // Scroll to bottom when new messages arrive
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   const startSession = useCallback(async () => {
     try {
@@ -128,6 +122,16 @@ export const TutorChat: React.FC<TutorChatProps> = ({
       console.error('Error starting session:', error);
     }
   }, [subject, studentProfile]);
+
+  // Start session on mount
+  useEffect(() => {
+    startSession();
+  }, [startSession]);
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const sendMessage = async (text?: string) => {
     const messageText = text || inputText.trim();
@@ -203,10 +207,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
     if (!recognition.current) return;
 
     if (isListening) {
-      recognition.current.stop();
+      recognition.current?.stop();
       setIsListening(false);
     } else {
-      recognition.current.start();
+      recognition.current?.start();
       setIsListening(true);
     }
   };

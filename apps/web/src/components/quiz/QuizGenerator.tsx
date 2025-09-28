@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { quizService } from '@/services/quiz/QuizService';
-import { GeneratedQuestion } from '@fuzzys/quiz-generator';
+import { GeneratedQuestion } from '@fuzzy/quiz-generator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -48,10 +48,6 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
   const [questions, setQuestions] = useState<GeneratedQuestion[]>([]);
   const [recommendations, setRecommendations] = useState<any[]>([]);
 
-  useEffect(() => {
-    loadRecommendations();
-  }, [userId, loadRecommendations]);
-
   const loadRecommendations = useCallback(async () => {
     try {
       const recs = await quizService.getSubjectRecommendations(userId);
@@ -60,6 +56,10 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
       console.error('Error loading recommendations:', error);
     }
   }, [userId]);
+
+  useEffect(() => {
+    loadRecommendations();
+  }, [loadRecommendations]);
 
   const generateQuiz = async () => {
     setLoading(true);
@@ -347,7 +347,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                            question.type === 'short_answer' ? 'Respuesta corta' : question.type}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
-                          {question.bloomsLevel ? question.bloomsLevel.charAt(0).toUpperCase() + question.bloomsLevel.slice(1) : 'N/A'}
+                          {question.bloomLevel ? question.bloomLevel.charAt(0).toUpperCase() + question.bloomLevel.slice(1) : 'N/A'}
                         </Badge>
                       </div>
                       <p className="font-medium mb-2">{question.question}</p>
@@ -357,7 +357,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                             <div
                               key={optIndex}
                               className={`text-sm p-2 rounded ${
-                                optIndex === question.correctAnswer
+                                optIndex === Number(question.correctAnswer)
                                   ? 'bg-green-100 text-green-800'
                                   : 'bg-gray-50'
                               }`}

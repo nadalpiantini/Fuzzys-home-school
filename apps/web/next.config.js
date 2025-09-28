@@ -2,7 +2,17 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  transpilePackages: ['@fuzzys/ui', '@fuzzys/schemas', '@fuzzys/game-engine'],
+  transpilePackages: [
+    '@fuzzy/adaptive-engine',
+    '@fuzzy/creative-tools', 
+    '@fuzzy/external-games',
+    '@fuzzy/game-engine',
+    '@fuzzy/h5p-adapter',
+    '@fuzzy/quiz-generator',
+    '@fuzzy/sandbox-connector',
+    '@fuzzy/simulation-engine',
+    '@fuzzy/vr-ar-adapter'
+  ],
   images: {
     domains: ['localhost', 'supabase.co', 'fuzzyandfriends.com'],
     unoptimized: true, // For Cloudflare Pages

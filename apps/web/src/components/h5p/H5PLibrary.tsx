@@ -62,6 +62,7 @@ export const H5PLibrary: React.FC<H5PLibraryProps> = ({
     const sampleContents: H5PContentItem[] = [
       {
         id: 'drag-drop-animals',
+        library: 'H5P.DragDropAdvanced',
         type: 'drag_drop_advanced',
         title: 'Clasificación de Animales',
         description: 'Arrastra los animales a sus hábitats correctos',
@@ -119,6 +120,7 @@ export const H5PLibrary: React.FC<H5PLibraryProps> = ({
       },
       {
         id: 'hotspot-human-body',
+        library: 'H5P.HotspotImage',
         type: 'hotspot_image',
         title: 'El Cuerpo Humano',
         description: 'Explora los sistemas del cuerpo humano',
@@ -170,6 +172,7 @@ export const H5PLibrary: React.FC<H5PLibraryProps> = ({
       },
       {
         id: 'story-branch-adventure',
+        library: 'H5P.BranchingScenario',
         type: 'branching_scenario',
         title: 'Aventura en la Selva',
         description: 'Toma decisiones en esta aventura interactiva',
@@ -241,7 +244,7 @@ export const H5PLibrary: React.FC<H5PLibraryProps> = ({
     if (searchQuery) {
       filtered = filtered.filter(content =>
         content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        content.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (content.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         content.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       );
     }

@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useExternalGameTracking } from '../hooks/useExternalGameTracking';
 import type { ExternalGameWrapperProps } from '../types';

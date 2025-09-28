@@ -56,6 +56,47 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const joinRoom = useCallback(async () => {
+    try {
+      const joinedRoom = await wsManager.current.joinRoom(roomId, player);
+      setRoom(joinedRoom);
+      setGamePhase(joinedRoom.status as any);
+    } catch (error) {
+      console.error('Failed to join room:', error);
+    }
+  }, [roomId, player]);
+
+  const playSound = useCallback((type: string) => {
+    if (!soundEnabled) return;
+
+    // Simple audio feedback - in production would use actual sound files
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    const frequencies: Record<string, number> = {
+      join: 523.25,      // C5
+      leave: 392.00,     // G4
+      game_start: 659.25, // E5
+      question_start: 783.99, // G5
+      question_end: 523.25,   // C5
+      game_end: 880.00,       // A5
+      message: 440.00,        // A4
+      submit: 698.46,         // F5
+      score: 1046.50          // C6
+    };
+
+    oscillator.frequency.setValueAtTime(frequencies[type] || 440, audioContext.currentTime);
+    oscillator.type = 'sine';
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.1);
+  }, [soundEnabled]);
+
   useEffect(() => {
     const ws = wsManager.current;
 
@@ -142,16 +183,6 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [room?.chat]);
 
-  const joinRoom = useCallback(async () => {
-    try {
-      const joinedRoom = await wsManager.current.joinRoom(roomId, player);
-      setRoom(joinedRoom);
-      setGamePhase(joinedRoom.status as any);
-    } catch (error) {
-      console.error('Failed to join room:', error);
-    }
-  }, [roomId, player]);
-
   const startTimer = (seconds: number) => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -199,38 +230,6 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
       onLeaveRoom();
     }
   };
-
-  const playSound = useCallback((type: string) => {
-    if (!soundEnabled) return;
-
-    // Simple audio feedback - in production would use actual sound files
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    const frequencies: Record<string, number> = {
-      join: 523.25,      // C5
-      leave: 392.00,     // G4
-      game_start: 659.25, // E5
-      question_start: 783.99, // G5
-      question_end: 523.25,   // C5
-      game_end: 880.00,       // A5
-      message: 440.00,        // A4
-      submit: 698.46,         // F5
-      score: 1046.50          // C6
-    };
-
-    oscillator.frequency.setValueAtTime(frequencies[type] || 440, audioContext.currentTime);
-    oscillator.type = 'sine';
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
-  }, [soundEnabled]);
 
   const getPlayerRank = (playerId: string): number => {
     return room?.leaderboard.find(entry => entry.playerId === playerId)?.rank || 0;

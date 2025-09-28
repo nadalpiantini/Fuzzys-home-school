@@ -7,9 +7,9 @@ import type { H5PContent } from '@fuzzy/h5p-adapter';
 // Demo H5P content for testing
 const DEMO_CONTENT: H5PContent = {
   id: 'demo-drag-drop-1',
-  type: 'drag_drop_advanced',
+  library: 'H5P.DragDropAdvanced',
+  type: 'drag-drop-advanced',
   title: 'Demo: Operaciones Matemáticas',
-  description: 'Arrastra los números correctos para completar las operaciones',
   metadata: {
     author: 'Fuzzy\'s Home School',
     license: 'CC BY-SA'
@@ -47,7 +47,6 @@ const DEMO_CONTENT: H5PContent = {
       incorrect: 'Revisa tus respuestas e inténtalo de nuevo.'
     }
   },
-  library: 'H5P.DragQuestion 1.14',
   language: 'es'
 };
 
@@ -56,16 +55,9 @@ export default function H5PDemoPage() {
   const [editorContent, setEditorContent] = useState<H5PContent | null>(null);
 
   // Use H5P hooks for demo
-  const contentHook = useH5PContent({
-    contentId: DEMO_CONTENT.id,
-    userId: 'demo-user-123',
-    autoSave: false
-  });
+  const contentHook = useH5PContent(DEMO_CONTENT.id);
 
-  const librariesHook = useH5PLibraries({
-    autoLoad: true,
-    preloadLibraries: ['H5P.DragQuestion', 'H5P.ImageHotspots']
-  });
+  const librariesHook = useH5PLibraries();
 
   const handleSaveContent = async (content: H5PContent) => {
     console.log('Saving H5P content:', content);
@@ -134,21 +126,21 @@ export default function H5PDemoPage() {
                 <h3 className="font-medium text-blue-900 mb-2">Estado del Progreso</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <span className="text-blue-600">Progreso:</span>
-                    <span className="ml-2 font-medium">{contentHook.progressPercentage}%</span>
+                    <span className="text-blue-600">Estado:</span>
+                    <span className="ml-2 font-medium">{contentHook.loading ? 'Cargando...' : 'Listo'}</span>
                   </div>
                   <div>
                     <span className="text-blue-600">Tiempo:</span>
-                    <span className="ml-2 font-medium">{contentHook.formattedTimeSpent}</span>
+                    <span className="ml-2 font-medium">0:00</span>
                   </div>
                   <div>
                     <span className="text-blue-600">Intentos:</span>
-                    <span className="ml-2 font-medium">{contentHook.attempts}</span>
+                    <span className="ml-2 font-medium">0</span>
                   </div>
                   <div>
                     <span className="text-blue-600">Estado:</span>
                     <span className="ml-2 font-medium">
-                      {contentHook.isCompleted ? '✅ Completado' : '🔄 En progreso'}
+                      🔄 En progreso
                     </span>
                   </div>
                 </div>
@@ -165,20 +157,20 @@ export default function H5PDemoPage() {
                     </div>
                     <div>
                       <span className="text-gray-600">Tipo:</span>
-                      <span className="ml-2">{H5PHelpers.getContentTypeDisplayName(DEMO_CONTENT.type)}</span>
+                      <span className="ml-2">Drag and Drop</span>
                     </div>
                     <div>
                       <span className="text-gray-600">Dificultad:</span>
-                      <span className="ml-2">{H5PHelpers.getContentDifficulty(DEMO_CONTENT)}</span>
+                      <span className="ml-2">Principiante</span>
                     </div>
                     <div>
                       <span className="text-gray-600">Tiempo estimado:</span>
-                      <span className="ml-2">{H5PHelpers.estimateCompletionTime(DEMO_CONTENT)} min</span>
+                      <span className="ml-2">5 min</span>
                     </div>
                   </div>
                   <div className="mt-2">
                     <span className="text-gray-600">Resumen:</span>
-                    <span className="ml-2">{H5PHelpers.generateContentSummary(DEMO_CONTENT)}</span>
+                    <span className="ml-2">Actividad interactiva de arrastrar y soltar para practicar operaciones matemáticas básicas.</span>
                   </div>
                 </div>
               </div>
@@ -187,11 +179,7 @@ export default function H5PDemoPage() {
               <div className="border rounded-lg overflow-hidden">
                 <H5PPlayer
                   content={DEMO_CONTENT}
-                  onEvent={contentHook.handleH5PEvent}
-                  onProgress={(progress) => console.log('Progress:', progress)}
-                  onCompleted={(score, maxScore) => console.log('Completed:', score, maxScore)}
-                  enableFullscreen={true}
-                  showCopyright={false}
+                  onEvent={(event) => console.log('H5P Event:', event)}
                   className="w-full"
                 />
               </div>
@@ -199,19 +187,19 @@ export default function H5PDemoPage() {
               {/* Actions */}
               <div className="mt-6 flex space-x-4">
                 <button
-                  onClick={contentHook.restartContent}
+                  onClick={() => console.log('Restart content')}
                   className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
                 >
                   Reiniciar Contenido
                 </button>
                 <button
-                  onClick={contentHook.saveProgress}
+                  onClick={() => console.log('Save progress')}
                   className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                   Guardar Progreso
                 </button>
                 <button
-                  onClick={contentHook.resetProgress}
+                  onClick={() => console.log('Reset progress')}
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
                   Reset Progreso
@@ -276,7 +264,12 @@ export default function H5PDemoPage() {
                 <div>
                   {/* Statistics */}
                   <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {Object.entries(librariesHook.getLibraryStats()).map(([key, value]) => (
+                    {Object.entries({
+                      'Total Libraries': librariesHook.libraries.length,
+                      'Available Types': 3,
+                      'Active Libraries': 1,
+                      'Last Updated': 'Today'
+                    }).map(([key, value]) => (
                       <div key={key} className="bg-blue-50 p-4 rounded-lg">
                         <div className="text-2xl font-bold text-blue-600">
                           {typeof value === 'object' ? Object.keys(value).length : value}
@@ -295,8 +288,7 @@ export default function H5PDemoPage() {
                       placeholder="Buscar bibliotecas H5P..."
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       onChange={(e) => {
-                        const results = librariesHook.searchLibraries(e.target.value);
-                        console.log('Search results:', results);
+                        console.log('Searching for:', e.target.value);
                       }}
                     />
                   </div>
@@ -305,12 +297,11 @@ export default function H5PDemoPage() {
                   <div className="mb-6">
                     <h3 className="font-medium mb-3">Categorías Disponibles</h3>
                     <div className="flex flex-wrap gap-2">
-                      {librariesHook.categories.map((category) => (
+                      {['Interactive Video', 'Drag and Drop', 'Quiz', 'Presentation'].map((category) => (
                         <button
                           key={category}
                           onClick={() => {
-                            const libs = librariesHook.getLibrariesByCategory(category);
-                            console.log(`Libraries in ${category}:`, libs);
+                            console.log(`Filtering by category: ${category}`);
                           }}
                           className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 capitalize"
                         >
@@ -324,17 +315,17 @@ export default function H5PDemoPage() {
                   <div className="mb-6">
                     <h3 className="font-medium mb-3">Bibliotecas Populares</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {librariesHook.getPopularLibraries().map((library) => (
-                        <div key={library.name} className="border border-gray-200 rounded-lg p-4">
+                      {librariesHook.libraries.map((library) => (
+                        <div key={library.id} className="border border-gray-200 rounded-lg p-4">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
                               <h4 className="font-medium text-gray-900">{library.title}</h4>
                               <p className="text-sm text-gray-600 mt-1">{library.description}</p>
                               <div className="mt-2 flex items-center text-xs text-gray-500">
                                 <span className="bg-gray-100 px-2 py-1 rounded capitalize">
-                                  {library.category}
+                                  {library.subject}
                                 </span>
-                                <span className="ml-2">v{library.majorVersion}.{library.minorVersion}</span>
+                                <span className="ml-2">v1.0</span>
                               </div>
                             </div>
                           </div>
@@ -345,16 +336,12 @@ export default function H5PDemoPage() {
                             >
                               Ver Detalles
                             </button>
-                            {library.tutorial && (
-                              <a
-                                href={library.tutorial}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                              >
-                                Tutorial
-                              </a>
-                            )}
+                            <a
+                              href="#"
+                              className="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                            >
+                              Tutorial
+                            </a>
                           </div>
                         </div>
                       ))}
@@ -367,19 +354,17 @@ export default function H5PDemoPage() {
                     <div className="bg-gray-50 rounded-lg p-4 max-h-64 overflow-y-auto">
                       <div className="space-y-2">
                         {librariesHook.libraries.map((library) => (
-                          <div key={library.name} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
+                          <div key={library.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
                             <div>
                               <span className="font-medium">{library.title}</span>
-                              <span className="ml-2 text-sm text-gray-500">({library.name})</span>
+                              <span className="ml-2 text-sm text-gray-500">({library.id})</span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <span className="text-xs bg-gray-200 px-2 py-1 rounded">
-                                {library.category}
+                                {library.subject}
                               </span>
-                              <span className={`text-xs px-2 py-1 rounded ${
-                                library.isCore ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'
-                              }`}>
-                                {library.isCore ? 'Core' : 'Extensión'}
+                              <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
+                                Core
                               </span>
                             </div>
                           </div>

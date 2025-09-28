@@ -1,9 +1,12 @@
-import { AdaptiveEngine, LearningProfile, ActivityAttempt, AdaptiveRecommendation } from '@fuzzys/adaptive-engine';
+import { AdaptiveEngine, LearningProfile, ActivityAttempt, AdaptiveRecommendation } from '@fuzzy/adaptive-engine';
 import { createClient } from '@/lib/supabase/client';
 
 export class AdaptiveService {
   private engine: AdaptiveEngine;
-  private supabase = createClient();
+  private supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   constructor() {
     this.engine = new AdaptiveEngine();
@@ -55,7 +58,7 @@ export class AdaptiveService {
         game_type: attempt.gameType,
         concept: attempt.concept,
         difficulty: attempt.difficulty,
-        start_time: attempt.startTime.toISOString(),
+        start_time: attempt.startTime?.toISOString(),
         end_time: attempt.endTime?.toISOString(),
         score: attempt.score,
         time_spent: attempt.timeSpent,
@@ -78,15 +81,15 @@ export class AdaptiveService {
         learningStyle: 'multimodal',
         knowledgeMap: {},
         preferences: {
-          preferredDifficulty: 0.5,
+          difficulty: 0.5,
           sessionLength: 30,
           feedbackStyle: 'immediate'
         },
         performance: {
-          overallProgress: 0,
-          strengthAreas: [],
-          improvementAreas: [],
-          recentTrends: []
+          averageScore: 0,
+          streakDays: 0,
+          totalStudyTime: 0,
+          completedActivities: 0
         },
         createdAt: new Date(),
         updatedAt: new Date()
@@ -105,18 +108,10 @@ export class AdaptiveService {
       .limit(20);
 
     const formattedActivities = activities?.map(a => ({
-      userId: a.user_id,
-      activityId: a.activity_id,
-      gameType: a.game_type,
+      id: a.activity_id,
       concept: a.concept,
       difficulty: a.difficulty,
-      startTime: new Date(a.start_time),
-      endTime: a.end_time ? new Date(a.end_time) : undefined,
-      score: a.score,
-      timeSpent: a.time_spent,
-      hintsUsed: a.hints_used,
-      mistakes: a.mistakes,
-      completed: a.completed
+      gameType: a.game_type
     })) || [];
 
     return this.engine.generateRecommendations(profile, formattedActivities);

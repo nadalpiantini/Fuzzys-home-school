@@ -162,7 +162,7 @@ export class AIQuizGenerator {
       ...options,
       difficulty: performanceAnalysis.suggestedDifficulty,
       focusTopics: performanceAnalysis.weakTopics,
-      bloomsLevels: performanceAnalysis.targetTaxonomyLevels
+      bloomsLevels: performanceAnalysis.targetTaxonomyLevels as ("remember" | "understand" | "apply" | "analyze" | "evaluate" | "create")[]
     };
 
     const prompt = this.buildAdaptivePrompt(performanceAnalysis, adaptiveOptions);

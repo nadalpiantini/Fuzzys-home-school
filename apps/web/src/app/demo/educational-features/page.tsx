@@ -122,16 +122,16 @@ const mockH5PContent = {
         }
       ],
       draggables: [
-        { id: 'dolphin', type: 'text', content: '🐬 Delfín', multiple: false },
-        { id: 'shark', type: 'text', content: '🦈 Tiburón', multiple: false },
-        { id: 'whale', type: 'text', content: '🐋 Ballena', multiple: false },
-        { id: 'bear', type: 'text', content: '🐻 Oso', multiple: false },
-        { id: 'deer', type: 'text', content: '🦌 Ciervo', multiple: false },
-        { id: 'owl', type: 'text', content: '🦉 Búho', multiple: false },
-        { id: 'camel', type: 'text', content: '🐪 Camello', multiple: false },
-        { id: 'snake', type: 'text', content: '🐍 Serpiente', multiple: false },
-        { id: 'penguin', type: 'text', content: '🐧 Pingüino', multiple: false },
-        { id: 'polar_bear', type: 'text', content: '🐻‍❄️ Oso Polar', multiple: false }
+        { id: 'dolphin', type: 'text' as const, content: '🐬 Delfín', multiple: false },
+        { id: 'shark', type: 'text' as const, content: '🦈 Tiburón', multiple: false },
+        { id: 'whale', type: 'text' as const, content: '🐋 Ballena', multiple: false },
+        { id: 'bear', type: 'text' as const, content: '🐻 Oso', multiple: false },
+        { id: 'deer', type: 'text' as const, content: '🦌 Ciervo', multiple: false },
+        { id: 'owl', type: 'text' as const, content: '🦉 Búho', multiple: false },
+        { id: 'camel', type: 'text' as const, content: '🐪 Camello', multiple: false },
+        { id: 'snake', type: 'text' as const, content: '🐍 Serpiente', multiple: false },
+        { id: 'penguin', type: 'text' as const, content: '🐧 Pingüino', multiple: false },
+        { id: 'polar_bear', type: 'text' as const, content: '🐻‍❄️ Oso Polar', multiple: false }
       ],
       feedback: {
         correct: '¡Excelente! Has colocado correctamente todos los animales en sus hábitats.',
@@ -239,11 +239,13 @@ export default function EducationalFeaturesDemo() {
             <CardContent>
               <div className="h-96">
                 <TutorChat
-                  userId={mockUserId}
-                  initialContext={{
-                    subject: 'ciencias_naturales',
+                  subject="Ciencias Naturales"
+                  studentProfile={{
                     grade: 4,
-                    topic: 'ecosistemas'
+                    learningStyle: 'visual',
+                    currentLevel: 'beginner',
+                    strongAreas: ['observación', 'curiosidad'],
+                    challengeAreas: ['análisis', 'síntesis']
                   }}
                 />
               </div>
@@ -401,13 +403,9 @@ export default function EducationalFeaturesDemo() {
             </CardHeader>
             <CardContent>
               <H5PLibrary
-                content={mockH5PLibrary}
-                onContentSelect={(content) => console.log('Selected content:', content)}
-                filters={{
-                  difficulty: 'all',
-                  subject: 'all',
-                  type: 'all'
-                }}
+                onContentComplete={(contentId, results) => console.log('Content completed:', contentId, results)}
+                studentLevel="beginner"
+                subject="Ciencias Naturales"
               />
               <div className="mt-4 p-3 bg-indigo-50 rounded-lg text-sm">
                 <strong>Sistema de gestión:</strong>
@@ -436,8 +434,11 @@ export default function EducationalFeaturesDemo() {
             <CardContent>
               <LiveQuizRoom
                 roomId="demo-room-123"
-                userId={mockUserId}
-                playerName="Demo Student"
+                player={{
+                  id: mockUserId,
+                  name: "Demo Student",
+                  avatar: "/avatars/student.png"
+                }}
               />
               <div className="mt-4 p-3 bg-orange-50 rounded-lg text-sm">
                 <strong>Características multijugador:</strong>

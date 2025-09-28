@@ -1,10 +1,13 @@
-import { QuizGenerator, QuestionGenerationParams, GeneratedQuestion, ContentSource } from '@fuzzys/quiz-generator';
+import { QuizGenerator, QuestionGenerationParams, GeneratedQuestion, ContentSource } from '@fuzzy/quiz-generator';
 import { adaptiveService } from '@/services/adaptive/AdaptiveService';
 import { createClient } from '@/lib/supabase/client';
 
 export class QuizService {
   private generator: QuizGenerator;
-  private supabase = createClient();
+  private supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   constructor() {
     this.generator = new QuizGenerator();
@@ -24,23 +27,28 @@ export class QuizService {
 
     const params: QuestionGenerationParams = {
       subject,
-      grade,
-      difficulty,
-      questionCount,
+      topic: subject,
+      difficulty: this.convertDifficultyToString(difficulty),
+      count: questionCount,
       language: 'es',
-      questionTypes: this.getPreferredQuestionTypes(profile?.preferences),
-      bloomsLevels: this.getBloomsLevelsForDifficulty(difficulty),
+      adaptToGrade: grade,
+      questionType: 'multiple_choice',
+      bloomLevel: 'understand',
       includeExplanations: true,
-      adaptToLearningStyle: profile?.learningStyle || 'multimodal'
+      includeVisuals: false,
+      avoidBias: true
     };
 
     // Use Dominican curriculum as content source
     const contentSource: ContentSource = {
       type: 'curriculum',
-      curriculum: 'dominican_republic',
-      grade,
-      subject,
-      language: 'es'
+      content: `Dominican Republic curriculum for ${subject} grade ${grade}`,
+      metadata: {
+        curriculum: 'dominican_republic',
+        grade,
+        subject,
+        language: 'es'
+      }
     };
 
     const questions = await this.generator.generateQuestions(params, contentSource);
@@ -58,12 +66,7 @@ export class QuizService {
     questionCount: number = 10,
     difficulty: number = 0.5
   ): Promise<GeneratedQuestion[]> {
-    return this.generator.generateDominicanCurriculumQuestions(grade, subject, unit, {
-      questionCount,
-      difficulty,
-      questionTypes: ['multiple_choice', 'true_false', 'short_answer'],
-      includeExplanations: true
-    });
+    return this.generator.generateDominicanCurriculumQuestions(grade, subject, unit);
   }
 
   async generateTopicQuiz(
@@ -74,19 +77,24 @@ export class QuizService {
   ): Promise<GeneratedQuestion[]> {
     const params: QuestionGenerationParams = {
       subject: 'general',
-      grade: 5, // Default middle grade
-      difficulty,
-      questionCount,
+      topic: topic,
+      difficulty: this.convertDifficultyToString(difficulty),
+      count: questionCount,
       language: 'es',
-      questionTypes,
-      bloomsLevels: ['understanding', 'applying'],
-      includeExplanations: true
+      questionType: 'multiple_choice',
+      bloomLevel: 'understand',
+      includeExplanations: true,
+      includeVisuals: false,
+      avoidBias: true
     };
 
     const contentSource: ContentSource = {
       type: 'topic',
-      topic,
-      language: 'es'
+      content: `Topic: ${topic}`,
+      metadata: {
+        topic,
+        language: 'es'
+      }
     };
 
     return this.generator.generateQuestions(params, contentSource);
@@ -112,7 +120,7 @@ export class QuizService {
     const quizData = {
       user_id: userId,
       subject: params.subject,
-      grade: params.grade,
+      grade: params.adaptToGrade || 5,
       difficulty: params.difficulty,
       question_count: questions.length,
       questions: questions,
@@ -146,6 +154,13 @@ export class QuizService {
     }
   }
 
+  private convertDifficultyToString(difficulty: number): "beginner" | "intermediate" | "advanced" | "expert" {
+    if (difficulty <= 0.25) return 'beginner';
+    if (difficulty <= 0.5) return 'intermediate';
+    if (difficulty <= 0.75) return 'advanced';
+    return 'expert';
+  }
+
   private getBloomsLevelsForDifficulty(difficulty: number): string[] {
     if (difficulty < 0.3) {
       return ['remembering', 'understanding'];
@@ -162,10 +177,10 @@ export class QuizService {
         question: q.question,
         answers: q.type === 'multiple_choice' ? q.options?.map((option, optIndex) => ({
           text: option,
-          correct: optIndex === q.correctAnswer,
+          correct: optIndex === Number(q.correctAnswer),
           tipsAndFeedback: {
             tip: '',
-            chosenFeedback: optIndex === q.correctAnswer ? '¡Correcto!' : 'Incorrecto',
+            chosenFeedback: optIndex === Number(q.correctAnswer) ? '¡Correcto!' : 'Incorrecto',
             notChosenFeedback: ''
           }
         })) : [],

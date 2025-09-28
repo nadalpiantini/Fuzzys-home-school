@@ -11,7 +11,7 @@ import { CheckCircle, XCircle, Clock, Play, TestTube } from 'lucide-react';
 import { tutorEngine } from '@/services/tutor/TutorEngine';
 import { adaptiveService } from '@/services/adaptive/AdaptiveService';
 import { quizService } from '@/services/quiz/QuizService';
-import { WebSocketManager } from '@/services/multiplayer/WebSocketManager';
+import { getWebSocketManager } from '@/services/multiplayer/websocket-manager';
 
 interface TestResult {
   name: string;
@@ -94,10 +94,10 @@ export default function IntegrationTestPage() {
     }
 
     // Test basic query processing (mock)
-    const mockResponse = await tutorEngine.processQuery(
+    const mockResponse = await tutorEngine.sendMessage(
       'test-session-123',
       '¿Qué es la fotosíntesis?',
-      { subject: 'ciencias_naturales', grade: 4 }
+      'student'
     );
 
     if (!mockResponse || !mockResponse.content) {
@@ -185,7 +185,7 @@ export default function IntegrationTestPage() {
 
   const testWebSocketManager = async () => {
     // Test WebSocket manager initialization
-    const wsManager = WebSocketManager.getInstance();
+    const wsManager = getWebSocketManager();
 
     if (!wsManager) {
       throw new Error('WebSocket manager not initialized');

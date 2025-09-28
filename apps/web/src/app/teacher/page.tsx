@@ -9,7 +9,14 @@ import {
   Plus,
   Settings,
   Calendar,
-  Target
+  Target,
+  Sparkles,
+  Atom,
+  Blocks,
+  Music,
+  MapPin,
+  ExternalLink,
+  Gamepad2
 } from 'lucide-react'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -111,6 +118,179 @@ export default function TeacherDashboard() {
               </Button>
             </CardContent>
           </Card>
+        </div>
+
+        {/* External Resources for Teachers */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Sparkles className="w-6 h-6 text-fuzzy-yellow" />
+            <h3 className="text-2xl font-bold">
+              {language === 'es' ? '🎓 Recursos Educativos' : '🎓 Educational Resources'}
+            </h3>
+          </div>
+          <p className="text-gray-600 mb-6">
+            {language === 'es'
+              ? 'Más de 100 herramientas y actividades para enriquecer tus clases'
+              : '100+ tools and activities to enrich your classes'}
+          </p>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <Card className="card-hover cursor-pointer border-2 border-blue-200 hover:border-blue-400 transition-all">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <Atom className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">PhET Simulations</h4>
+                    <p className="text-xs text-gray-600">6+ simulaciones</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  {language === 'es'
+                    ? 'Simulaciones interactivas de física y ciencias'
+                    : 'Interactive physics and science simulations'}
+                </p>
+                <Button size="sm" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover cursor-pointer border-2 border-orange-200 hover:border-orange-400 transition-all">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Blocks className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Blockly Games</h4>
+                    <p className="text-xs text-gray-600">7+ juegos</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  {language === 'es'
+                    ? 'Programación visual para principiantes'
+                    : 'Visual programming for beginners'}
+                </p>
+                <Button size="sm" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover cursor-pointer border-2 border-purple-200 hover:border-purple-400 transition-all">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Music className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Music Blocks</h4>
+                    <p className="text-xs text-gray-600">5+ actividades</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  {language === 'es'
+                    ? 'Integración de música y matemáticas'
+                    : 'Music and math integration'}
+                </p>
+                <Button size="sm" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover cursor-pointer border-2 border-green-200 hover:border-green-400 transition-all">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">AR Colonial</h4>
+                    <p className="text-xs text-gray-600">Zona Colonial SD</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  {language === 'es'
+                    ? 'Exploración histórica con realidad aumentada'
+                    : 'Historical exploration with AR'}
+                </p>
+                <Button size="sm" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card className="border-2 border-indigo-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Gamepad2 className="w-5 h-5 text-indigo-600" />
+                  {language === 'es' ? 'Recursos Adicionales' : 'Additional Resources'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>GCompris</span>
+                    <span className="text-gray-500">20+ actividades</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sugarizer</span>
+                    <span className="text-gray-500">15+ herramientas</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Scratch for Schools</span>
+                    <span className="text-gray-500">Programación</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Khan Academy</span>
+                    <span className="text-gray-500">Matemáticas</span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  {language === 'es' ? 'Ver Todos' : 'View All'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-amber-200">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <BarChart3 className="w-5 h-5 text-amber-600" />
+                  {language === 'es' ? 'Seguimiento de Uso' : 'Usage Tracking'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">
+                      {language === 'es' ? 'Recursos usados' : 'Resources used'}
+                    </span>
+                    <span className="font-semibold">12/15</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-amber-500 h-2 rounded-full" style={{ width: '80%' }} />
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    {language === 'es'
+                      ? 'Tus estudiantes han explorado 80% de los recursos disponibles'
+                      : 'Your students have explored 80% of available resources'}
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full mt-4" size="sm">
+                  {language === 'es' ? 'Ver Reportes' : 'View Reports'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Recent Activity */}

@@ -11,12 +11,16 @@ import {
 } from '@fuzzy/h5p-adapter';
 import type {
   H5PContent,
-  H5PEvent,
-  H5PContentType
+  H5PEvent
 } from '@fuzzy/h5p-adapter';
 
+// Extend H5PContent to include type property
+interface ExtendedH5PContent extends H5PContent {
+  type: string;
+}
+
 interface H5PContainerProps {
-  content: H5PContent;
+  content: ExtendedH5PContent;
   onComplete?: (results: H5PResults) => void;
   onProgress?: (progress: number) => void;
   className?: string;
@@ -109,8 +113,8 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
     }
   };
 
-  const getContentTypeLabel = (type: H5PContentType): string => {
-    const labels: Record<H5PContentType, string> = {
+  const getContentTypeLabel = (type: string): string => {
+    const labels: Record<string, string> = {
       'drag_drop_advanced': 'Arrastrar y Soltar Avanzado',
       'hotspot_image': 'Imagen con Puntos Calientes',
       'branching_scenario': 'Escenario Ramificado',

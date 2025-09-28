@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ExternalGameWrapper } from '@fuzzy/external-games';
 import type { ExternalGameConfig, ExternalGameEvent } from '@fuzzy/external-games';
