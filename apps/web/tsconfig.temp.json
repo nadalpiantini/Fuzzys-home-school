@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "exclude": [
+    "src/app/api/brain/schedulers/**/*",
+    "src/app/api/brain/worker/**/*",
+    "src/app/api/games/**/metrics/**/*"
+  ]
+}

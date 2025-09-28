@@ -3,28 +3,25 @@ import { QualityValidator } from './QualityValidator';
 import { llmChat } from './llm';
 import { genPrompt } from '../prompts/generator';
 import { safeParseGames } from './parse';
+import { curriculumAdjust } from '../agents/CurriculumAgent';
+import { difficultyAdjust } from '../agents/DifficultyAgent';
 
 export class GameGenerator {
   async generateAndSave(p: any) {
     const s = sb();
-    // 🔎 log request
-    try {
-      await (s.from('brain_logs') as any).insert({
-        kind: 'request',
-        payload: JSON.stringify(p).slice(0, 8000),
-      });
-    } catch {}
 
-    const messages = genPrompt(p);
+    // Agents pre-LLM
+    const withCurr = curriculumAdjust(p);
+    const withDiff = difficultyAdjust(withCurr);
+
+    // Log request
+    try { await s.from('brain_logs').insert({ kind:'request', payload: JSON.stringify(withDiff).slice(0,8000) }); } catch {}
+
+    const messages = genPrompt(withDiff);
     const raw = await llmChat(messages);
 
-    // 🔎 log response (truncado)
-    try {
-      await (s.from('brain_logs') as any).insert({
-        kind: 'response',
-        payload: String(raw).slice(0, 8000),
-      });
-    } catch {}
+    // Log response
+    try { await s.from('brain_logs').insert({ kind:'response', payload: String(raw).slice(0,8000) }); } catch {}
 
     const out = safeParseGames(raw);
     const validator = new QualityValidator();
@@ -53,40 +50,39 @@ export class GameGenerator {
         subjectMap[g.subject.toLowerCase()] ||
         '84b1c3d4-619b-43e2-802a-5f1baf1e2760'; // Default to math
 
-      const { data: game, error: ge } = await (s.from('games') as any)
+      // Anti-duplicados por índice único (23505)
+      const { data: game, error: ge } = await s
+        .from('games')
         .insert({
           title: g.title,
-          description: `Juego de ${g.subject} para grado ${g.grade}`,
-          type: 'quiz',
-          subject_id: subjectId,
-          difficulty: 'medium',
+          subject: g.subject,
           grade_level: g.grade,
-          data: {
-            questions: g.questions,
-            metadata: g.metadata,
-            language: g.language,
-          },
-          instructions: `Responde las preguntas sobre ${g.subject}`,
-          points: 100,
-          is_active: true,
+          language: g.language,
+          metadata: g.metadata
         })
-        .select('id')
-        .single();
+        .select('id').single();
 
       if (ge) {
-        // si hay duplicado u otro error, lo registramos y seguimos
-        try {
-          await (s.from('brain_logs') as any).insert({
-            kind: 'parse_issues',
-            payload: `insert_game_error: ${ge.message}`,
-          });
-        } catch {}
+        if ((ge as any).code === '23505') {
+          try { await s.from('brain_logs').insert({ kind:'parse_issues', payload:`duplicate: ${g.title}/${g.subject}/${g.grade}` }); } catch {}
+          continue;
+        }
+        try { await s.from('brain_logs').insert({ kind:'parse_issues', payload:`insert_game_error: ${ge.message}` }); } catch {}
         continue;
       }
 
-      // Questions are now stored in the data field of the games table
-      // No need to insert into quiz_questions table separately
-      ids.push((game as any).id);
+      for (const q of g.questions) {
+        const { error: qe } = await s.from('quiz_questions').insert({
+          game_id: game.id,
+          prompt: q.prompt,
+          choices: q.choices,
+          correct_index: q.answer
+        });
+        if (qe) {
+          try { await s.from('brain_logs').insert({ kind:'parse_issues', payload:`insert_question_error: ${qe.message}` }); } catch {}
+        }
+      }
+      ids.push(game.id);
     }
 
     // si nada se creó, deja pistas en la respuesta

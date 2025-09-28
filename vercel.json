@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/brain/schedulers/generate-weekly",
+      "schedule": "0 9 * * 1"
+    },
+    {
+      "path": "/api/brain/worker",
+      "schedule": "0 */2 * * *"
+    }
+  ]
+}
