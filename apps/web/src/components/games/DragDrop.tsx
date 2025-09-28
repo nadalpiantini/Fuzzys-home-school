@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import type { DragDropGame } from '@fuzzy/game-engine';
+import type { DragDropGame } from '@/types/game-types';
 
 interface DragDropProps {
   game: DragDropGame;
@@ -28,13 +28,13 @@ export const DragDrop: React.FC<DragDropProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const safeItems = game.items ?? [];
   const safeZones = game.zones ?? [];
   const [zones, setZones] = useState<Record<string, string[]>>(() => {
     const initial: Record<string, string[]> = {};
-    safeZones.forEach(zone => {
+    safeZones.forEach((zone) => {
       if (zone?.id) {
         initial[zone.id] = [];
       }
@@ -42,8 +42,8 @@ export const DragDrop: React.FC<DragDropProps> = ({
     return initial;
   });
 
-  const [unplacedItems, setUnplacedItems] = useState<string[]>(
-    () => safeItems.map(it => it?.id).filter((id): id is string => Boolean(id))
+  const [unplacedItems, setUnplacedItems] = useState<string[]>(() =>
+    safeItems.map((it) => it?.id).filter((id): id is string => Boolean(id)),
   );
 
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
@@ -63,8 +63,8 @@ export const DragDrop: React.FC<DragDropProps> = ({
 
     // Remove from previous location
     const newZones = { ...zones };
-    Object.keys(newZones).forEach(zone => {
-      newZones[zone] = newZones[zone].filter(item => item !== draggedItem);
+    Object.keys(newZones).forEach((zone) => {
+      newZones[zone] = newZones[zone].filter((item) => item !== draggedItem);
     });
 
     // Add to new zone
@@ -72,7 +72,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
     setZones(newZones);
 
     // Update unplaced items
-    setUnplacedItems(prev => prev.filter(item => item !== draggedItem));
+    setUnplacedItems((prev) => prev.filter((item) => item !== draggedItem));
     setDraggedItem(null);
   };
 
@@ -82,8 +82,8 @@ export const DragDrop: React.FC<DragDropProps> = ({
 
     // Remove from zones
     const newZones = { ...zones };
-    Object.keys(newZones).forEach(zone => {
-      newZones[zone] = newZones[zone].filter(item => item !== draggedItem);
+    Object.keys(newZones).forEach((zone) => {
+      newZones[zone] = newZones[zone].filter((item) => item !== draggedItem);
     });
     setZones(newZones);
 
@@ -102,11 +102,11 @@ export const DragDrop: React.FC<DragDropProps> = ({
   const getItemStyle = (itemId: string) => {
     if (!showFeedback) return '';
 
-    const item = safeItems.find(i => i?.id === itemId);
+    const item = safeItems.find((i) => i?.id === itemId);
     if (!item) return '';
 
-    const placedZone = Object.keys(zones).find(zone =>
-      zones[zone].includes(itemId)
+    const placedZone = Object.keys(zones).find((zone) =>
+      zones[zone].includes(itemId),
     );
 
     if (placedZone === item.targetZone) {
@@ -118,7 +118,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
   };
 
   const getItemContent = (itemId: string) => {
-    const item = safeItems.find(i => i?.id === itemId);
+    const item = safeItems.find((i) => i?.id === itemId);
     return item?.content || '';
   };
 
@@ -137,7 +137,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
         >
           <p className="text-sm text-gray-600 mb-3">Elementos sin colocar:</p>
           <div className="flex flex-wrap gap-2">
-            {unplacedItems.map(itemId => (
+            {unplacedItems.map((itemId) => (
               <div
                 key={itemId}
                 draggable={!showFeedback}
@@ -152,7 +152,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
 
         {/* Drop Zones */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {safeZones.map(zone => (
+          {safeZones.map((zone) => (
             <div
               key={zone.id}
               className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
@@ -161,18 +161,21 @@ export const DragDrop: React.FC<DragDropProps> = ({
             >
               <h3 className="font-medium text-blue-900 mb-3">{zone?.label}</h3>
               <div className="min-h-[80px] space-y-2">
-                {zone?.id && zones[zone.id]?.map(itemId => (
-                  <div
-                    key={itemId}
-                    draggable={!showFeedback}
-                    onDragStart={() => handleDragStart(itemId)}
-                    className={`px-4 py-2 bg-white rounded-lg border-2 cursor-move hover:shadow-md transition-all ${getItemStyle(itemId)}`}
-                  >
-                    {getItemContent(itemId)}
-                  </div>
-                ))}
+                {zone?.id &&
+                  zones[zone.id]?.map((itemId) => (
+                    <div
+                      key={itemId}
+                      draggable={!showFeedback}
+                      onDragStart={() => handleDragStart(itemId)}
+                      className={`px-4 py-2 bg-white rounded-lg border-2 cursor-move hover:shadow-md transition-all ${getItemStyle(itemId)}`}
+                    >
+                      {getItemContent(itemId)}
+                    </div>
+                  ))}
                 {zone?.id && (zones[zone.id]?.length ?? 0) === 0 && (
-                  <p className="text-sm text-blue-600 italic">Arrastra elementos aquí</p>
+                  <p className="text-sm text-blue-600 italic">
+                    Arrastra elementos aquí
+                  </p>
                 )}
               </div>
             </div>
@@ -180,9 +183,13 @@ export const DragDrop: React.FC<DragDropProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Perfecto!' : `${feedback.score}/${feedback.maxScore} elementos correctos`}
+              {feedback.correct
+                ? '¡Perfecto!'
+                : `${feedback.score}/${feedback.maxScore} elementos correctos`}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>

@@ -28,17 +28,20 @@ export const Crossword: React.FC<CrosswordProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [userGrid, setUserGrid] = useState<(string | null)[][]>([]);
   const [selectedCell, setSelectedCell] = useState<CellPosition | null>(null);
-  const [selectedClue, setSelectedClue] = useState<{ type: 'across' | 'down'; number: number } | null>(null);
+  const [selectedClue, setSelectedClue] = useState<{
+    type: 'across' | 'down';
+    number: number;
+  } | null>(null);
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     // Initialize user grid with empty cells
-    const initialGrid = game.grid.map(row =>
-      row.map(cell => cell === null ? null : '')
+    const initialGrid = game.grid.map((row) =>
+      row.map((cell) => (cell === null ? null : '')),
     );
     setUserGrid(initialGrid);
   }, [game.grid]);
@@ -50,13 +53,17 @@ export const Crossword: React.FC<CrosswordProps> = ({
 
     // Find associated clue
     const acrossClue = game.clues.across.find(
-      clue => clue.startRow === row && clue.startCol <= col &&
-      col < clue.startCol + clue.answer.length
+      (clue) =>
+        clue.startRow === row &&
+        clue.startCol <= col &&
+        col < clue.startCol + clue.answer.length,
     );
 
     const downClue = game.clues.down.find(
-      clue => clue.startCol === col && clue.startRow <= row &&
-      row < clue.startRow + clue.answer.length
+      (clue) =>
+        clue.startCol === col &&
+        clue.startRow <= row &&
+        row < clue.startRow + clue.answer.length,
     );
 
     if (acrossClue) {
@@ -66,7 +73,11 @@ export const Crossword: React.FC<CrosswordProps> = ({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>, row: number, col: number) => {
+  const handleKeyPress = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    row: number,
+    col: number,
+  ) => {
     if (showFeedback) return;
 
     const key = e.key.toUpperCase();
@@ -77,9 +88,17 @@ export const Crossword: React.FC<CrosswordProps> = ({
       setUserGrid(newGrid);
 
       // Move to next cell
-      if (selectedClue?.type === 'across' && col < game.grid[0].length - 1 && game.grid[row][col + 1] !== null) {
+      if (
+        selectedClue?.type === 'across' &&
+        col < game.grid[0].length - 1 &&
+        game.grid[row][col + 1] !== null
+      ) {
         setSelectedCell({ row, col: col + 1 });
-      } else if (selectedClue?.type === 'down' && row < game.grid.length - 1 && game.grid[row + 1][col] !== null) {
+      } else if (
+        selectedClue?.type === 'down' &&
+        row < game.grid.length - 1 &&
+        game.grid[row + 1][col] !== null
+      ) {
         setSelectedCell({ row: row + 1, col });
       }
     } else if (e.key === 'Backspace') {
@@ -88,9 +107,17 @@ export const Crossword: React.FC<CrosswordProps> = ({
       setUserGrid(newGrid);
 
       // Move to previous cell
-      if (selectedClue?.type === 'across' && col > 0 && game.grid[row][col - 1] !== null) {
+      if (
+        selectedClue?.type === 'across' &&
+        col > 0 &&
+        game.grid[row][col - 1] !== null
+      ) {
         setSelectedCell({ row, col: col - 1 });
-      } else if (selectedClue?.type === 'down' && row > 0 && game.grid[row - 1][col] !== null) {
+      } else if (
+        selectedClue?.type === 'down' &&
+        row > 0 &&
+        game.grid[row - 1][col] !== null
+      ) {
         setSelectedCell({ row: row - 1, col });
       }
     }
@@ -127,21 +154,34 @@ export const Crossword: React.FC<CrosswordProps> = ({
   const isInSelectedClue = (row: number, col: number): boolean => {
     if (!selectedClue) return false;
 
-    const clueList = selectedClue.type === 'across' ? game.clues.across : game.clues.down;
-    const clue = clueList.find(c => c.number === selectedClue.number);
+    const clueList =
+      selectedClue.type === 'across' ? game.clues.across : game.clues.down;
+    const clue = clueList.find((c) => c.number === selectedClue.number);
 
     if (!clue) return false;
 
     if (selectedClue.type === 'across') {
-      return row === clue.startRow && col >= clue.startCol && col < clue.startCol + clue.answer.length;
+      return (
+        row === clue.startRow &&
+        col >= clue.startCol &&
+        col < clue.startCol + clue.answer.length
+      );
     } else {
-      return col === clue.startCol && row >= clue.startRow && row < clue.startRow + clue.answer.length;
+      return (
+        col === clue.startCol &&
+        row >= clue.startRow &&
+        row < clue.startRow + clue.answer.length
+      );
     }
   };
 
   const getCellNumber = (row: number, col: number): number | null => {
-    const acrossClue = game.clues.across.find(c => c.startRow === row && c.startCol === col);
-    const downClue = game.clues.down.find(c => c.startRow === row && c.startCol === col);
+    const acrossClue = game.clues.across.find(
+      (c) => c.startRow === row && c.startCol === col,
+    );
+    const downClue = game.clues.down.find(
+      (c) => c.startRow === row && c.startCol === col,
+    );
 
     return acrossClue?.number || downClue?.number || null;
   };
@@ -191,7 +231,9 @@ export const Crossword: React.FC<CrosswordProps> = ({
                               type="text"
                               value={cell || ''}
                               onChange={() => {}}
-                              onKeyDown={(e) => handleKeyPress(e, rowIndex, colIndex)}
+                              onKeyDown={(e) =>
+                                handleKeyPress(e, rowIndex, colIndex)
+                              }
                               className="w-full h-full text-center font-bold bg-transparent outline-none"
                               maxLength={1}
                               disabled={showFeedback}
@@ -211,20 +253,25 @@ export const Crossword: React.FC<CrosswordProps> = ({
             <div>
               <h4 className="font-semibold mb-2">Horizontal</h4>
               <div className="space-y-1">
-                {game.clues.across.map(clue => (
+                {game.clues.across.map((clue) => (
                   <div
                     key={clue.number}
                     className={`p-2 rounded cursor-pointer ${
-                      selectedClue?.type === 'across' && selectedClue.number === clue.number
+                      selectedClue?.type === 'across' &&
+                      selectedClue.number === clue.number
                         ? 'bg-blue-100'
                         : 'hover:bg-gray-100'
                     }`}
                     onClick={() => {
                       setSelectedClue({ type: 'across', number: clue.number });
-                      setSelectedCell({ row: clue.startRow, col: clue.startCol });
+                      setSelectedCell({
+                        row: clue.startRow,
+                        col: clue.startCol,
+                      });
                     }}
                   >
-                    <span className="font-medium">{clue.number}.</span> {clue.clue}
+                    <span className="font-medium">{clue.number}.</span>{' '}
+                    {clue.clue}
                     {showHint && (
                       <span className="text-xs text-gray-500 ml-2">
                         ({clue.answer.length} letras)
@@ -238,20 +285,25 @@ export const Crossword: React.FC<CrosswordProps> = ({
             <div>
               <h4 className="font-semibold mb-2">Vertical</h4>
               <div className="space-y-1">
-                {game.clues.down.map(clue => (
+                {game.clues.down.map((clue) => (
                   <div
                     key={clue.number}
                     className={`p-2 rounded cursor-pointer ${
-                      selectedClue?.type === 'down' && selectedClue.number === clue.number
+                      selectedClue?.type === 'down' &&
+                      selectedClue.number === clue.number
                         ? 'bg-blue-100'
                         : 'hover:bg-gray-100'
                     }`}
                     onClick={() => {
                       setSelectedClue({ type: 'down', number: clue.number });
-                      setSelectedCell({ row: clue.startRow, col: clue.startCol });
+                      setSelectedCell({
+                        row: clue.startRow,
+                        col: clue.startCol,
+                      });
                     }}
                   >
-                    <span className="font-medium">{clue.number}.</span> {clue.clue}
+                    <span className="font-medium">{clue.number}.</span>{' '}
+                    {clue.clue}
                     {showHint && (
                       <span className="text-xs text-gray-500 ml-2">
                         ({clue.answer.length} letras)
@@ -265,9 +317,13 @@ export const Crossword: React.FC<CrosswordProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Excelente! Completaste el crucigrama.' : 'Hay algunos errores en el crucigrama.'}
+              {feedback.correct
+                ? '¡Excelente! Completaste el crucigrama.'
+                : 'Hay algunos errores en el crucigrama.'}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -277,10 +333,7 @@ export const Crossword: React.FC<CrosswordProps> = ({
 
         <div className="flex justify-between mt-6">
           {!showFeedback ? (
-            <Button
-              onClick={handleSubmit}
-              className="ml-auto"
-            >
+            <Button onClick={handleSubmit} className="ml-auto">
               Verificar Crucigrama
             </Button>
           ) : (

@@ -23,7 +23,7 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [currentNodeId, setCurrentNodeId] = useState(game.startNode);
   const [path, setPath] = useState<string[]>([game.startNode]);
@@ -31,9 +31,13 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
   const [lives, setLives] = useState(3);
   const [isComplete, setIsComplete] = useState(false);
 
-  const currentNode = game.nodes.find(node => node.id === currentNodeId);
+  const currentNode = game.nodes.find((node) => node.id === currentNodeId);
 
-  const handleChoice = (option: { text: string; next: string; points?: number }) => {
+  const handleChoice = (option: {
+    text: string;
+    next: string;
+    points?: number;
+  }) => {
     if (isComplete || showFeedback) return;
 
     const newPath = [...path, option.next];
@@ -43,7 +47,7 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
       setScore(score + option.points);
     }
 
-    const nextNode = game.nodes.find(node => node.id === option.next);
+    const nextNode = game.nodes.find((node) => node.id === option.next);
 
     if (!nextNode || nextNode.options.length === 0 || option.next === 'end') {
       // Scenario complete
@@ -73,7 +77,9 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
       <div className="space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">Escenario Interactivo</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            Escenario Interactivo
+          </h3>
           <div className="flex items-center gap-4">
             {/* Lives */}
             <div className="flex items-center gap-1">
@@ -173,7 +179,9 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
                 <p className="text-gray-600">
                   Has terminado el escenario con una puntuación de:
                 </p>
-                <p className="text-4xl font-bold text-blue-600">{score} puntos</p>
+                <p className="text-4xl font-bold text-blue-600">
+                  {score} puntos
+                </p>
               </div>
             </Card>
 
@@ -182,12 +190,14 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
               <h4 className="font-semibold mb-3">Tu recorrido:</h4>
               <div className="space-y-2">
                 {path.map((nodeId, index) => {
-                  const node = game.nodes.find(n => n.id === nodeId);
+                  const node = game.nodes.find((n) => n.id === nodeId);
                   if (!node) return null;
 
                   return (
                     <div key={index} className="flex items-start gap-2">
-                      <span className="text-sm text-gray-500 mt-0.5">{index + 1}.</span>
+                      <span className="text-sm text-gray-500 mt-0.5">
+                        {index + 1}.
+                      </span>
                       <p className="text-sm text-gray-700">
                         {node.content.substring(0, 100)}
                         {node.content.length > 100 && '...'}
@@ -202,9 +212,7 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
               <Button onClick={handleRestart} variant="outline">
                 Jugar de Nuevo
               </Button>
-              <Button onClick={() => onAnswer(path, score)}>
-                Finalizar
-              </Button>
+              <Button onClick={() => onAnswer(path, score)}>Finalizar</Button>
             </div>
           </div>
         )}
@@ -212,10 +220,14 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
         {/* Feedback */}
         {showFeedback && feedback && (
           <div className="space-y-4">
-            <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}>
+            <div
+              className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}
+            >
               <p className="font-medium">Escenario completado</p>
               {feedback.finalScore && (
-                <p className="text-sm">Puntuación final: {feedback.finalScore} puntos</p>
+                <p className="text-sm">
+                  Puntuación final: {feedback.finalScore} puntos
+                </p>
               )}
               {feedback.explanation && (
                 <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -224,9 +236,7 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
 
             {onNext && (
               <div className="flex justify-end">
-                <Button onClick={onNext}>
-                  Siguiente
-                </Button>
+                <Button onClick={onNext}>Siguiente</Button>
               </div>
             )}
           </div>

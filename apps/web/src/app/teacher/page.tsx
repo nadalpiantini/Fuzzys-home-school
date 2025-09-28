@@ -1,7 +1,13 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Users,
   BookOpen,
@@ -16,12 +22,12 @@ import {
   Music,
   MapPin,
   ExternalLink,
-  Gamepad2
-} from 'lucide-react'
-import { useTranslation } from '@/hooks/useTranslation'
+  Gamepad2,
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TeacherDashboard() {
-  const { t, language } = useTranslation()
+  const { t, language } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -31,9 +37,7 @@ export default function TeacherDashboard() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <Users className="w-8 h-8 text-fuzzy-purple" />
-              <h1 className="text-2xl font-bold">
-                {t('teacher.dashboard')}
-              </h1>
+              <h1 className="text-2xl font-bold">{t('teacher.dashboard')}</h1>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm">
@@ -53,10 +57,9 @@ export default function TeacherDashboard() {
             {t('common.welcome')}, Profesor! 👋
           </h2>
           <p className="text-gray-600">
-            {language === 'es' 
+            {language === 'es'
               ? 'Gestiona tus clases y crea contenido educativo'
-              : 'Manage your classes and create educational content'
-            }
+              : 'Manage your classes and create educational content'}
           </p>
         </div>
 
@@ -111,7 +114,7 @@ export default function TeacherDashboard() {
               <p className="text-blue-100">
                 {language === 'es'
                   ? 'Analiza el progreso de tus estudiantes'
-                  : 'Analyze your students\' progress'}
+                  : "Analyze your students' progress"}
               </p>
               <Button className="mt-4 bg-white text-blue-600 hover:bg-gray-100">
                 {language === 'es' ? 'Ver Análisis' : 'View Analytics'}
@@ -125,7 +128,9 @@ export default function TeacherDashboard() {
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-fuzzy-yellow" />
             <h3 className="text-2xl font-bold">
-              {language === 'es' ? '🎓 Recursos Educativos' : '🎓 Educational Resources'}
+              {language === 'es'
+                ? '🎓 Recursos Educativos'
+                : '🎓 Educational Resources'}
             </h3>
           </div>
           <p className="text-gray-600 mb-6">
@@ -233,7 +238,9 @@ export default function TeacherDashboard() {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Gamepad2 className="w-5 h-5 text-indigo-600" />
-                  {language === 'es' ? 'Recursos Adicionales' : 'Additional Resources'}
+                  {language === 'es'
+                    ? 'Recursos Adicionales'
+                    : 'Additional Resources'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -277,7 +284,10 @@ export default function TeacherDashboard() {
                     <span className="font-semibold">12/15</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-amber-500 h-2 rounded-full" style={{ width: '80%' }} />
+                    <div
+                      className="bg-amber-500 h-2 rounded-full"
+                      style={{ width: '80%' }}
+                    />
                   </div>
                   <p className="text-xs text-gray-600">
                     {language === 'es'
@@ -302,24 +312,38 @@ export default function TeacherDashboard() {
                 {language === 'es' ? 'Actividad Reciente' : 'Recent Activity'}
               </CardTitle>
               <CardDescription>
-                {language === 'es' ? 'Últimas actividades de tus estudiantes' : 'Latest student activities'}
+                {language === 'es'
+                  ? 'Últimas actividades de tus estudiantes'
+                  : 'Latest student activities'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <ActivityItem
                   student="María González"
-                  action={language === 'es' ? 'Completó Quiz de Matemáticas' : 'Completed Math Quiz'}
+                  action={
+                    language === 'es'
+                      ? 'Completó Quiz de Matemáticas'
+                      : 'Completed Math Quiz'
+                  }
                   time="Hace 2 horas"
                 />
                 <ActivityItem
                   student="Carlos Ruiz"
-                  action={language === 'es' ? 'Subió de nivel en Ciencias' : 'Leveled up in Science'}
+                  action={
+                    language === 'es'
+                      ? 'Subió de nivel en Ciencias'
+                      : 'Leveled up in Science'
+                  }
                   time="Hace 4 horas"
                 />
                 <ActivityItem
                   student="Ana López"
-                  action={language === 'es' ? 'Preguntó al tutor IA' : 'Asked AI tutor'}
+                  action={
+                    language === 'es'
+                      ? 'Preguntó al tutor IA'
+                      : 'Asked AI tutor'
+                  }
                   time="Hace 6 horas"
                 />
               </div>
@@ -333,14 +357,18 @@ export default function TeacherDashboard() {
                 {language === 'es' ? 'Tareas Pendientes' : 'Pending Tasks'}
               </CardTitle>
               <CardDescription>
-                {language === 'es' ? 'Tareas que requieren tu atención' : 'Tasks requiring your attention'}
+                {language === 'es'
+                  ? 'Tareas que requieren tu atención'
+                  : 'Tasks requiring your attention'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold mb-2">
-                    {language === 'es' ? '📝 Revisar Tareas' : '📝 Review Assignments'}
+                    {language === 'es'
+                      ? '📝 Revisar Tareas'
+                      : '📝 Review Assignments'}
                   </h4>
                   <p className="text-sm text-gray-600 mb-3">
                     {language === 'es'
@@ -354,7 +382,9 @@ export default function TeacherDashboard() {
 
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold mb-2">
-                    {language === 'es' ? '📊 Crear Reporte' : '📊 Create Report'}
+                    {language === 'es'
+                      ? '📊 Crear Reporte'
+                      : '📊 Create Report'}
                   </h4>
                   <p className="text-sm text-gray-600 mb-3">
                     {language === 'es'
@@ -371,10 +401,18 @@ export default function TeacherDashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-function ActivityItem({ student, action, time }: { student: string, action: string, time: string }) {
+function ActivityItem({
+  student,
+  action,
+  time,
+}: {
+  student: string;
+  action: string;
+  time: string;
+}) {
   return (
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 bg-fuzzy-purple/10 rounded-full flex items-center justify-center">
@@ -386,5 +424,5 @@ function ActivityItem({ student, action, time }: { student: string, action: stri
       </div>
       <span className="text-xs text-gray-400">{time}</span>
     </div>
-  )
+  );
 }

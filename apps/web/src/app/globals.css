@@ -60,7 +60,7 @@
 
 @layer utilities {
   .fuzzy-gradient {
-    background: linear-gradient(135deg, #8B5CF6 0%, #10B981 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #10b981 100%);
   }
 
   .fuzzy-text-gradient {
@@ -77,34 +77,34 @@
 
   /* Asegurar que los colores fuzzy estén disponibles */
   .text-fuzzy-purple {
-    color: #8B5CF6;
+    color: #8b5cf6;
   }
-  
+
   .text-fuzzy-green {
-    color: #10B981;
+    color: #10b981;
   }
-  
+
   .text-fuzzy-blue {
-    color: #3B82F6;
+    color: #3b82f6;
   }
-  
+
   .text-fuzzy-yellow {
-    color: #F59E0B;
+    color: #f59e0b;
   }
-  
+
   .bg-fuzzy-purple {
-    background-color: #8B5CF6;
+    background-color: #8b5cf6;
   }
-  
+
   .bg-fuzzy-green {
-    background-color: #10B981;
+    background-color: #10b981;
   }
-  
+
   .bg-fuzzy-blue {
-    background-color: #3B82F6;
+    background-color: #3b82f6;
   }
-  
+
   .bg-fuzzy-yellow {
-    background-color: #F59E0B;
+    background-color: #f59e0b;
   }
 }

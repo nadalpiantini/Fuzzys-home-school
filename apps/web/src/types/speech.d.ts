@@ -8,8 +8,14 @@ interface SpeechRecognition extends EventTarget {
   start(): void;
   stop(): void;
   abort(): void;
-  addEventListener(type: string, listener: (event: SpeechRecognitionEvent) => void): void;
-  removeEventListener(type: string, listener: (event: SpeechRecognitionEvent) => void): void;
+  addEventListener(
+    type: string,
+    listener: (event: SpeechRecognitionEvent) => void,
+  ): void;
+  removeEventListener(
+    type: string,
+    listener: (event: SpeechRecognitionEvent) => void,
+  ): void;
 }
 
 interface SpeechRecognitionEvent extends Event {

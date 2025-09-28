@@ -1,7 +1,13 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Map,
   QrCode,
@@ -10,12 +16,12 @@ import {
   Users,
   Target,
   Compass,
-  Award
-} from 'lucide-react'
-import { useTranslation } from '@/hooks/useTranslation'
+  Award,
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ColonialRallyPage() {
-  const { t, language } = useTranslation()
+  const { t, language } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
@@ -44,16 +50,14 @@ export default function ColonialRallyPage() {
         {/* Welcome Section */}
         <div className="mb-8 text-center">
           <h2 className="text-4xl font-bold mb-4">
-            {language === 'es' 
+            {language === 'es'
               ? 'Explora la Zona Colonial'
-              : 'Explore the Colonial Zone'
-            }
+              : 'Explore the Colonial Zone'}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             {language === 'es'
               ? 'Descubre la historia de Santo Domingo a través de códigos QR y realidad aumentada'
-              : 'Discover Santo Domingo\'s history through QR codes and augmented reality'
-            }
+              : "Discover Santo Domingo's history through QR codes and augmented reality"}
           </p>
         </div>
 
@@ -155,55 +159,69 @@ export default function ColonialRallyPage() {
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <HistoricalSiteCard
-              name={language === 'es' ? 'Catedral Primada' : 'Primada Cathedral'}
-              description={language === 'es' 
-                ? 'Primera catedral de América'
-                : 'First cathedral in the Americas'
+              name={
+                language === 'es' ? 'Catedral Primada' : 'Primada Cathedral'
+              }
+              description={
+                language === 'es'
+                  ? 'Primera catedral de América'
+                  : 'First cathedral in the Americas'
               }
               status="visited"
               points={150}
             />
             <HistoricalSiteCard
               name={language === 'es' ? 'Alcázar de Colón' : 'Columbus Alcazar'}
-              description={language === 'es'
-                ? 'Residencia del virrey Diego Colón'
-                : 'Residence of Viceroy Diego Columbus'
+              description={
+                language === 'es'
+                  ? 'Residencia del virrey Diego Colón'
+                  : 'Residence of Viceroy Diego Columbus'
               }
               status="visited"
               points={200}
             />
             <HistoricalSiteCard
               name={language === 'es' ? 'Fortaleza Ozama' : 'Ozama Fortress'}
-              description={language === 'es'
-                ? 'Primera fortaleza militar de América'
-                : 'First military fortress in the Americas'
+              description={
+                language === 'es'
+                  ? 'Primera fortaleza militar de América'
+                  : 'First military fortress in the Americas'
               }
               status="available"
               points={100}
             />
             <HistoricalSiteCard
               name={language === 'es' ? 'Casa del Cordón' : 'Casa del Cordón'}
-              description={language === 'es'
-                ? 'Primera casa de piedra de América'
-                : 'First stone house in the Americas'
+              description={
+                language === 'es'
+                  ? 'Primera casa de piedra de América'
+                  : 'First stone house in the Americas'
               }
               status="locked"
               points={75}
             />
             <HistoricalSiteCard
-              name={language === 'es' ? 'Museo de las Casas Reales' : 'Museum of Royal Houses'}
-              description={language === 'es'
-                ? 'Antigua sede del gobierno colonial'
-                : 'Former colonial government headquarters'
+              name={
+                language === 'es'
+                  ? 'Museo de las Casas Reales'
+                  : 'Museum of Royal Houses'
+              }
+              description={
+                language === 'es'
+                  ? 'Antigua sede del gobierno colonial'
+                  : 'Former colonial government headquarters'
               }
               status="locked"
               points={125}
             />
             <HistoricalSiteCard
-              name={language === 'es' ? 'Panteón Nacional' : 'National Pantheon'}
-              description={language === 'es'
-                ? 'Mausoleo de los héroes nacionales'
-                : 'Mausoleum of national heroes'
+              name={
+                language === 'es' ? 'Panteón Nacional' : 'National Pantheon'
+              }
+              description={
+                language === 'es'
+                  ? 'Mausoleo de los héroes nacionales'
+                  : 'Mausoleum of national heroes'
               }
               status="locked"
               points={175}
@@ -212,42 +230,52 @@ export default function ColonialRallyPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-function HistoricalSiteCard({ 
-  name, 
-  description, 
-  status, 
-  points 
-}: { 
-  name: string, 
-  description: string, 
-  status: 'visited' | 'available' | 'locked', 
-  points: number 
+function HistoricalSiteCard({
+  name,
+  description,
+  status,
+  points,
+}: {
+  name: string;
+  description: string;
+  status: 'visited' | 'available' | 'locked';
+  points: number;
 }) {
   const getStatusColor = () => {
     switch (status) {
-      case 'visited': return 'bg-green-100 text-green-800'
-      case 'available': return 'bg-blue-100 text-blue-800'
-      case 'locked': return 'bg-gray-100 text-gray-800'
+      case 'visited':
+        return 'bg-green-100 text-green-800';
+      case 'available':
+        return 'bg-blue-100 text-blue-800';
+      case 'locked':
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
   const getStatusText = () => {
     switch (status) {
-      case 'visited': return 'Visitado'
-      case 'available': return 'Disponible'
-      case 'locked': return 'Bloqueado'
+      case 'visited':
+        return 'Visitado';
+      case 'available':
+        return 'Disponible';
+      case 'locked':
+        return 'Bloqueado';
     }
-  }
+  };
 
   return (
-    <Card className={`${status === 'locked' ? 'opacity-60' : 'card-hover cursor-pointer'}`}>
+    <Card
+      className={`${status === 'locked' ? 'opacity-60' : 'card-hover cursor-pointer'}`}
+    >
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg">{name}</CardTitle>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor()}`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor()}`}
+          >
             {getStatusText()}
           </span>
         </div>
@@ -267,5 +295,5 @@ function HistoricalSiteCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

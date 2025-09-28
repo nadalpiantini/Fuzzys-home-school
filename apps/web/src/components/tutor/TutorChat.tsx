@@ -14,7 +14,7 @@ import {
   MessageSquare,
   Bot,
   User,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 
 interface Message {
@@ -22,7 +22,12 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  type?: 'explanation' | 'socratic_question' | 'example' | 'step_by_step' | 'encouragement';
+  type?:
+    | 'explanation'
+    | 'socratic_question'
+    | 'example'
+    | 'step_by_step'
+    | 'encouragement';
   followUpSuggestions?: string[];
   visualElements?: Array<{
     type: 'diagram' | 'image' | 'animation' | 'interactive';
@@ -48,7 +53,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   subject,
   studentProfile,
   onSessionEnd,
-  className = ''
+  className = '',
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -98,8 +103,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           action: 'start_session',
           userId: 'current_user', // Would come from auth context
           subject,
-          studentProfile
-        })
+          studentProfile,
+        }),
       });
 
       const data = await response.json();
@@ -113,7 +118,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           role: 'assistant',
           content: data.data.welcomeMessage,
           timestamp: new Date(),
-          type: 'encouragement'
+          type: 'encouragement',
         };
 
         setMessages([welcomeMessage]);
@@ -141,10 +146,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
       id: Date.now().toString(),
       role: 'user',
       content: messageText,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInputText('');
     setIsLoading(true);
 
@@ -157,9 +162,9 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           sessionId,
           query: messageText,
           metadata: {
-            concept: currentConcept
-          }
-        })
+            concept: currentConcept,
+          },
+        }),
       });
 
       const data = await response.json();
@@ -172,10 +177,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           timestamp: new Date(),
           type: data.data.type,
           followUpSuggestions: data.data.followUpSuggestions,
-          visualElements: data.data.visualElements
+          visualElements: data.data.visualElements,
         };
 
-        setMessages(prev => [...prev, assistantMessage]);
+        setMessages((prev) => [...prev, assistantMessage]);
       } else {
         throw new Error(data.error);
       }
@@ -185,12 +190,13 @@ export const TutorChat: React.FC<TutorChatProps> = ({
       const errorMessage: Message = {
         id: Date.now().toString() + '_error',
         role: 'assistant',
-        content: 'Lo siento, tuve un problema técnico. ¿Puedes intentar de nuevo?',
+        content:
+          'Lo siento, tuve un problema técnico. ¿Puedes intentar de nuevo?',
         timestamp: new Date(),
-        type: 'explanation'
+        type: 'explanation',
       };
 
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -229,8 +235,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({
         body: JSON.stringify({
           action: 'step_by_step',
           sessionId,
-          concept: currentConcept
-        })
+          concept: currentConcept,
+        }),
       });
 
       const data = await response.json();
@@ -242,10 +248,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           content: data.data.response,
           timestamp: new Date(),
           type: 'step_by_step',
-          followUpSuggestions: data.data.followUpSuggestions
+          followUpSuggestions: data.data.followUpSuggestions,
         };
 
-        setMessages(prev => [...prev, stepByStepMessage]);
+        setMessages((prev) => [...prev, stepByStepMessage]);
       }
     } catch (error) {
       console.error('Error requesting step by step:', error);
@@ -254,7 +260,9 @@ export const TutorChat: React.FC<TutorChatProps> = ({
     }
   };
 
-  const requestExamples = async (type: 'local' | 'visual' | 'analogies' = 'local') => {
+  const requestExamples = async (
+    type: 'local' | 'visual' | 'analogies' = 'local',
+  ) => {
     if (!currentConcept) {
       sendMessage(`Dame ejemplos de lo que estábamos viendo`);
       return;
@@ -269,8 +277,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           action: 'request_examples',
           sessionId,
           concept: currentConcept,
-          type
-        })
+          type,
+        }),
       });
 
       const data = await response.json();
@@ -281,10 +289,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           role: 'assistant',
           content: data.data.response,
           timestamp: new Date(),
-          type: 'example'
+          type: 'example',
         };
 
-        setMessages(prev => [...prev, exampleMessage]);
+        setMessages((prev) => [...prev, exampleMessage]);
       }
     } catch (error) {
       console.error('Error requesting examples:', error);
@@ -302,8 +310,8 @@ export const TutorChat: React.FC<TutorChatProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'end_session',
-          sessionId
-        })
+          sessionId,
+        }),
       });
 
       const data = await response.json();
@@ -334,7 +342,7 @@ export const TutorChat: React.FC<TutorChatProps> = ({
   const formatTimestamp = (timestamp: Date) => {
     return timestamp.toLocaleTimeString('es-DO', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -347,9 +355,13 @@ export const TutorChat: React.FC<TutorChatProps> = ({
             <Bot className="w-6 h-6" />
           </div>
           <div>
-            <h3 className="font-semibold text-lg">Fuzzy - Tu Tutor de {subject}</h3>
+            <h3 className="font-semibold text-lg">
+              Fuzzy - Tu Tutor de {subject}
+            </h3>
             <p className="text-blue-100 text-sm">
-              {studentProfile ? `Grado ${studentProfile.grade} • ${studentProfile.learningStyle}` : 'Tutor personalizado'}
+              {studentProfile
+                ? `Grado ${studentProfile.grade} • ${studentProfile.learningStyle}`
+                : 'Tutor personalizado'}
             </p>
           </div>
         </div>
@@ -385,7 +397,10 @@ export const TutorChat: React.FC<TutorChatProps> = ({
               {message.visualElements && message.visualElements.length > 0 && (
                 <div className="visual-elements mt-3 space-y-2">
                   {message.visualElements.map((element, index) => (
-                    <div key={index} className="visual-element p-2 bg-blue-50 rounded border">
+                    <div
+                      key={index}
+                      className="visual-element p-2 bg-blue-50 rounded border"
+                    >
                       <div className="flex items-center gap-2 text-xs text-blue-700">
                         <span className="font-medium">{element.type}:</span>
                         <span>{element.description}</span>
@@ -405,24 +420,29 @@ export const TutorChat: React.FC<TutorChatProps> = ({
               )}
 
               {/* Follow-up Suggestions */}
-              {message.followUpSuggestions && message.followUpSuggestions.length > 0 && (
-                <div className="follow-up-suggestions mt-3 space-y-1">
-                  <div className="text-xs text-gray-600 font-medium">Sugerencias:</div>
-                  {message.followUpSuggestions.map((suggestion, index) => (
-                    <button
-                      key={index}
-                      onClick={() => sendMessage(suggestion)}
-                      className="block w-full text-left text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {message.followUpSuggestions &&
+                message.followUpSuggestions.length > 0 && (
+                  <div className="follow-up-suggestions mt-3 space-y-1">
+                    <div className="text-xs text-gray-600 font-medium">
+                      Sugerencias:
+                    </div>
+                    {message.followUpSuggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        onClick={() => sendMessage(suggestion)}
+                        className="block w-full text-left text-xs bg-gray-100 hover:bg-gray-200 p-2 rounded transition-colors"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
 
-              <div className={`text-xs mt-2 ${
-                message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
-              }`}>
+              <div
+                className={`text-xs mt-2 ${
+                  message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
+                }`}
+              >
                 {formatTimestamp(message.timestamp)}
               </div>
             </div>
@@ -441,7 +461,9 @@ export const TutorChat: React.FC<TutorChatProps> = ({
               <Loader2 className="w-4 h-4 animate-spin" />
             </div>
             <div className="message-content bg-white border border-gray-200 rounded-r-lg rounded-tl-lg shadow-sm p-3">
-              <div className="text-sm text-gray-500">Fuzzy está pensando...</div>
+              <div className="text-sm text-gray-500">
+                Fuzzy está pensando...
+              </div>
             </div>
           </div>
         )}
@@ -475,7 +497,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => sendMessage('¿Puedes hacerme unas preguntas para verificar si entendí?')}
+            onClick={() =>
+              sendMessage(
+                '¿Puedes hacerme unas preguntas para verificar si entendí?',
+              )
+            }
             disabled={isLoading}
             className="text-xs"
           >
@@ -513,7 +539,11 @@ export const TutorChat: React.FC<TutorChatProps> = ({
             disabled={isLoading || !recognition.current}
             className={isListening ? 'bg-red-50 border-red-300' : ''}
           >
-            {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            {isListening ? (
+              <MicOff className="w-4 h-4" />
+            ) : (
+              <Mic className="w-4 h-4" />
+            )}
           </Button>
 
           <Button

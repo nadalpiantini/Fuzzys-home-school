@@ -18,8 +18,8 @@ export default function ExternalGames() {
         </CardHeader>
         <CardContent>
           <p className="text-gray-600">
-            Las integraciones con herramientas externas están siendo configuradas.
-            Pronto podrás acceder a:
+            Las integraciones con herramientas externas están siendo
+            configuradas. Pronto podrás acceder a:
           </p>
           <ul className="mt-4 space-y-2 text-sm">
             <li>• Simulaciones PhET Interactive</li>

@@ -45,11 +45,11 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
   quizId,
   onJoin,
   onStart,
-  onAnswer
+  onAnswer,
 }) => {
   const [gameState, setGameState] = useState<GameState>({
     status: 'waiting',
-    players: []
+    players: [],
   });
 
   const [joinPin, setJoinPin] = useState('');
@@ -65,8 +65,8 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
         pin: '123456',
         players: [
           { id: '1', nickname: 'Juan', score: 0, answered: false },
-          { id: '2', nickname: 'María', score: 0, answered: false }
-        ]
+          { id: '2', nickname: 'María', score: 0, answered: false },
+        ],
       });
     }
   }, [mode, quizId]);
@@ -81,7 +81,7 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
     if (onStart) {
       onStart();
     }
-    setGameState(prev => ({
+    setGameState((prev) => ({
       ...prev,
       status: 'question',
       questionNumber: 1,
@@ -95,10 +95,10 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
           { id: 'a', text: 'Santo Domingo' },
           { id: 'b', text: 'Santiago' },
           { id: 'c', text: 'La Romana' },
-          { id: 'd', text: 'Puerto Plata' }
+          { id: 'd', text: 'Puerto Plata' },
         ],
-        timeLimit: 30
-      }
+        timeLimit: 30,
+      },
     }));
   };
 
@@ -114,7 +114,7 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
       a: 'bg-red-500 hover:bg-red-600',
       b: 'bg-blue-500 hover:bg-blue-600',
       c: 'bg-yellow-500 hover:bg-yellow-600',
-      d: 'bg-green-500 hover:bg-green-600'
+      d: 'bg-green-500 hover:bg-green-600',
     };
     return colors[choiceId as keyof typeof colors] || 'bg-gray-500';
   };
@@ -140,8 +140,11 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {gameState.players.map(player => (
-                <div key={player.id} className="bg-white px-3 py-2 rounded-lg shadow-sm">
+              {gameState.players.map((player) => (
+                <div
+                  key={player.id}
+                  className="bg-white px-3 py-2 rounded-lg shadow-sm"
+                >
                   <User className="inline w-4 h-4 mr-1" />
                   {player.nickname}
                 </div>
@@ -179,10 +182,12 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
           </div>
 
           <div className="text-center">
-            <h3 className="text-2xl font-bold mb-6">{gameState.currentQuestion?.stem}</h3>
+            <h3 className="text-2xl font-bold mb-6">
+              {gameState.currentQuestion?.stem}
+            </h3>
 
             <div className="grid grid-cols-2 gap-4">
-              {gameState.currentQuestion?.choices.map(choice => (
+              {gameState.currentQuestion?.choices.map((choice) => (
                 <div
                   key={choice.id}
                   className={`p-6 rounded-lg text-white font-medium ${getAnswerButtonColor(choice.id)}`}
@@ -195,7 +200,8 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
 
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="text-center text-gray-600">
-              {gameState.players.filter(p => p.answered).length} de {gameState.players.length} jugadores han respondido
+              {gameState.players.filter((p) => p.answered).length} de{' '}
+              {gameState.players.length} jugadores han respondido
             </p>
           </div>
         </div>
@@ -211,7 +217,9 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
           <h2 className="text-2xl font-bold text-center">Unirse al Quiz</h2>
 
           <div>
-            <label className="block text-sm font-medium mb-2">PIN del juego</label>
+            <label className="block text-sm font-medium mb-2">
+              PIN del juego
+            </label>
             <Input
               type="text"
               value={joinPin}
@@ -261,10 +269,12 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
 
           {!hasAnswered ? (
             <>
-              <p className="text-center text-gray-600">Selecciona tu respuesta:</p>
+              <p className="text-center text-gray-600">
+                Selecciona tu respuesta:
+              </p>
 
               <div className="grid grid-cols-2 gap-3">
-                {['a', 'b', 'c', 'd'].map(choice => (
+                {['a', 'b', 'c', 'd'].map((choice) => (
                   <Button
                     key={choice}
                     onClick={() => {
@@ -273,7 +283,9 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
                     }}
                     className={`h-24 ${getAnswerButtonColor(choice)} text-white`}
                   >
-                    <span className="text-3xl font-bold">{choice.toUpperCase()}</span>
+                    <span className="text-3xl font-bold">
+                      {choice.toUpperCase()}
+                    </span>
                   </Button>
                 ))}
               </div>
@@ -282,7 +294,9 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
             <div className="text-center py-12">
               <div className="text-6xl mb-4">✓</div>
               <p className="text-xl font-medium">¡Respuesta enviada!</p>
-              <p className="text-gray-600 mt-2">Esperando a los demás jugadores...</p>
+              <p className="text-gray-600 mt-2">
+                Esperando a los demás jugadores...
+              </p>
             </div>
           )}
         </div>
@@ -305,9 +319,13 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
               <div
                 key={player.id}
                 className={`flex items-center justify-between p-4 rounded-lg ${
-                  index === 0 ? 'bg-yellow-100' :
-                  index === 1 ? 'bg-gray-100' :
-                  index === 2 ? 'bg-orange-100' : 'bg-white'
+                  index === 0
+                    ? 'bg-yellow-100'
+                    : index === 1
+                      ? 'bg-gray-100'
+                      : index === 2
+                        ? 'bg-orange-100'
+                        : 'bg-white'
                 }`}
               >
                 <div className="flex items-center space-x-3">

@@ -14,9 +14,10 @@ export const translations = {
       success: 'Éxito',
     },
     home: {
-      title: 'Fuzzy\'s Home School',
+      title: "Fuzzy's Home School",
       tagline: 'Aprende Jugando, Explora Aprendiendo',
-      description: 'Plataforma educativa con tutor IA, juegos interactivos y rally de exploración en la Zona Colonial',
+      description:
+        'Plataforma educativa con tutor IA, juegos interactivos y rally de exploración en la Zona Colonial',
       studentRole: 'Soy Estudiante',
       teacherRole: 'Soy Profesor',
       colonialRally: 'Rally Colonial',
@@ -76,7 +77,7 @@ export const translations = {
       locations: 'Ubicaciones',
       rewards: 'Recompensas',
       leaderboard: 'Clasificación',
-    }
+    },
   },
   en: {
     common: {
@@ -93,11 +94,12 @@ export const translations = {
       success: 'Success',
     },
     home: {
-      title: 'Fuzzy\'s Home School',
+      title: "Fuzzy's Home School",
       tagline: 'Learn by Playing, Explore by Learning',
-      description: 'Educational platform with AI tutor, interactive games, and Colonial Zone exploration rally',
-      studentRole: 'I\'m a Student',
-      teacherRole: 'I\'m a Teacher',
+      description:
+        'Educational platform with AI tutor, interactive games, and Colonial Zone exploration rally',
+      studentRole: "I'm a Student",
+      teacherRole: "I'm a Teacher",
       colonialRally: 'Colonial Rally',
       studentDescription: 'Access your AI tutor and educational games',
       teacherDescription: 'Manage classes and create educational content',
@@ -155,6 +157,6 @@ export const translations = {
       locations: 'Locations',
       rewards: 'Rewards',
       leaderboard: 'Leaderboard',
-    }
-  }
-}
+    },
+  },
+};

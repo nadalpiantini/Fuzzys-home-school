@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Check, X, Eye, EyeOff } from 'lucide-react';
-import type { TimelineGame } from '@fuzzy/game-engine';
+import type { TimelineGame } from '@/types/game-types';
 
 interface TimelineProps {
   game: TimelineGame;
@@ -23,7 +23,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const safeEvents = game.events ?? [];
   const [events, setEvents] = useState(safeEvents);
@@ -58,7 +58,7 @@ export const Timeline: React.FC<TimelineProps> = ({
     e.preventDefault();
     if (!draggedEvent || showFeedback) return;
 
-    const draggedIndex = events.findIndex(event => event.id === draggedEvent);
+    const draggedIndex = events.findIndex((event) => event.id === draggedEvent);
     if (draggedIndex === dropIndex) {
       setDraggedEvent(null);
       setDragOverIndex(null);
@@ -75,7 +75,9 @@ export const Timeline: React.FC<TimelineProps> = ({
   };
 
   const handleSubmit = () => {
-    const currentOrder = (events ?? []).map(event => event?.id).filter((id): id is string => Boolean(id));
+    const currentOrder = (events ?? [])
+      .map((event) => event?.id)
+      .filter((id): id is string => Boolean(id));
     onAnswer(currentOrder);
   };
 
@@ -92,10 +94,13 @@ export const Timeline: React.FC<TimelineProps> = ({
     }
 
     const eventId = events[index]?.id;
-    const correctOrder = [...safeEvents].sort((a, b) =>
-      new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime()
+    const correctOrder = [...safeEvents].sort(
+      (a, b) =>
+        new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime(),
     );
-    const correctIndex = correctOrder.findIndex(event => event.id === eventId);
+    const correctIndex = correctOrder.findIndex(
+      (event) => event.id === eventId,
+    );
 
     if (correctIndex === index) {
       return 'border-green-500 bg-green-50';
@@ -108,10 +113,13 @@ export const Timeline: React.FC<TimelineProps> = ({
     if (!showFeedback) return null;
 
     const eventId = events[index]?.id;
-    const correctOrder = [...safeEvents].sort((a, b) =>
-      new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime()
+    const correctOrder = [...safeEvents].sort(
+      (a, b) =>
+        new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime(),
     );
-    const correctIndex = correctOrder.findIndex(event => event.id === eventId);
+    const correctIndex = correctOrder.findIndex(
+      (event) => event.id === eventId,
+    );
 
     if (correctIndex === index) {
       return <Check className="w-5 h-5 text-green-600" />;
@@ -126,7 +134,7 @@ export const Timeline: React.FC<TimelineProps> = ({
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -180,7 +188,9 @@ export const Timeline: React.FC<TimelineProps> = ({
                   {/* Timeline Marker */}
                   <div className="relative z-10">
                     <div className="w-16 h-16 rounded-full bg-white border-4 border-blue-500 flex items-center justify-center">
-                      <span className="font-bold text-blue-600">{index + 1}</span>
+                      <span className="font-bold text-blue-600">
+                        {index + 1}
+                      </span>
                     </div>
                     {getEventIcon(index) && (
                       <div className="absolute -top-2 -right-2 bg-white rounded-full p-1">
@@ -202,7 +212,9 @@ export const Timeline: React.FC<TimelineProps> = ({
                       )}
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
-                          <h4 className="font-semibold text-lg">{event.title}</h4>
+                          <h4 className="font-semibold text-lg">
+                            {event.title}
+                          </h4>
                           {(showDates || showFeedback) && (
                             <div className="flex items-center gap-1 text-sm text-gray-500">
                               <Calendar className="w-4 h-4" />
@@ -225,9 +237,13 @@ export const Timeline: React.FC<TimelineProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Perfecto! Los eventos están en el orden correcto.' : 'El orden no es correcto.'}
+              {feedback.correct
+                ? '¡Perfecto! Los eventos están en el orden correcto.'
+                : 'El orden no es correcto.'}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -237,10 +253,7 @@ export const Timeline: React.FC<TimelineProps> = ({
 
         <div className="flex justify-between mt-6">
           {!showFeedback ? (
-            <Button
-              onClick={handleSubmit}
-              className="ml-auto"
-            >
+            <Button onClick={handleSubmit} className="ml-auto">
               Verificar Orden
             </Button>
           ) : (

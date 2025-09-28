@@ -3,7 +3,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, RotateCcw, BookOpen, Brain, Clock, TrendingUp, Star } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  RotateCcw,
+  BookOpen,
+  Brain,
+  Clock,
+  TrendingUp,
+  Star,
+} from 'lucide-react';
 
 interface SRSCard {
   id: string;
@@ -31,7 +40,9 @@ interface FlashcardsSRSGame {
 
 interface FlashcardsSRSProps {
   game: FlashcardsSRSGame;
-  onAnswer: (results: { cardId: string; quality: number; nextDue: Date }[]) => void;
+  onAnswer: (
+    results: { cardId: string; quality: number; nextDue: Date }[],
+  ) => void;
   onNext?: () => void;
   showFeedback?: boolean;
   feedback?: {
@@ -42,7 +53,10 @@ interface FlashcardsSRSProps {
 }
 
 // SM-2 Algorithm implementation
-const calculateNextReview = (card: SRSCard, quality: number): { easeFactor: number; interval: number; repetitions: number } => {
+const calculateNextReview = (
+  card: SRSCard,
+  quality: number,
+): { easeFactor: number; interval: number; repetitions: number } => {
   let { easeFactor, interval, repetitions } = card;
 
   // If quality < 3, reset repetitions
@@ -62,7 +76,10 @@ const calculateNextReview = (card: SRSCard, quality: number): { easeFactor: numb
   }
 
   // Update ease factor
-  easeFactor = Math.max(1.3, easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  easeFactor = Math.max(
+    1.3,
+    easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)),
+  );
 
   return { easeFactor, interval, repetitions };
 };
@@ -91,11 +108,13 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [results, setResults] = useState<{ cardId: string; quality: number; nextDue: Date }[]>([]);
+  const [results, setResults] = useState<
+    { cardId: string; quality: number; nextDue: Date }[]
+  >([]);
   const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
   const [sessionCards, setSessionCards] = useState<SRSCard[]>([]);
 
@@ -106,10 +125,10 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
 
     switch (game.reviewMode) {
       case 'due':
-        filteredCards = game.cards.filter(card => card.dueDate <= now);
+        filteredCards = game.cards.filter((card) => card.dueDate <= now);
         break;
       case 'new':
-        filteredCards = game.cards.filter(card => card.repetitions === 0);
+        filteredCards = game.cards.filter((card) => card.repetitions === 0);
         break;
       default:
         filteredCards = [...game.cards];
@@ -130,7 +149,7 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
   }, [game.cards, game.reviewMode, game.sessionTarget]);
 
   const currentCard = sessionCards[currentIndex];
-  const progress = ((reviewedCards.size) / sessionCards.length) * 100;
+  const progress = (reviewedCards.size / sessionCards.length) * 100;
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -139,15 +158,21 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
   const handleQualityRating = (quality: number) => {
     if (!currentCard) return;
 
-    const { easeFactor, interval, repetitions } = calculateNextReview(currentCard, quality);
+    const { easeFactor, interval, repetitions } = calculateNextReview(
+      currentCard,
+      quality,
+    );
     const nextDueDate = new Date();
     nextDueDate.setDate(nextDueDate.getDate() + interval);
 
-    const newResults = [...results, {
-      cardId: currentCard.id,
-      quality,
-      nextDue: nextDueDate
-    }];
+    const newResults = [
+      ...results,
+      {
+        cardId: currentCard.id,
+        quality,
+        nextDue: nextDueDate,
+      },
+    ];
 
     setResults(newResults);
     setReviewedCards(new Set([...reviewedCards, currentCard.id]));
@@ -161,7 +186,7 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
       dueDate: nextDueDate,
       lastReview: new Date(),
       quality,
-      leechCount: quality < 3 ? currentCard.leechCount + 1 : 0
+      leechCount: quality < 3 ? currentCard.leechCount + 1 : 0,
     };
 
     // Replace in sessionCards for immediate UI updates
@@ -201,9 +226,13 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
 
   const getSessionStats = () => {
     const now = new Date();
-    const dueCards = sessionCards.filter(card => card.dueDate <= now).length;
-    const newCards = sessionCards.filter(card => card.repetitions === 0).length;
-    const averageEase = sessionCards.reduce((sum, card) => sum + card.easeFactor, 0) / sessionCards.length;
+    const dueCards = sessionCards.filter((card) => card.dueDate <= now).length;
+    const newCards = sessionCards.filter(
+      (card) => card.repetitions === 0,
+    ).length;
+    const averageEase =
+      sessionCards.reduce((sum, card) => sum + card.easeFactor, 0) /
+      sessionCards.length;
 
     return { dueCards, newCards, averageEase };
   };
@@ -260,15 +289,21 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
         {/* Session Stats */}
         <div className="grid grid-cols-3 gap-4 p-3 bg-gray-50 rounded-lg">
           <div className="text-center">
-            <div className="text-lg font-bold text-red-600">{stats.dueCards}</div>
+            <div className="text-lg font-bold text-red-600">
+              {stats.dueCards}
+            </div>
             <div className="text-xs text-gray-600">Pendientes</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-blue-600">{stats.newCards}</div>
+            <div className="text-lg font-bold text-blue-600">
+              {stats.newCards}
+            </div>
             <div className="text-xs text-gray-600">Nuevas</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-green-600">{stats.averageEase.toFixed(1)}</div>
+            <div className="text-lg font-bold text-green-600">
+              {stats.averageEase.toFixed(1)}
+            </div>
             <div className="text-xs text-gray-600">Ease Promedio</div>
           </div>
         </div>
@@ -288,7 +323,9 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
               <Clock className="w-4 h-4" />
               <span>Próxima: {currentCard.interval}d</span>
             </div>
-            <div className={`px-2 py-1 rounded text-xs ${getDifficultyColor(currentCard.easeFactor)}`}>
+            <div
+              className={`px-2 py-1 rounded text-xs ${getDifficultyColor(currentCard.easeFactor)}`}
+            >
               {getDifficultyLabel(currentCard.easeFactor)}
             </div>
             <div className="flex items-center gap-2">
@@ -309,7 +346,9 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
               style={{ transformStyle: 'preserve-3d' }}
             >
               {/* Front of card */}
-              <Card className={`absolute inset-0 backface-hidden ${!isFlipped ? '' : 'invisible'}`}>
+              <Card
+                className={`absolute inset-0 backface-hidden ${!isFlipped ? '' : 'invisible'}`}
+              >
                 <div className="h-full flex flex-col items-center justify-center p-6">
                   <BookOpen className="w-8 h-8 mb-4 text-blue-500" />
                   {currentCard.image && (
@@ -334,7 +373,9 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
               </Card>
 
               {/* Back of card */}
-              <Card className={`absolute inset-0 backface-hidden rotate-y-180 ${isFlipped ? '' : 'invisible'}`}>
+              <Card
+                className={`absolute inset-0 backface-hidden rotate-y-180 ${isFlipped ? '' : 'invisible'}`}
+              >
                 <div className="h-full flex flex-col items-center justify-center p-6">
                   <Brain className="w-8 h-8 mb-4 text-green-500" />
                   <p className="text-xl font-medium text-center">
@@ -361,7 +402,8 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 variant="outline"
                 className="bg-red-50 hover:bg-red-100 text-red-700 text-xs py-2"
               >
-                <span className="font-bold">1</span> - Muy Difícil<br/>
+                <span className="font-bold">1</span> - Muy Difícil
+                <br />
                 <span className="text-xs opacity-75">No recordé nada</span>
               </Button>
               <Button
@@ -369,15 +411,19 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 variant="outline"
                 className="bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs py-2"
               >
-                <span className="font-bold">2</span> - Difícil<br/>
-                <span className="text-xs opacity-75">Recordé con mucha ayuda</span>
+                <span className="font-bold">2</span> - Difícil
+                <br />
+                <span className="text-xs opacity-75">
+                  Recordé con mucha ayuda
+                </span>
               </Button>
               <Button
                 onClick={() => handleQualityRating(3)}
                 variant="outline"
                 className="bg-yellow-50 hover:bg-yellow-100 text-yellow-700 text-xs py-2"
               >
-                <span className="font-bold">3</span> - Normal<br/>
+                <span className="font-bold">3</span> - Normal
+                <br />
                 <span className="text-xs opacity-75">Recordé con esfuerzo</span>
               </Button>
               <Button
@@ -385,8 +431,11 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 variant="outline"
                 className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs py-2"
               >
-                <span className="font-bold">4</span> - Bien<br/>
-                <span className="text-xs opacity-75">Recordé sin problemas</span>
+                <span className="font-bold">4</span> - Bien
+                <br />
+                <span className="text-xs opacity-75">
+                  Recordé sin problemas
+                </span>
               </Button>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -394,15 +443,19 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 onClick={() => handleQualityRating(5)}
                 className="bg-green-50 hover:bg-green-100 text-green-700 text-xs py-2"
               >
-                <span className="font-bold">5</span> - Perfecto<br/>
-                <span className="text-xs opacity-75">Respuesta inmediata y correcta</span>
+                <span className="font-bold">5</span> - Perfecto
+                <br />
+                <span className="text-xs opacity-75">
+                  Respuesta inmediata y correcta
+                </span>
               </Button>
               <Button
                 onClick={() => handleQualityRating(0)}
                 variant="outline"
                 className="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs py-2"
               >
-                <span className="font-bold">0</span> - Omitir<br/>
+                <span className="font-bold">0</span> - Omitir
+                <br />
                 <span className="text-xs opacity-75">No intenté responder</span>
               </Button>
             </div>
@@ -421,10 +474,7 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
               <ChevronLeft className="w-4 h-4" />
               Anterior
             </Button>
-            <Button
-              onClick={handleFlip}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={handleFlip} className="flex items-center gap-2">
               Voltear Tarjeta
             </Button>
             <Button
@@ -452,13 +502,16 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 <div>
                   <p className="text-sm text-gray-600">Calidad promedio</p>
                   <p className="text-2xl font-bold">
-                    {(results.reduce((sum, r) => sum + r.quality, 0) / results.length).toFixed(1)}
+                    {(
+                      results.reduce((sum, r) => sum + r.quality, 0) /
+                      results.length
+                    ).toFixed(1)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Dificultades</p>
                   <p className="text-2xl font-bold">
-                    {results.filter(r => r.quality < 3).length}
+                    {results.filter((r) => r.quality < 3).length}
                   </p>
                 </div>
               </div>
@@ -471,8 +524,13 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                 {results
                   .sort((a, b) => a.nextDue.getTime() - b.nextDue.getTime())
                   .map((result, index) => {
-                    const card = sessionCards.find(c => c.id === result.cardId);
-                    const daysUntil = Math.ceil((result.nextDue.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                    const card = sessionCards.find(
+                      (c) => c.id === result.cardId,
+                    );
+                    const daysUntil = Math.ceil(
+                      (result.nextDue.getTime() - new Date().getTime()) /
+                        (1000 * 60 * 60 * 24),
+                    );
 
                     return (
                       <div
@@ -483,7 +541,11 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
                           {card?.front.substring(0, 30)}...
                         </span>
                         <span className={`ml-2 ${getIntervalColor(daysUntil)}`}>
-                          {daysUntil === 0 ? 'Hoy' : daysUntil === 1 ? 'Mañana' : `${daysUntil}d`}
+                          {daysUntil === 0
+                            ? 'Hoy'
+                            : daysUntil === 1
+                              ? 'Mañana'
+                              : `${daysUntil}d`}
                         </span>
                       </div>
                     );
@@ -495,7 +557,9 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
               <div className="p-4 rounded-lg bg-green-50 text-green-800">
                 <p className="font-medium">¡Sesión completada!</p>
                 {feedback.mastery && (
-                  <p className="text-sm">Dominio general: {Math.round(feedback.mastery * 100)}%</p>
+                  <p className="text-sm">
+                    Dominio general: {Math.round(feedback.mastery * 100)}%
+                  </p>
                 )}
                 {feedback.explanation && (
                   <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -507,9 +571,7 @@ export const FlashcardsSRS: React.FC<FlashcardsSRSProps> = ({
 
         {showFeedback && onNext && (
           <div className="flex justify-end mt-6">
-            <Button onClick={onNext}>
-              Siguiente
-            </Button>
+            <Button onClick={onNext}>Siguiente</Button>
           </div>
         )}
       </div>

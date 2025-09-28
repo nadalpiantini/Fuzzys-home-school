@@ -18,8 +18,8 @@ export default function H5PDemo() {
         </CardHeader>
         <CardContent>
           <p className="text-gray-600">
-            Los componentes H5P interactivos están siendo integrados.
-            Pronto podrás disfrutar de:
+            Los componentes H5P interactivos están siendo integrados. Pronto
+            podrás disfrutar de:
           </p>
           <ul className="mt-4 space-y-2 text-sm">
             <li>• Contenido interactivo H5P</li>

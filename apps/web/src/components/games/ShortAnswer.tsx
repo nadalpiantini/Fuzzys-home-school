@@ -28,7 +28,7 @@ export const ShortAnswer: React.FC<ShortAnswerProps> = ({
   showFeedback = false,
   feedback,
   maxLength = 500,
-  placeholder = "Escribe tu respuesta aquí..."
+  placeholder = 'Escribe tu respuesta aquí...',
 }) => {
   const [answer, setAnswer] = useState('');
 
@@ -43,9 +43,7 @@ export const ShortAnswer: React.FC<ShortAnswerProps> = ({
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-4">
-        <div className="text-lg font-medium text-gray-900">
-          {question}
-        </div>
+        <div className="text-lg font-medium text-gray-900">{question}</div>
 
         <div className="space-y-2">
           <Textarea
@@ -66,7 +64,9 @@ export const ShortAnswer: React.FC<ShortAnswerProps> = ({
 
         {showFeedback && feedback && (
           <div className="space-y-3">
-            <div className={`p-4 rounded-lg ${feedback.score === feedback.maxScore ? 'bg-green-50' : feedback.score > 0 ? 'bg-yellow-50' : 'bg-red-50'}`}>
+            <div
+              className={`p-4 rounded-lg ${feedback.score === feedback.maxScore ? 'bg-green-50' : feedback.score > 0 ? 'bg-yellow-50' : 'bg-red-50'}`}
+            >
               <p className="font-medium">
                 Puntuación: {feedback.score}/{feedback.maxScore}
               </p>
@@ -77,7 +77,9 @@ export const ShortAnswer: React.FC<ShortAnswerProps> = ({
 
             {feedback.modelAnswer && (
               <div className="p-4 bg-blue-50 rounded-lg">
-                <p className="font-medium text-blue-900 mb-2">Respuesta modelo:</p>
+                <p className="font-medium text-blue-900 mb-2">
+                  Respuesta modelo:
+                </p>
                 <p className="text-sm text-blue-800">{feedback.modelAnswer}</p>
               </div>
             )}

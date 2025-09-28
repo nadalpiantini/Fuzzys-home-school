@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import type { GapFillGame } from '@fuzzy/game-engine';
+import type { GapFillGame } from '@/types/game-types';
 
 interface GapFillProps {
   game: GapFillGame;
@@ -25,12 +25,12 @@ export const GapFill: React.FC<GapFillProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   // Split text by gaps and create input state
   const textParts = game.text?.split('_____') || [''];
   const [answers, setAnswers] = useState<string[]>(
-    new Array(textParts.length - 1).fill('')
+    new Array(textParts.length - 1).fill(''),
   );
 
   const handleInputChange = (index: number, value: string) => {
@@ -50,7 +50,9 @@ export const GapFill: React.FC<GapFillProps> = ({
     const acceptableAnswers = feedback?.correctAnswer?.[index] || [];
     const isCorrect = game.caseSensitive
       ? acceptableAnswers.includes(userAnswer)
-      : acceptableAnswers.some(a => a.toLowerCase() === userAnswer.toLowerCase());
+      : acceptableAnswers.some(
+          (a) => a.toLowerCase() === userAnswer.toLowerCase(),
+        );
 
     return isCorrect
       ? 'border-green-500 bg-green-50'
@@ -90,9 +92,13 @@ export const GapFill: React.FC<GapFillProps> = ({
 
         {showFeedback && feedback && (
           <div className="space-y-3">
-            <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}>
+            <div
+              className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}
+            >
               <p className="font-medium">
-                {feedback.correct ? '¡Perfecto!' : `${feedback.score}/${feedback.maxScore} espacios correctos`}
+                {feedback.correct
+                  ? '¡Perfecto!'
+                  : `${feedback.score}/${feedback.maxScore} espacios correctos`}
               </p>
               {feedback.explanation && (
                 <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -101,7 +107,9 @@ export const GapFill: React.FC<GapFillProps> = ({
 
             {!feedback.correct && feedback.correctAnswer && (
               <div className="p-4 bg-blue-50 rounded-lg">
-                <p className="font-medium text-blue-900 mb-2">Respuestas correctas:</p>
+                <p className="font-medium text-blue-900 mb-2">
+                  Respuestas correctas:
+                </p>
                 <ul className="space-y-1">
                   {feedback.correctAnswer.map((acceptableAnswers, index) => (
                     <li key={index} className="text-sm text-blue-800">
@@ -118,7 +126,7 @@ export const GapFill: React.FC<GapFillProps> = ({
           {!showFeedback ? (
             <Button
               onClick={handleSubmit}
-              disabled={answers.some(a => !a.trim())}
+              disabled={answers.some((a) => !a.trim())}
               className="ml-auto"
             >
               Verificar Respuesta

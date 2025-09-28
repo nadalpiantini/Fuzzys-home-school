@@ -18,8 +18,8 @@ export default function GamesDemo() {
         </CardHeader>
         <CardContent>
           <p className="text-gray-600">
-            Los juegos educativos están siendo desarrollados.
-            Pronto tendrás acceso a:
+            Los juegos educativos están siendo desarrollados. Pronto tendrás
+            acceso a:
           </p>
           <ul className="mt-4 space-y-2 text-sm">
             <li>• Juegos de memoria y asociación</li>

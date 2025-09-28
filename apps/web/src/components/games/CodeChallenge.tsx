@@ -37,7 +37,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [code, setCode] = useState(game.starterCode || '');
   const [output, setOutput] = useState('');
@@ -62,7 +62,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
           const mockConsole = {
             log: (...args: any[]) => {
               capturedOutput += args.join(' ') + '\n';
-            }
+            },
           };
 
           func(mockConsole);
@@ -99,29 +99,56 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
 
   const getLanguageColor = () => {
     switch (game.language) {
-      case 'javascript': return 'bg-yellow-100 text-yellow-800';
-      case 'python': return 'bg-blue-100 text-blue-800';
-      case 'html': return 'bg-orange-100 text-orange-800';
-      case 'css': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'javascript':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'python':
+        return 'bg-blue-100 text-blue-800';
+      case 'html':
+        return 'bg-orange-100 text-orange-800';
+      case 'css':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getSyntaxHighlight = (text: string) => {
     // Simple syntax highlighting for demo
-    const keywords = ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'class', 'def', 'import'];
+    const keywords = [
+      'function',
+      'const',
+      'let',
+      'var',
+      'if',
+      'else',
+      'for',
+      'while',
+      'return',
+      'class',
+      'def',
+      'import',
+    ];
     let highlighted = text;
 
-    keywords.forEach(keyword => {
+    keywords.forEach((keyword) => {
       const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-      highlighted = highlighted.replace(regex, `<span class="text-blue-600 font-bold">${keyword}</span>`);
+      highlighted = highlighted.replace(
+        regex,
+        `<span class="text-blue-600 font-bold">${keyword}</span>`,
+      );
     });
 
     // Highlight strings
-    highlighted = highlighted.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, '<span class="text-green-600">$&</span>');
+    highlighted = highlighted.replace(
+      /(["'])(?:(?=(\\?))\2.)*?\1/g,
+      '<span class="text-green-600">$&</span>',
+    );
 
     // Highlight comments
-    highlighted = highlighted.replace(/(\/\/.*$)/gm, '<span class="text-gray-500">$1</span>');
+    highlighted = highlighted.replace(
+      /(\/\/.*$)/gm,
+      '<span class="text-gray-500">$1</span>',
+    );
 
     return highlighted;
   };
@@ -135,7 +162,9 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
             <Code className="w-6 h-6 text-purple-600" />
             <h3 className="text-lg font-medium text-gray-900">{game.title}</h3>
           </div>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getLanguageColor()}`}>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${getLanguageColor()}`}
+          >
             {game.language.toUpperCase()}
           </span>
         </div>
@@ -151,11 +180,7 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
             <div className="flex justify-between items-center">
               <label className="font-semibold">Tu Código:</label>
               <div className="flex gap-2">
-                <Button
-                  onClick={handleCopyCode}
-                  variant="outline"
-                  size="sm"
-                >
+                <Button onClick={handleCopyCode} variant="outline" size="sm">
                   <Copy className="w-4 h-4" />
                 </Button>
                 <Button
@@ -220,14 +245,18 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
                           <div className="flex-1">
                             <p className="font-medium">Test {index + 1}</p>
                             {testCase.description && (
-                              <p className="text-gray-600 text-xs mt-1">{testCase.description}</p>
+                              <p className="text-gray-600 text-xs mt-1">
+                                {testCase.description}
+                              </p>
                             )}
                             <div className="mt-2 space-y-1">
                               <p className="font-mono text-xs">
-                                <span className="text-gray-500">Entrada:</span> {testCase.input}
+                                <span className="text-gray-500">Entrada:</span>{' '}
+                                {testCase.input}
                               </p>
                               <p className="font-mono text-xs">
-                                <span className="text-gray-500">Esperado:</span> {testCase.expectedOutput}
+                                <span className="text-gray-500">Esperado:</span>{' '}
+                                {testCase.expectedOutput}
                               </p>
                             </div>
                           </div>
@@ -266,11 +295,13 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
             {showHints && (
               <Card className="p-4 bg-yellow-50 border-yellow-200">
                 <div className="space-y-2">
-                  {game.hints.slice(0, currentHintIndex + 1).map((hint, index) => (
-                    <p key={index} className="text-sm text-yellow-800">
-                      <span className="font-medium">{index + 1}.</span> {hint}
-                    </p>
-                  ))}
+                  {game.hints
+                    .slice(0, currentHintIndex + 1)
+                    .map((hint, index) => (
+                      <p key={index} className="text-sm text-yellow-800">
+                        <span className="font-medium">{index + 1}.</span> {hint}
+                      </p>
+                    ))}
                   {currentHintIndex < game.hints.length - 1 && (
                     <Button
                       onClick={handleShowHint}
@@ -289,7 +320,9 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
 
         {/* Feedback */}
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <div className="flex items-center gap-2">
               {feedback.correct ? (
                 <Check className="w-5 h-5" />
@@ -297,7 +330,9 @@ export const CodeChallenge: React.FC<CodeChallengeProps> = ({
                 <X className="w-5 h-5" />
               )}
               <p className="font-medium">
-                {feedback.correct ? '¡Excelente! Solución correcta.' : 'Hay algunos errores en tu código.'}
+                {feedback.correct
+                  ? '¡Excelente! Solución correcta.'
+                  : 'Hay algunos errores en tu código.'}
               </p>
             </div>
             {feedback.explanation && (

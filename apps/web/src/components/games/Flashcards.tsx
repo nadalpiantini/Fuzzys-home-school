@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, RotateCcw, BookOpen, Brain } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  RotateCcw,
+  BookOpen,
+  Brain,
+} from 'lucide-react';
 
 interface FlashcardsGame {
   type: 'flashcards';
@@ -35,15 +41,17 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [results, setResults] = useState<{ cardId: string; knew: boolean }[]>([]);
+  const [results, setResults] = useState<{ cardId: string; knew: boolean }[]>(
+    [],
+  );
   const [reviewedCards, setReviewedCards] = useState<Set<string>>(new Set());
 
   const currentCard = game.cards[currentIndex];
-  const progress = ((reviewedCards.size) / game.cards.length) * 100;
+  const progress = (reviewedCards.size / game.cards.length) * 100;
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -92,7 +100,7 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
   };
 
   const getCardResult = (cardId: string) => {
-    const result = results.find(r => r.cardId === cardId);
+    const result = results.find((r) => r.cardId === cardId);
     return result?.knew;
   };
 
@@ -101,7 +109,9 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Tarjetas de Estudio</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Tarjetas de Estudio
+            </h3>
             {game.subject && (
               <p className="text-sm text-gray-600">Tema: {game.subject}</p>
             )}
@@ -143,7 +153,9 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
               style={{ transformStyle: 'preserve-3d' }}
             >
               {/* Front of card */}
-              <Card className={`absolute inset-0 backface-hidden ${!isFlipped ? '' : 'invisible'}`}>
+              <Card
+                className={`absolute inset-0 backface-hidden ${!isFlipped ? '' : 'invisible'}`}
+              >
                 <div className="h-full flex flex-col items-center justify-center p-6">
                   <BookOpen className="w-8 h-8 mb-4 text-blue-500" />
                   {currentCard.image && (
@@ -160,7 +172,9 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
                     Click para voltear
                   </p>
                   {currentCard.difficulty && (
-                    <div className={`absolute top-4 right-4 px-2 py-1 rounded text-xs ${getDifficultyColor(currentCard.difficulty)}`}>
+                    <div
+                      className={`absolute top-4 right-4 px-2 py-1 rounded text-xs ${getDifficultyColor(currentCard.difficulty)}`}
+                    >
                       Dificultad: {Math.round(currentCard.difficulty * 100)}%
                     </div>
                   )}
@@ -168,7 +182,9 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
               </Card>
 
               {/* Back of card */}
-              <Card className={`absolute inset-0 backface-hidden rotate-y-180 ${isFlipped ? '' : 'invisible'}`}>
+              <Card
+                className={`absolute inset-0 backface-hidden rotate-y-180 ${isFlipped ? '' : 'invisible'}`}
+              >
                 <div className="h-full flex flex-col items-center justify-center p-6">
                   <Brain className="w-8 h-8 mb-4 text-green-500" />
                   <p className="text-xl font-medium text-center">
@@ -214,10 +230,7 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
               <ChevronLeft className="w-4 h-4" />
               Anterior
             </Button>
-            <Button
-              onClick={handleFlip}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={handleFlip} className="flex items-center gap-2">
               Voltear Tarjeta
             </Button>
             <Button
@@ -245,7 +258,11 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
                 <div>
                   <p className="text-sm text-gray-600">Dominio</p>
                   <p className="text-2xl font-bold">
-                    {Math.round((results.filter(r => r.knew).length / results.length) * 100)}%
+                    {Math.round(
+                      (results.filter((r) => r.knew).length / results.length) *
+                        100,
+                    )}
+                    %
                   </p>
                 </div>
               </div>
@@ -264,8 +281,8 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
                         knew === true
                           ? 'bg-green-50 border-green-300'
                           : knew === false
-                          ? 'bg-red-50 border-red-300'
-                          : 'bg-gray-50 border-gray-300'
+                            ? 'bg-red-50 border-red-300'
+                            : 'bg-gray-50 border-gray-300'
                       }`}
                     >
                       <div className="flex justify-between items-center">
@@ -273,7 +290,11 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
                           {index + 1}. {card.front}
                         </span>
                         <span className="text-xs">
-                          {knew === true ? '✓ Sabía' : knew === false ? '✗ No sabía' : 'No revisado'}
+                          {knew === true
+                            ? '✓ Sabía'
+                            : knew === false
+                              ? '✗ No sabía'
+                              : 'No revisado'}
                         </span>
                       </div>
                     </div>
@@ -286,7 +307,9 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
               <div className="p-4 rounded-lg bg-blue-50 text-blue-800">
                 <p className="font-medium">Sesión de estudio completada</p>
                 {feedback.mastery && (
-                  <p className="text-sm">Nivel de dominio: {Math.round(feedback.mastery * 100)}%</p>
+                  <p className="text-sm">
+                    Nivel de dominio: {Math.round(feedback.mastery * 100)}%
+                  </p>
                 )}
                 {feedback.explanation && (
                   <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -298,9 +321,7 @@ export const Flashcards: React.FC<FlashcardsProps> = ({
 
         {showFeedback && onNext && (
           <div className="flex justify-end mt-6">
-            <Button onClick={onNext}>
-              Siguiente
-            </Button>
+            <Button onClick={onNext}>Siguiente</Button>
           </div>
         )}
       </div>

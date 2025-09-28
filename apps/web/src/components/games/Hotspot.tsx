@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Target } from 'lucide-react';
-import type { HotspotGame } from '@fuzzy/game-engine';
+import type { HotspotGame } from '@/types/game-types';
 
 interface HotspotProps {
   game: HotspotGame;
@@ -24,7 +24,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const safeTargets = game.targets ?? [];
   const [clicks, setClicks] = useState<{ x: number; y: number }[]>([]);
@@ -51,13 +51,14 @@ export const Hotspot: React.FC<HotspotProps> = ({
   const isClickCorrect = (click: { x: number; y: number }) => {
     if (!showFeedback) return false;
 
-    return safeTargets.some(t => {
+    return safeTargets.some((t) => {
       if (
         !t?.correct ||
         typeof t.x !== 'number' ||
         typeof t.y !== 'number' ||
         typeof t.radius !== 'number'
-      ) return false;
+      )
+        return false;
 
       const distance = Math.hypot(click.x - t.x, click.y - t.y);
       return distance <= t.radius;
@@ -72,7 +73,9 @@ export const Hotspot: React.FC<HotspotProps> = ({
         </div>
 
         <p className="text-sm text-gray-600">
-          Necesitas encontrar {(safeTargets.filter(t => t?.correct).length) ?? 0} área(s) correcta(s)
+          Necesitas encontrar{' '}
+          {safeTargets.filter((t) => t?.correct).length ?? 0} área(s)
+          correcta(s)
         </p>
 
         <div
@@ -84,7 +87,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
             backgroundSize: 'contain',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            paddingBottom: '56.25%' // 16:9 aspect ratio
+            paddingBottom: '56.25%', // 16:9 aspect ratio
           }}
         >
           {/* Show clicks */}
@@ -107,11 +110,12 @@ export const Hotspot: React.FC<HotspotProps> = ({
           {/* Show correct areas when feedback is shown */}
           {showFeedback &&
             safeTargets
-              .filter(target =>
-                target?.correct &&
-                typeof target.x === 'number' &&
-                typeof target.y === 'number' &&
-                typeof target.radius === 'number'
+              .filter(
+                (target) =>
+                  target?.correct &&
+                  typeof target.x === 'number' &&
+                  typeof target.y === 'number' &&
+                  typeof target.radius === 'number',
               )
               .map((target, index) => (
                 <div
@@ -121,7 +125,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
                     left: `${target.x! - target.radius!}%`,
                     top: `${target.y! - target.radius!}%`,
                     width: `${target.radius! * 2}%`,
-                    height: `${target.radius! * 2}%`
+                    height: `${target.radius! * 2}%`,
                   }}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -132,9 +136,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            Clicks: {clicks.length}
-          </div>
+          <div className="text-sm text-gray-600">Clicks: {clicks.length}</div>
           {!showFeedback && (
             <Button variant="outline" size="sm" onClick={handleReset}>
               Reiniciar
@@ -143,9 +145,13 @@ export const Hotspot: React.FC<HotspotProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Perfecto!' : `Encontraste ${feedback.score}/${feedback.maxScore} áreas correctas`}
+              {feedback.correct
+                ? '¡Perfecto!'
+                : `Encontraste ${feedback.score}/${feedback.maxScore} áreas correctas`}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>

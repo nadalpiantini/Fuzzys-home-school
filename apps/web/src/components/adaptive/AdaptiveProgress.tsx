@@ -1,11 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { adaptiveService } from '@/services/adaptive/AdaptiveService';
+import { AdaptiveService } from '@/services/adaptive/AdaptiveService';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { TrendingUp, TrendingDown, Minus, Target, Clock, Award } from 'lucide-react';
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Target,
+  Clock,
+  Award,
+} from 'lucide-react';
 
 interface AdaptiveProgressProps {
   userId: string;
@@ -14,7 +21,7 @@ interface AdaptiveProgressProps {
 
 export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
   userId,
-  timeframe = 'month'
+  timeframe = 'month',
 }) => {
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +29,10 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
   useEffect(() => {
     const loadAnalytics = async () => {
       try {
-        const data = await adaptiveService.getProgressAnalytics(userId, timeframe);
+        const data = await AdaptiveService.getProgressAnalytics(
+          userId,
+          timeframe,
+        );
         setAnalytics(data);
       } catch (error) {
         console.error('Error loading adaptive analytics:', error);
@@ -37,7 +47,7 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
   if (loading) {
     return (
       <div className="space-y-4">
-        {[1, 2, 3].map(i => (
+        {[1, 2, 3].map((i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className="p-6">
               <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -102,7 +112,9 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Puntuación Promedio</p>
-                <p className="text-2xl font-bold">{Math.round(analytics.averageScore * 100)}%</p>
+                <p className="text-2xl font-bold">
+                  {Math.round(analytics.averageScore * 100)}%
+                </p>
               </div>
               <Award className="w-8 h-8 text-yellow-600" />
             </div>
@@ -114,7 +126,9 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Tiempo Total</p>
-                <p className="text-2xl font-bold">{Math.round(analytics.totalTimeSpent / 60)}m</p>
+                <p className="text-2xl font-bold">
+                  {Math.round(analytics.totalTimeSpent / 60)}m
+                </p>
               </div>
               <Clock className="w-8 h-8 text-purple-600" />
             </div>
@@ -126,7 +140,9 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Racha Actual</p>
-                <p className="text-2xl font-bold">{analytics.streakData.current}</p>
+                <p className="text-2xl font-bold">
+                  {analytics.streakData.current}
+                </p>
               </div>
               <div className="text-right">
                 <Badge variant="outline" className="text-xs">
@@ -145,8 +161,11 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
             Progreso General
             <Badge className={getTrendColor(analytics.progressTrend)}>
               {getTrendIcon(analytics.progressTrend)}
-              {analytics.progressTrend === 'improving' ? 'Mejorando' :
-               analytics.progressTrend === 'declining' ? 'Necesita atención' : 'Estable'}
+              {analytics.progressTrend === 'improving'
+                ? 'Mejorando'
+                : analytics.progressTrend === 'declining'
+                  ? 'Necesita atención'
+                  : 'Estable'}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -168,27 +187,34 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {Object.entries(analytics.conceptProgress).map(([concept, data]: [string, any]) => (
-              <div key={concept} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium capitalize">{concept.replace('_', ' ')}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {data.attempts} actividades
-                    </Badge>
+            {Object.entries(analytics.conceptProgress).map(
+              ([concept, data]: [string, any]) => (
+                <div key={concept} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium capitalize">
+                        {concept.replace('_', ' ')}
+                      </span>
+                      <Badge variant="outline" className="text-xs">
+                        {data.attempts} actividades
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">
+                        {Math.round(data.averageScore * 100)}%
+                      </span>
+                      <Badge
+                        className={getTrendColor(data.trend)}
+                        variant="outline"
+                      >
+                        {getTrendIcon(data.trend)}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">
-                      {Math.round(data.averageScore * 100)}%
-                    </span>
-                    <Badge className={getTrendColor(data.trend)} variant="outline">
-                      {getTrendIcon(data.trend)}
-                    </Badge>
-                  </div>
+                  <Progress value={data.averageScore * 100} className="h-2" />
                 </div>
-                <Progress value={data.averageScore * 100} className="h-2" />
-              </div>
-            ))}
+              ),
+            )}
 
             {Object.keys(analytics.conceptProgress).length === 0 && (
               <p className="text-center text-gray-500 py-4">
@@ -210,9 +236,12 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
               <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
                 <TrendingUp className="w-5 h-5 text-green-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-green-800">¡Excelente progreso!</p>
+                  <p className="font-medium text-green-800">
+                    ¡Excelente progreso!
+                  </p>
                   <p className="text-sm text-green-700">
-                    Mantienes un rendimiento muy alto. Considera intentar contenido más desafiante.
+                    Mantienes un rendimiento muy alto. Considera intentar
+                    contenido más desafiante.
                   </p>
                 </div>
               </div>
@@ -222,9 +251,12 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
               <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
                 <Target className="w-5 h-5 text-yellow-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-yellow-800">Oportunidad de mejora</p>
+                  <p className="font-medium text-yellow-800">
+                    Oportunidad de mejora
+                  </p>
                   <p className="text-sm text-yellow-700">
-                    Considera revisar los conceptos básicos y practicar más regularmente.
+                    Considera revisar los conceptos básicos y practicar más
+                    regularmente.
                   </p>
                 </div>
               </div>
@@ -234,25 +266,32 @@ export const AdaptiveProgress: React.FC<AdaptiveProgressProps> = ({
               <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
                 <Award className="w-5 h-5 text-purple-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-purple-800">¡Racha impresionante!</p>
+                  <p className="font-medium text-purple-800">
+                    ¡Racha impresionante!
+                  </p>
                   <p className="text-sm text-purple-700">
-                    Llevas {analytics.streakData.current} días consecutivos. ¡Sigue así!
+                    Llevas {analytics.streakData.current} días consecutivos.
+                    ¡Sigue así!
                   </p>
                 </div>
               </div>
             )}
 
-            {analytics.totalAttempts > 0 && analytics.totalTimeSpent / analytics.totalAttempts > 900 && (
-              <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
-                <div>
-                  <p className="font-medium text-blue-800">Aprendizaje reflexivo</p>
-                  <p className="text-sm text-blue-700">
-                    Tomas tiempo para pensar las respuestas. ¡Esto muestra un aprendizaje profundo!
-                  </p>
+            {analytics.totalAttempts > 0 &&
+              analytics.totalTimeSpent / analytics.totalAttempts > 900 && (
+                <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                  <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-blue-800">
+                      Aprendizaje reflexivo
+                    </p>
+                    <p className="text-sm text-blue-700">
+                      Tomas tiempo para pensar las respuestas. ¡Esto muestra un
+                      aprendizaje profundo!
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </CardContent>
       </Card>

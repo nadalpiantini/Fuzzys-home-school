@@ -1,9 +1,15 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Brain,
   BookOpen,
@@ -17,15 +23,15 @@ import {
   Atom,
   Blocks,
   Music,
-  MapPin
-} from 'lucide-react'
-import { useTranslation } from '@/hooks/useTranslation'
+  MapPin,
+} from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function StudentDashboard() {
-  const { t, language } = useTranslation()
-  const router = useRouter()
-  const [streak, setStreak] = useState(7)
-  const [points, setPoints] = useState(1250)
+  const { t, language } = useTranslation();
+  const router = useRouter();
+  const [streak, setStreak] = useState(7);
+  const [points, setPoints] = useState(1250);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -35,18 +41,20 @@ export default function StudentDashboard() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <Brain className="w-8 h-8 text-fuzzy-purple" />
-              <h1 className="text-2xl font-bold">
-                {t('student.dashboard')}
-              </h1>
+              <h1 className="text-2xl font-bold">{t('student.dashboard')}</h1>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Trophy className="w-5 h-5 text-fuzzy-yellow" />
-                <span className="font-semibold">{points} {t('student.points')}</span>
+                <span className="font-semibold">
+                  {points} {t('student.points')}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Target className="w-5 h-5 text-fuzzy-green" />
-                <span className="font-semibold">{streak} {t('student.streak')}</span>
+                <span className="font-semibold">
+                  {streak} {t('student.streak')}
+                </span>
               </div>
             </div>
           </div>
@@ -60,9 +68,7 @@ export default function StudentDashboard() {
           <h2 className="text-3xl font-bold mb-2">
             {t('common.welcome')}, María! 👋
           </h2>
-          <p className="text-gray-600">
-            {t('student.continueLesson')}
-          </p>
+          <p className="text-gray-600">{t('student.continueLesson')}</p>
         </div>
 
         {/* Quick Actions */}
@@ -133,7 +139,9 @@ export default function StudentDashboard() {
           <div className="flex items-center gap-2 mb-6">
             <Sparkles className="w-6 h-6 text-fuzzy-yellow" />
             <h3 className="text-2xl font-bold">
-              {language === 'es' ? '🌟 Recursos Especiales' : '🌟 Special Resources'}
+              {language === 'es'
+                ? '🌟 Recursos Especiales'
+                : '🌟 Special Resources'}
             </h3>
           </div>
           <p className="text-gray-600 mb-6">
@@ -262,14 +270,18 @@ export default function StudentDashboard() {
                 {t('student.dailyChallenge')}
               </CardTitle>
               <CardDescription>
-                {language === 'es' ? 'Completa para mantener tu racha' : 'Complete to maintain your streak'}
+                {language === 'es'
+                  ? 'Completa para mantener tu racha'
+                  : 'Complete to maintain your streak'}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold mb-2">
-                    {language === 'es' ? '🎯 Reto de Geografía' : '🎯 Geography Challenge'}
+                    {language === 'es'
+                      ? '🎯 Reto de Geografía'
+                      : '🎯 Geography Challenge'}
                   </h4>
                   <p className="text-sm text-gray-600 mb-3">
                     {language === 'es'
@@ -283,7 +295,9 @@ export default function StudentDashboard() {
 
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-semibold mb-2">
-                    {language === 'es' ? '🧮 Problema del Día' : '🧮 Problem of the Day'}
+                    {language === 'es'
+                      ? '🧮 Problema del Día'
+                      : '🧮 Problem of the Day'}
                   </h4>
                   <p className="text-sm text-gray-600 mb-3">
                     {language === 'es'
@@ -300,10 +314,18 @@ export default function StudentDashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-function ProgressItem({ subject, progress, color }: { subject: string, progress: number, color: string }) {
+function ProgressItem({
+  subject,
+  progress,
+  color,
+}: {
+  subject: string;
+  progress: number;
+  color: string;
+}) {
   return (
     <div className="flex items-center gap-3">
       <div className="flex-1">
@@ -319,5 +341,5 @@ function ProgressItem({ subject, progress, color }: { subject: string, progress:
         </div>
       </div>
     </div>
-  )
+  );
 }

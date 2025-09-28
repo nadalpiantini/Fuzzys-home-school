@@ -1,8 +1,27 @@
-import { createClient } from '@supabase/supabase-js'
+import 'server-only';
+import { createClient } from '@supabase/supabase-js';
+import { ENV } from '@/lib/env';
 
-export const createServerClient = () => {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ggntuptvqxditgxtnsex.supabase.co',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnbnR1cHR2cXhkaXRneHRuc2V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwMTAxMTYsImV4cCI6MjA3NDU4NjExNn0.pVVcvkFYRWb8STJB5OV-EQKSiPqSVO0gjfcbnCcTrt8'
-  )
+export const supabaseServer = createClient(
+  ENV.NEXT_PUBLIC_SUPABASE_URL,
+  ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  },
+);
+
+export function getServiceRoleClient() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY; // evitar tree-shake accidental
+  if (!key) throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+  return createClient(ENV.NEXT_PUBLIC_SUPABASE_URL, key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
 }

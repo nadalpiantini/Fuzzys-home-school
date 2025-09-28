@@ -1,16 +1,48 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { quizService } from '@/services/quiz/QuizService';
+import { QuizService } from '@/services/quiz/QuizService';
 import { GeneratedQuestion } from '@/types/workspace';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Brain, Target, Clock, BookOpen, Lightbulb } from 'lucide-react';
+import {
+  Sparkles,
+  Brain,
+  Target,
+  Clock,
+  BookOpen,
+  Lightbulb,
+} from 'lucide-react';
+
+// Tipos + normalizador para datos heterogéneos
+type UIQuestion = {
+  id?: string;
+  subject?: string;
+  topic?: string;
+  question: string;
+  options?: string[];
+  correctAnswer?: string | number | null;
+  [k: string]: any;
+};
+const toUI = (q: any, i: number): UIQuestion => ({
+  id: q?.id ?? String(i),
+  subject: q?.subject ?? q?.topic ?? 'general',
+  topic: q?.topic ?? q?.subject ?? 'general',
+  question: q?.question ?? q?.prompt ?? '',
+  options: Array.isArray(q?.options) ? q.options : [],
+  correctAnswer: q?.correctAnswer ?? q?.answer ?? null,
+});
 
 interface QuizGeneratorProps {
   userId: string;
@@ -25,19 +57,21 @@ const dominican_subjects = [
   { value: 'ingles', label: 'Inglés' },
   { value: 'educacion_fisica', label: 'Educación Física' },
   { value: 'educacion_artistica', label: 'Educación Artística' },
-  { value: 'formacion_humana', label: 'Formación Humana' }
+  { value: 'formacion_humana', label: 'Formación Humana' },
 ];
 
 const grades = Array.from({ length: 12 }, (_, i) => ({
   value: i + 1,
-  label: `${i + 1}° Grado`
+  label: `${i + 1}° Grado`,
 }));
 
 export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
   userId,
-  onQuizGenerated
+  onQuizGenerated,
 }) => {
-  const [mode, setMode] = useState<'adaptive' | 'curriculum' | 'topic'>('adaptive');
+  const [mode, setMode] = useState<'adaptive' | 'curriculum' | 'topic'>(
+    'adaptive',
+  );
   const [subject, setSubject] = useState('matematicas');
   const [grade, setGrade] = useState(5);
   const [topic, setTopic] = useState('');
@@ -50,7 +84,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
   const loadRecommendations = useCallback(async () => {
     try {
-      const recs = await quizService.getSubjectRecommendations(userId);
+      const recs = await QuizService.getSubjectRecommendations(userId);
       setRecommendations(recs);
     } catch (error) {
       console.error('Error loading recommendations:', error);
@@ -68,57 +102,74 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
       switch (mode) {
         case 'adaptive':
-          const adaptiveQuestions = await quizService.generateAdaptiveQuiz(
+          const adaptiveQuestions = await QuizService.generateAdaptiveQuiz(
             userId,
             subject,
-            grade,
-            questionCount
+            String(grade),
+            questionCount,
           );
-          generatedQuestions = adaptiveQuestions.map((q, index) => ({
-            ...q,
-            id: q.id || `adaptive-${index}-${Date.now()}`,
-            type: q.type || 'multiple_choice',
-            subject: q.subject || subject,
-            topic: q.topic || topic || '',
-            question: q.question || `Generated question ${index + 1}`,
-            correctAnswer: q.correctAnswer || ''
-          })) as GeneratedQuestion[];
+          const adaptiveItems: UIQuestion[] = Array.isArray(adaptiveQuestions)
+            ? adaptiveQuestions.map(toUI)
+            : [];
+          generatedQuestions = adaptiveItems.map(
+            (q: UIQuestion, index: number) => ({
+              ...q,
+              id: q.id || `adaptive-${index}-${Date.now()}`,
+              type: q.type || 'multiple_choice',
+              subject: q.subject || subject,
+              topic: q.topic || topic || '',
+              question: q.question || `Generated question ${index + 1}`,
+              correctAnswer: q.correctAnswer || '',
+            }),
+          ) as GeneratedQuestion[];
           break;
 
         case 'curriculum':
-          const curriculumQuestions = await quizService.generateCurriculumQuiz(
-            grade,
+          const curriculumQuestions = await QuizService.generateCurriculumQuiz(
+            String(grade),
             subject,
             unit,
             questionCount,
-            difficulty[0]
+            String(difficulty[0]),
           );
-          generatedQuestions = curriculumQuestions.map((q, index) => ({
-            ...q,
-            id: q.id || `curriculum-${index}-${Date.now()}`,
-            type: q.type || 'multiple_choice',
-            subject: q.subject || subject,
-            topic: q.topic || topic || '',
-            question: q.question || `Generated question ${index + 1}`,
-            correctAnswer: q.correctAnswer || ''
-          })) as GeneratedQuestion[];
+          const curriculumItems: UIQuestion[] = Array.isArray(
+            curriculumQuestions,
+          )
+            ? curriculumQuestions.map(toUI)
+            : [];
+          generatedQuestions = curriculumItems.map(
+            (q: UIQuestion, index: number) => ({
+              ...q,
+              id: q.id || `curriculum-${index}-${Date.now()}`,
+              type: q.type || 'multiple_choice',
+              subject: q.subject || subject,
+              topic: q.topic || topic || '',
+              question: q.question || `Generated question ${index + 1}`,
+              correctAnswer: q.correctAnswer || '',
+            }),
+          ) as GeneratedQuestion[];
           break;
 
         case 'topic':
-          const topicQuestions = await quizService.generateTopicQuiz(
+          const topicQuestions = await QuizService.generateTopicQuiz(
             topic,
-            difficulty[0],
-            questionCount
+            String(difficulty[0]),
+            questionCount,
           );
-          generatedQuestions = topicQuestions.map((q, index) => ({
-            ...q,
-            id: q.id || `topic-${index}-${Date.now()}`,
-            type: q.type || 'multiple_choice',
-            subject: q.subject || subject,
-            topic: q.topic || topic || '',
-            question: q.question || `Generated question ${index + 1}`,
-            correctAnswer: q.correctAnswer || ''
-          })) as GeneratedQuestion[];
+          const topicItems: UIQuestion[] = Array.isArray(topicQuestions)
+            ? topicQuestions.map(toUI)
+            : [];
+          generatedQuestions = topicItems.map(
+            (q: UIQuestion, index: number) => ({
+              ...q,
+              id: q.id || `topic-${index}-${Date.now()}`,
+              type: q.type || 'multiple_choice',
+              subject: q.subject || subject,
+              topic: q.topic || topic || '',
+              question: q.question || `Generated question ${index + 1}`,
+              correctAnswer: q.correctAnswer || '',
+            }),
+          ) as GeneratedQuestion[];
           break;
       }
 
@@ -181,7 +232,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                       {rec.subject.replace('_', ' ')}
                     </span>
                     <Badge
-                      variant={rec.priority === 'high' ? 'destructive' : 'secondary'}
+                      variant={
+                        rec.priority === 'high' ? 'destructive' : 'secondary'
+                      }
                       className="text-xs"
                     >
                       {rec.priority === 'high' ? 'Refuerzo' : 'Desafío'}
@@ -246,7 +299,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {dominican_subjects.map(subj => (
+                    {dominican_subjects.map((subj) => (
                       <SelectItem key={subj.value} value={subj.value}>
                         {subj.label}
                       </SelectItem>
@@ -257,12 +310,15 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
               <div className="space-y-2">
                 <Label>Grado</Label>
-                <Select value={grade.toString()} onValueChange={(value) => setGrade(parseInt(value))}>
+                <Select
+                  value={grade.toString()}
+                  onValueChange={(value) => setGrade(parseInt(value))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {grades.map(g => (
+                    {grades.map((g) => (
                       <SelectItem key={g.value} value={g.value.toString()}>
                         {g.label}
                       </SelectItem>
@@ -314,7 +370,8 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           {mode !== 'adaptive' && (
             <div className="space-y-2">
               <Label>
-                Dificultad: {getDifficultyLabel(difficulty[0])} ({Math.round(difficulty[0] * 100)}%)
+                Dificultad: {getDifficultyLabel(difficulty[0])} (
+                {Math.round(difficulty[0] * 100)}%)
               </Label>
               <Slider
                 value={difficulty}
@@ -330,7 +387,11 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           {/* Generate Button */}
           <Button
             onClick={generateQuiz}
-            disabled={loading || (mode === 'curriculum' && !unit) || (mode === 'topic' && !topic)}
+            disabled={
+              loading ||
+              (mode === 'curriculum' && !unit) ||
+              (mode === 'topic' && !topic)
+            }
             className="w-full"
           >
             {loading ? (
@@ -369,12 +430,19 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                       <div className="flex items-center gap-2 mb-2">
                         {getQuestionTypeIcon(question.type)}
                         <Badge variant="outline" className="text-xs">
-                          {question.type === 'multiple_choice' ? 'Opción múltiple' :
-                           question.type === 'true_false' ? 'Verdadero/Falso' :
-                           question.type === 'short_answer' ? 'Respuesta corta' : question.type}
+                          {question.type === 'multiple_choice'
+                            ? 'Opción múltiple'
+                            : question.type === 'true_false'
+                              ? 'Verdadero/Falso'
+                              : question.type === 'short_answer'
+                                ? 'Respuesta corta'
+                                : question.type}
                         </Badge>
                         <Badge variant="outline" className="text-xs">
-                          {question.bloomLevel ? question.bloomLevel.charAt(0).toUpperCase() + question.bloomLevel.slice(1) : 'N/A'}
+                          {question.bloomLevel
+                            ? question.bloomLevel.charAt(0).toUpperCase() +
+                              question.bloomLevel.slice(1)
+                            : 'N/A'}
                         </Badge>
                       </div>
                       <p className="font-medium mb-2">{question.question}</p>

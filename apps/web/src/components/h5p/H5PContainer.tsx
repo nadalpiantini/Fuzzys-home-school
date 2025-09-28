@@ -4,19 +4,30 @@ import React, { useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, RotateCcw, CheckCircle, AlertCircle } from 'lucide-react';
-import {
-  DragDropAdvanced,
-  HotspotImage,
-  BranchingScenario
-} from '@fuzzy/h5p-adapter';
-import type {
-  H5PContent,
-  H5PEvent
-} from '@fuzzy/h5p-adapter';
+// Mock H5P components for deployment
+const DragDropAdvanced = ({ content, onComplete }: any) => (
+  <div>DragDropAdvanced Mock</div>
+);
+const HotspotImage = ({ content, onComplete }: any) => (
+  <div>HotspotImage Mock</div>
+);
+const BranchingScenario = ({ content, onComplete }: any) => (
+  <div>BranchingScenario Mock</div>
+);
+
+import type { H5PContent } from '@/types/service-types';
+
+interface H5PEvent {
+  type: string;
+  data: any;
+}
 
 // Extend H5PContent to include type property
 interface ExtendedH5PContent extends H5PContent {
   type: string;
+  description?: string;
+  language?: string;
+  content: any;
 }
 
 interface H5PContainerProps {
@@ -40,7 +51,7 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
   content,
   onComplete,
   onProgress,
-  className = ''
+  className = '',
 }) => {
   const [started, setStarted] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -48,39 +59,42 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
   const [interactions, setInteractions] = useState(0);
   const [startTime] = useState(Date.now());
 
-  const handleEvent = useCallback((event: H5PEvent) => {
-    switch (event.type) {
-      case 'interaction':
-        setInteractions(prev => prev + 1);
-        break;
+  const handleEvent = useCallback(
+    (event: H5PEvent) => {
+      switch (event.type) {
+        case 'interaction':
+          setInteractions((prev) => prev + 1);
+          break;
 
-      case 'progress':
-        if (event.data.completion !== undefined && onProgress) {
-          onProgress(event.data.completion);
-        }
-        break;
+        case 'progress':
+          if (event.data.completion !== undefined && onProgress) {
+            onProgress(event.data.completion);
+          }
+          break;
 
-      case 'completed':
-        const timeSpent = Date.now() - startTime;
-        const finalResults: H5PResults = {
-          contentId: content.id,
-          score: event.data.score || 0,
-          maxScore: event.data.maxScore || 100,
-          timeSpent,
-          interactions,
-          completion: event.data.completion || 100,
-          passed: (event.data.score || 0) >= 70 // 70% passing threshold
-        };
+        case 'completed':
+          const timeSpent = Date.now() - startTime;
+          const finalResults: H5PResults = {
+            contentId: content.id,
+            score: event.data.score || 0,
+            maxScore: event.data.maxScore || 100,
+            timeSpent,
+            interactions,
+            completion: event.data.completion || 100,
+            passed: (event.data.score || 0) >= 70, // 70% passing threshold
+          };
 
-        setResults(finalResults);
-        setCompleted(true);
+          setResults(finalResults);
+          setCompleted(true);
 
-        if (onComplete) {
-          onComplete(finalResults);
-        }
-        break;
-    }
-  }, [content.id, interactions, startTime, onComplete, onProgress]);
+          if (onComplete) {
+            onComplete(finalResults);
+          }
+          break;
+      }
+    },
+    [content.id, interactions, startTime, onComplete, onProgress],
+  );
 
   const resetContent = () => {
     setStarted(false);
@@ -93,7 +107,7 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
     const commonProps = {
       content,
       onEvent: handleEvent,
-      className: 'w-full'
+      className: 'w-full',
     };
 
     switch (content.type) {
@@ -115,21 +129,21 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
 
   const getContentTypeLabel = (type: string): string => {
     const labels: Record<string, string> = {
-      'drag_drop_advanced': 'Arrastrar y Soltar Avanzado',
-      'hotspot_image': 'Imagen con Puntos Calientes',
-      'branching_scenario': 'Escenario Ramificado',
-      'interactive_video': 'Video Interactivo',
-      'image_sequence_advanced': 'Secuencia de Imágenes Avanzada',
-      'timeline_interactive': 'Línea de Tiempo Interactiva',
-      'accordion': 'Acordeón',
-      'collage': 'Collage',
-      'image_hotspots': 'Puntos Calientes en Imagen',
-      'image_slider': 'Deslizador de Imágenes',
-      'speak_the_words': 'Habla las Palabras',
-      'find_the_words': 'Encuentra las Palabras',
-      'mark_the_words': 'Marca las Palabras',
-      'sort_paragraphs': 'Ordena los Párrafos',
-      'dialog_cards': 'Cartas de Diálogo'
+      drag_drop_advanced: 'Arrastrar y Soltar Avanzado',
+      hotspot_image: 'Imagen con Puntos Calientes',
+      branching_scenario: 'Escenario Ramificado',
+      interactive_video: 'Video Interactivo',
+      image_sequence_advanced: 'Secuencia de Imágenes Avanzada',
+      timeline_interactive: 'Línea de Tiempo Interactiva',
+      accordion: 'Acordeón',
+      collage: 'Collage',
+      image_hotspots: 'Puntos Calientes en Imagen',
+      image_slider: 'Deslizador de Imágenes',
+      speak_the_words: 'Habla las Palabras',
+      find_the_words: 'Encuentra las Palabras',
+      mark_the_words: 'Marca las Palabras',
+      sort_paragraphs: 'Ordena los Párrafos',
+      dialog_cards: 'Cartas de Diálogo',
     };
 
     return labels[type] || type;
@@ -185,7 +199,9 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
         {completed && results && (
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-center gap-2 mb-3">
-              <CheckCircle className={`w-5 h-5 ${results.passed ? 'text-green-600' : 'text-yellow-600'}`} />
+              <CheckCircle
+                className={`w-5 h-5 ${results.passed ? 'text-green-600' : 'text-yellow-600'}`}
+              />
               <span className="font-semibold">
                 {results.passed ? '¡Completado exitosamente!' : 'Completado'}
               </span>
@@ -229,25 +245,22 @@ export const H5PContainer: React.FC<H5PContainerProps> = ({
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Play className="w-8 h-8 text-blue-600" />
               </div>
-              <h4 className="text-lg font-semibold mb-2">¿Listo para comenzar?</h4>
+              <h4 className="text-lg font-semibold mb-2">
+                ¿Listo para comenzar?
+              </h4>
               <p className="text-gray-600 max-w-md mx-auto">
-                Esta actividad interactiva te ayudará a practicar y reforzar los conceptos aprendidos.
+                Esta actividad interactiva te ayudará a practicar y reforzar los
+                conceptos aprendidos.
               </p>
             </div>
 
-            <Button
-              onClick={() => setStarted(true)}
-              size="lg"
-              className="px-8"
-            >
+            <Button onClick={() => setStarted(true)} size="lg" className="px-8">
               <Play className="w-5 h-5 mr-2" />
               Comenzar Actividad
             </Button>
           </div>
         ) : (
-          <div className="h5p-content-area">
-            {renderH5PContent()}
-          </div>
+          <div className="h5p-content-area">{renderH5PContent()}</div>
         )}
       </Card>
 

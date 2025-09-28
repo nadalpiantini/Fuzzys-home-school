@@ -14,7 +14,7 @@ import {
   Shield,
   Target,
   Volume2,
-  VolumeX
+  VolumeX,
 } from 'lucide-react';
 import { getWebSocketManager } from '@/services/multiplayer/websocket-manager';
 import type { GameRoom, Player } from '@/services/multiplayer/types';
@@ -40,17 +40,21 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   player,
   onGameEnd,
   onLeaveRoom,
-  className = ''
+  className = '',
 }) => {
   const [room, setRoom] = useState<GameRoom | null>(null);
   const [connected, setConnected] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionData | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionData | null>(
+    null,
+  );
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [chatMessage, setChatMessage] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [showResults, setShowResults] = useState(false);
-  const [gamePhase, setGamePhase] = useState<'waiting' | 'starting' | 'active' | 'finished'>('waiting');
+  const [gamePhase, setGamePhase] = useState<
+    'waiting' | 'starting' | 'active' | 'finished'
+  >('waiting');
 
   const wsManager = useRef(getWebSocketManager());
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -66,36 +70,46 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
     }
   }, [roomId, player]);
 
-  const playSound = useCallback((type: string) => {
-    if (!soundEnabled) return;
+  const playSound = useCallback(
+    (type: string) => {
+      if (!soundEnabled) return;
 
-    // Simple audio feedback - in production would use actual sound files
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+      // Simple audio feedback - in production would use actual sound files
+      const audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-    const frequencies: Record<string, number> = {
-      join: 523.25,      // C5
-      leave: 392.00,     // G4
-      game_start: 659.25, // E5
-      question_start: 783.99, // G5
-      question_end: 523.25,   // C5
-      game_end: 880.00,       // A5
-      message: 440.00,        // A4
-      submit: 698.46,         // F5
-      score: 1046.50          // C6
-    };
+      const frequencies: Record<string, number> = {
+        join: 523.25, // C5
+        leave: 392.0, // G4
+        game_start: 659.25, // E5
+        question_start: 783.99, // G5
+        question_end: 523.25, // C5
+        game_end: 880.0, // A5
+        message: 440.0, // A4
+        submit: 698.46, // F5
+        score: 1046.5, // C6
+      };
 
-    oscillator.frequency.setValueAtTime(frequencies[type] || 440, audioContext.currentTime);
-    oscillator.type = 'sine';
-    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.1);
-  }, [soundEnabled]);
+      oscillator.frequency.setValueAtTime(
+        frequencies[type] || 440,
+        audioContext.currentTime,
+      );
+      oscillator.type = 'sine';
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + 0.1,
+      );
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    },
+    [soundEnabled],
+  );
 
   const startTimer = (seconds: number) => {
     if (timerRef.current) {
@@ -103,7 +117,7 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           if (timerRef.current) {
             clearInterval(timerRef.current);
@@ -145,15 +159,18 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
       playSound('game_start');
     });
 
-    ws.on('question_start', (data: { question: QuestionData; timeLimit: number }) => {
-      setCurrentQuestion(data.question);
-      setTimeLeft(data.timeLimit);
-      setSelectedAnswer(null);
-      setShowResults(false);
-      setGamePhase('active');
-      startTimer(data.timeLimit);
-      playSound('question_start');
-    });
+    ws.on(
+      'question_start',
+      (data: { question: QuestionData; timeLimit: number }) => {
+        setCurrentQuestion(data.question);
+        setTimeLeft(data.timeLimit);
+        setSelectedAnswer(null);
+        setShowResults(false);
+        setGamePhase('active');
+        startTimer(data.timeLimit);
+        playSound('question_start');
+      },
+    );
 
     ws.on('question_end', (data: { results: any }) => {
       setShowResults(true);
@@ -177,12 +194,15 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
       setRoom(data.room);
     });
 
-    ws.on('score_update', (data: { playerId: string; score: number; room: GameRoom }) => {
-      setRoom(data.room);
-      if (data.playerId === player.id) {
-        playSound('score');
-      }
-    });
+    ws.on(
+      'score_update',
+      (data: { playerId: string; score: number; room: GameRoom }) => {
+        setRoom(data.room);
+        if (data.playerId === player.id) {
+          playSound('score');
+        }
+      },
+    );
 
     // Join room
     joinRoom();
@@ -232,7 +252,9 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   };
 
   const getPlayerRank = (playerId: string): number => {
-    return room?.leaderboard.find(entry => entry.playerId === playerId)?.rank || 0;
+    return (
+      room?.leaderboard.find((entry) => entry.playerId === playerId)?.rank || 0
+    );
   };
 
   const getTimerColor = (): string => {
@@ -268,7 +290,9 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   }
 
   return (
-    <div className={`live-quiz-room grid grid-cols-1 lg:grid-cols-4 gap-4 h-full ${className}`}>
+    <div
+      className={`live-quiz-room grid grid-cols-1 lg:grid-cols-4 gap-4 h-full ${className}`}
+    >
       {/* Main Game Area */}
       <div className="lg:col-span-3 space-y-4">
         {/* Room Header */}
@@ -286,7 +310,11 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
                 size="sm"
                 onClick={() => setSoundEnabled(!soundEnabled)}
               >
-                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                {soundEnabled ? (
+                  <Volume2 className="w-4 h-4" />
+                ) : (
+                  <VolumeX className="w-4 h-4" />
+                )}
               </Button>
               <Button variant="outline" onClick={leaveRoom}>
                 Salir
@@ -300,7 +328,8 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
           <Card className="p-6 text-center">
             <Users className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              Esperando jugadores ({room.players.length}/{room.config.maxPlayers})
+              Esperando jugadores ({room.players.length}/
+              {room.config.maxPlayers})
             </h3>
             <p className="text-gray-600 mb-4">
               Se necesitan al menos 2 jugadores para comenzar
@@ -316,7 +345,9 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
         {gamePhase === 'starting' && (
           <Card className="p-6 text-center">
             <Timer className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">¡El juego está comenzando!</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              ¡El juego está comenzando!
+            </h3>
             <p className="text-gray-600">Prepárate...</p>
           </Card>
         )}
@@ -331,10 +362,14 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all duration-1000 ${
-                    timeLeft > 20 ? 'bg-green-500' : timeLeft > 10 ? 'bg-yellow-500' : 'bg-red-500'
+                    timeLeft > 20
+                      ? 'bg-green-500'
+                      : timeLeft > 10
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
                   }`}
                   style={{
-                    width: `${(timeLeft / currentQuestion.timeLimit) * 100}%`
+                    width: `${(timeLeft / currentQuestion.timeLimit) * 100}%`,
                   }}
                 />
               </div>
@@ -342,7 +377,8 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
 
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">
-                Pregunta {(room.currentQuestion?.index || 0) + 1} de {room.config.totalQuestions}
+                Pregunta {(room.currentQuestion?.index || 0) + 1} de{' '}
+                {room.config.totalQuestions}
               </h3>
               <p className="text-xl mb-6">{currentQuestion.question}</p>
 
@@ -357,7 +393,9 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-300 hover:border-gray-400'
                     } ${
-                      showResults || timeLeft === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
+                      showResults || timeLeft === 0
+                        ? 'opacity-50 cursor-not-allowed'
+                        : 'hover:bg-gray-50'
                     }`}
                   >
                     <span className="font-medium text-blue-600 mr-2">
@@ -379,8 +417,12 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
 
             {showResults && (
               <div className="bg-blue-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-blue-800 mb-2">Resultados de la pregunta</h4>
-                <p className="text-blue-700">Esperando la siguiente pregunta...</p>
+                <h4 className="font-semibold text-blue-800 mb-2">
+                  Resultados de la pregunta
+                </h4>
+                <p className="text-blue-700">
+                  Esperando la siguiente pregunta...
+                </p>
               </div>
             )}
           </Card>
@@ -400,9 +442,15 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
                   className="flex items-center justify-between py-2"
                 >
                   <div className="flex items-center gap-2">
-                    {index === 0 && <Crown className="w-5 h-5 text-yellow-500" />}
-                    {index === 1 && <div className="w-5 h-5 bg-gray-400 rounded-full" />}
-                    {index === 2 && <div className="w-5 h-5 bg-amber-600 rounded-full" />}
+                    {index === 0 && (
+                      <Crown className="w-5 h-5 text-yellow-500" />
+                    )}
+                    {index === 1 && (
+                      <div className="w-5 h-5 bg-gray-400 rounded-full" />
+                    )}
+                    {index === 2 && (
+                      <div className="w-5 h-5 bg-amber-600 rounded-full" />
+                    )}
                     <span className="font-medium">{entry.name}</span>
                   </div>
                   <span className="font-bold text-blue-600">{entry.score}</span>
@@ -426,22 +474,33 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
               <div
                 key={roomPlayer.id}
                 className={`flex items-center justify-between p-2 rounded ${
-                  roomPlayer.id === player.id ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'
+                  roomPlayer.id === player.id
+                    ? 'bg-blue-50 border border-blue-200'
+                    : 'bg-gray-50'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    roomPlayer.status === 'connected' ? 'bg-green-500' :
-                    roomPlayer.status === 'answering' ? 'bg-yellow-500' : 'bg-gray-400'
-                  }`} />
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      roomPlayer.status === 'connected'
+                        ? 'bg-green-500'
+                        : roomPlayer.status === 'answering'
+                          ? 'bg-yellow-500'
+                          : 'bg-gray-400'
+                    }`}
+                  />
                   <span className="text-sm font-medium">{roomPlayer.name}</span>
                   {room.config.createdBy === roomPlayer.userId && (
                     <Crown className="w-3 h-3 text-yellow-500" />
                   )}
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-bold text-blue-600">{roomPlayer.score}</div>
-                  <div className="text-xs text-gray-500">#{getPlayerRank(roomPlayer.id)}</div>
+                  <div className="text-sm font-bold text-blue-600">
+                    {roomPlayer.score}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    #{getPlayerRank(roomPlayer.id)}
+                  </div>
                 </div>
               </div>
             ))}
@@ -462,13 +521,19 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
                   className="flex items-center justify-between p-2 rounded bg-gray-50"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-gray-600">#{entry.rank}</span>
+                    <span className="text-sm font-bold text-gray-600">
+                      #{entry.rank}
+                    </span>
                     <span className="text-sm">{entry.name}</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-bold text-blue-600">{entry.score}</div>
+                    <div className="text-sm font-bold text-blue-600">
+                      {entry.score}
+                    </div>
                     {entry.streak > 0 && (
-                      <div className="text-xs text-orange-600">🔥 {entry.streak}</div>
+                      <div className="text-xs text-orange-600">
+                        🔥 {entry.streak}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -494,7 +559,9 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
                   }`}
                 >
                   {message.type !== 'system' && (
-                    <span className="font-medium text-blue-600">{message.playerName}: </span>
+                    <span className="font-medium text-blue-600">
+                      {message.playerName}:{' '}
+                    </span>
                   )}
                   {message.message}
                 </div>

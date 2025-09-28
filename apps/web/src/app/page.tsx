@@ -1,18 +1,23 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react'
-import { LanguageToggle } from '@/components/layout/LanguageToggle'
-import { useTranslation } from '@/hooks/useTranslation'
+import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react';
+import { LanguageToggle } from '@/components/layout/LanguageToggle';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HomePage() {
-  const { t, language, setLanguage } = useTranslation()
+  const { t, language, setLanguage } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50" style={{background: 'linear-gradient(135deg, #f3e8ff 0%, #ecfdf5 100%)'}}>
+    <div
+      className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50"
+      style={{
+        background: 'linear-gradient(135deg, #f3e8ff 0%, #ecfdf5 100%)',
+      }}
+    >
       {/* Header */}
       <header className="flex justify-between items-center p-6">
         <div className="flex items-center gap-2">
@@ -21,7 +26,10 @@ export default function HomePage() {
             Fuzzy&apos;s Home School
           </h1>
         </div>
-        <LanguageToggle language={language} onToggle={() => setLanguage(language === 'es' ? 'en' : 'es')} />
+        <LanguageToggle
+          language={language}
+          onToggle={() => setLanguage(language === 'es' ? 'en' : 'es')}
+        />
       </header>
 
       {/* Hero Section */}
@@ -113,38 +121,58 @@ export default function HomePage() {
           <FeatureCard
             icon={<Brain />}
             title={language === 'es' ? 'Tutor IA 24/7' : 'AI Tutor 24/7'}
-            description={language === 'es'
-              ? 'Asistente inteligente que responde dudas al instante'
-              : 'Smart assistant that answers questions instantly'}
+            description={
+              language === 'es'
+                ? 'Asistente inteligente que responde dudas al instante'
+                : 'Smart assistant that answers questions instantly'
+            }
           />
           <FeatureCard
             icon={<Gamepad2 />}
-            title={language === 'es' ? '100+ Recursos Educativos' : '100+ Educational Resources'}
-            description={language === 'es'
-              ? 'PhET, Blockly, Music Blocks, AR Colonial y más'
-              : 'PhET, Blockly, Music Blocks, AR Colonial and more'}
+            title={
+              language === 'es'
+                ? '100+ Recursos Educativos'
+                : '100+ Educational Resources'
+            }
+            description={
+              language === 'es'
+                ? 'PhET, Blockly, Music Blocks, AR Colonial y más'
+                : 'PhET, Blockly, Music Blocks, AR Colonial and more'
+            }
           />
           <FeatureCard
             icon={<Map />}
             title={language === 'es' ? 'Rally AR/QR' : 'AR/QR Rally'}
-            description={language === 'es'
-              ? 'Aprende historia explorando lugares reales'
-              : 'Learn history by exploring real places'}
+            description={
+              language === 'es'
+                ? 'Aprende historia explorando lugares reales'
+                : 'Learn history by exploring real places'
+            }
           />
           <FeatureCard
             icon={<Globe />}
             title={language === 'es' ? 'Multi-idioma' : 'Multi-language'}
-            description={language === 'es'
-              ? 'Disponible en español e inglés'
-              : 'Available in Spanish and English'}
+            description={
+              language === 'es'
+                ? 'Disponible en español e inglés'
+                : 'Available in Spanish and English'
+            }
           />
         </div>
       </section>
     </div>
-  )
+  );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <Card className="p-6 text-center">
       <div className="w-12 h-12 bg-fuzzy-purple/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -153,5 +181,5 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
       <h4 className="font-semibold mb-2">{title}</h4>
       <p className="text-sm text-gray-600">{description}</p>
     </Card>
-  )
+  );
 }

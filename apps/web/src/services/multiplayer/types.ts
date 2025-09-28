@@ -2,12 +2,12 @@ import { z } from 'zod';
 
 // Game Room Status
 export const GameRoomStatusSchema = z.enum([
-  'waiting',     // Waiting for players
-  'starting',    // Game about to start (countdown)
-  'active',      // Game in progress
-  'paused',      // Game paused
-  'finished',    // Game completed
-  'cancelled'    // Game cancelled
+  'waiting', // Waiting for players
+  'starting', // Game about to start (countdown)
+  'active', // Game in progress
+  'paused', // Game paused
+  'finished', // Game completed
+  'cancelled', // Game cancelled
 ]);
 
 export type GameRoomStatus = z.infer<typeof GameRoomStatusSchema>;
@@ -18,7 +18,7 @@ export const PlayerStatusSchema = z.enum([
   'disconnected',
   'away',
   'answering',
-  'finished'
+  'finished',
 ]);
 
 export type PlayerStatus = z.infer<typeof PlayerStatusSchema>;
@@ -27,7 +27,12 @@ export type PlayerStatus = z.infer<typeof PlayerStatusSchema>;
 export const GameRoomConfigSchema = z.object({
   id: z.string(),
   name: z.string(),
-  gameType: z.enum(['quiz_battle', 'collaborative_solve', 'speed_round', 'team_challenge']),
+  gameType: z.enum([
+    'quiz_battle',
+    'collaborative_solve',
+    'speed_round',
+    'team_challenge',
+  ]),
   subject: z.string(),
   topic: z.string().optional(),
   difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
@@ -40,11 +45,11 @@ export const GameRoomConfigSchema = z.object({
     showLeaderboard: z.boolean().default(true),
     enableChat: z.boolean().default(true),
     powerUpsEnabled: z.boolean().default(false),
-    teamMode: z.boolean().default(false)
+    teamMode: z.boolean().default(false),
   }),
   createdBy: z.string(),
   createdAt: z.date(),
-  scheduledStart: z.date().optional()
+  scheduledStart: z.date().optional(),
 });
 
 export type GameRoomConfig = z.infer<typeof GameRoomConfigSchema>;
@@ -59,20 +64,26 @@ export const PlayerSchema = z.object({
   status: PlayerStatusSchema,
   score: z.number().default(0),
   streak: z.number().int().default(0),
-  answers: z.array(z.object({
-    questionId: z.string(),
-    answer: z.union([z.string(), z.array(z.string())]),
-    timeSpent: z.number(), // milliseconds
-    correct: z.boolean(),
-    points: z.number()
-  })),
-  powerUps: z.array(z.object({
-    type: z.string(),
-    count: z.number()
-  })).default([]),
+  answers: z.array(
+    z.object({
+      questionId: z.string(),
+      answer: z.union([z.string(), z.array(z.string())]),
+      timeSpent: z.number(), // milliseconds
+      correct: z.boolean(),
+      points: z.number(),
+    }),
+  ),
+  powerUps: z
+    .array(
+      z.object({
+        type: z.string(),
+        count: z.number(),
+      }),
+    )
+    .default([]),
   team: z.string().optional(),
   joinedAt: z.date(),
-  lastSeen: z.date()
+  lastSeen: z.date(),
 });
 
 export type Player = z.infer<typeof PlayerSchema>;
@@ -82,29 +93,37 @@ export const GameRoomSchema = z.object({
   config: GameRoomConfigSchema,
   status: GameRoomStatusSchema,
   players: z.array(PlayerSchema),
-  currentQuestion: z.object({
-    index: z.number().int(),
-    questionId: z.string(),
-    startTime: z.date(),
-    endTime: z.date(),
-    answers: z.record(z.string()) // playerId -> answer
-  }).optional(),
-  leaderboard: z.array(z.object({
-    playerId: z.string(),
-    name: z.string(),
-    score: z.number(),
-    rank: z.number(),
-    streak: z.number()
-  })),
-  chat: z.array(z.object({
-    id: z.string(),
-    playerId: z.string(),
-    playerName: z.string(),
-    message: z.string(),
-    timestamp: z.date(),
-    type: z.enum(['message', 'system', 'reaction']).default('message')
-  })).default([]),
-  gameData: z.record(z.any()).optional() // Game-specific data
+  currentQuestion: z
+    .object({
+      index: z.number().int(),
+      questionId: z.string(),
+      startTime: z.date(),
+      endTime: z.date(),
+      answers: z.record(z.string()), // playerId -> answer
+    })
+    .optional(),
+  leaderboard: z.array(
+    z.object({
+      playerId: z.string(),
+      name: z.string(),
+      score: z.number(),
+      rank: z.number(),
+      streak: z.number(),
+    }),
+  ),
+  chat: z
+    .array(
+      z.object({
+        id: z.string(),
+        playerId: z.string(),
+        playerName: z.string(),
+        message: z.string(),
+        timestamp: z.date(),
+        type: z.enum(['message', 'system', 'reaction']).default('message'),
+      }),
+    )
+    .default([]),
+  gameData: z.record(z.any()).optional(), // Game-specific data
 });
 
 export type GameRoom = z.infer<typeof GameRoomSchema>;
@@ -144,12 +163,12 @@ export const WebSocketMessageSchema = z.object({
     // System events
     'error',
     'ping',
-    'pong'
+    'pong',
   ]),
   roomId: z.string(),
   playerId: z.string().optional(),
   data: z.any().optional(),
-  timestamp: z.date().default(() => new Date())
+  timestamp: z.date().default(() => new Date()),
 });
 
 export type WebSocketMessage = z.infer<typeof WebSocketMessageSchema>;
@@ -163,40 +182,51 @@ export const QuizBattleConfigSchema = z.object({
   bonusMultipliers: z.object({
     streak: z.number().default(1.2),
     speed: z.number().default(1.5),
-    perfect: z.number().default(2.0)
-  })
+    perfect: z.number().default(2.0),
+  }),
 });
 
 export type QuizBattleConfig = z.infer<typeof QuizBattleConfigSchema>;
 
 // Collaborative Solve Types
 export const CollaborativeSolveConfigSchema = z.object({
-  problemType: z.enum(['math_problem', 'science_experiment', 'essay_writing', 'project_based']),
-  roles: z.array(z.object({
-    name: z.string(),
-    description: z.string(),
-    maxPlayers: z.number().int()
-  })),
-  phases: z.array(z.object({
-    name: z.string(),
-    timeLimit: z.number().int(), // minutes
-    deliverable: z.string()
-  })),
-  sharedWorkspace: z.boolean().default(true)
+  problemType: z.enum([
+    'math_problem',
+    'science_experiment',
+    'essay_writing',
+    'project_based',
+  ]),
+  roles: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+      maxPlayers: z.number().int(),
+    }),
+  ),
+  phases: z.array(
+    z.object({
+      name: z.string(),
+      timeLimit: z.number().int(), // minutes
+      deliverable: z.string(),
+    }),
+  ),
+  sharedWorkspace: z.boolean().default(true),
 });
 
-export type CollaborativeSolveConfig = z.infer<typeof CollaborativeSolveConfigSchema>;
+export type CollaborativeSolveConfig = z.infer<
+  typeof CollaborativeSolveConfigSchema
+>;
 
 // Power-ups System
 export const PowerUpSchema = z.object({
   type: z.enum([
-    'time_freeze',     // Pause timer for everyone
-    'double_points',   // Double points for next answer
-    'skip_question',   // Skip current question
-    'hint_reveal',     // Reveal a hint
-    'steal_points',    // Steal points from leader
-    'shield',          // Protect from negative effects
-    'speed_boost'      // Extra time for answering
+    'time_freeze', // Pause timer for everyone
+    'double_points', // Double points for next answer
+    'skip_question', // Skip current question
+    'hint_reveal', // Reveal a hint
+    'steal_points', // Steal points from leader
+    'shield', // Protect from negative effects
+    'speed_boost', // Extra time for answering
   ]),
   name: z.string(),
   description: z.string(),
@@ -206,8 +236,8 @@ export const PowerUpSchema = z.object({
   effect: z.object({
     duration: z.number().int().optional(), // Duration in seconds
     value: z.number().optional(), // Effect magnitude
-    conditions: z.array(z.string()).optional()
-  })
+    conditions: z.array(z.string()).optional(),
+  }),
 });
 
 export type PowerUp = z.infer<typeof PowerUpSchema>;
@@ -226,24 +256,28 @@ export const GameAnalyticsSchema = z.object({
     averageAnswerTime: z.number(),
     chatMessages: z.number().int(),
     powerUpsUsed: z.number().int(),
-    disconnections: z.number().int()
+    disconnections: z.number().int(),
   }),
-  questionAnalytics: z.array(z.object({
-    questionId: z.string(),
-    correctAnswers: z.number().int(),
-    averageTime: z.number(),
-    difficulty: z.number(), // Calculated difficulty based on performance
-    commonMistakes: z.array(z.string())
-  })),
-  playerPerformance: z.array(z.object({
-    playerId: z.string(),
-    finalScore: z.number(),
-    finalRank: z.number(),
-    questionsCorrect: z.number().int(),
-    averageAnswerTime: z.number(),
-    streakRecord: z.number().int(),
-    engagement: z.number() // Engagement score 0-1
-  }))
+  questionAnalytics: z.array(
+    z.object({
+      questionId: z.string(),
+      correctAnswers: z.number().int(),
+      averageTime: z.number(),
+      difficulty: z.number(), // Calculated difficulty based on performance
+      commonMistakes: z.array(z.string()),
+    }),
+  ),
+  playerPerformance: z.array(
+    z.object({
+      playerId: z.string(),
+      finalScore: z.number(),
+      finalRank: z.number(),
+      questionsCorrect: z.number().int(),
+      averageAnswerTime: z.number(),
+      streakRecord: z.number().int(),
+      engagement: z.number(), // Engagement score 0-1
+    }),
+  ),
 });
 
 export type GameAnalytics = z.infer<typeof GameAnalyticsSchema>;
@@ -256,7 +290,7 @@ export const MatchmakingCriteriaSchema = z.object({
   preferredGameType: z.string().optional(),
   maxWaitTime: z.number().int().default(120), // seconds
   allowCrossGrade: z.boolean().default(true),
-  allowCrossSkill: z.boolean().default(false)
+  allowCrossSkill: z.boolean().default(false),
 });
 
 export type MatchmakingCriteria = z.infer<typeof MatchmakingCriteriaSchema>;
@@ -270,12 +304,12 @@ export const RoomEventSchema = z.object({
     'question_answered',
     'game_ended',
     'chat_sent',
-    'powerup_used'
+    'powerup_used',
   ]),
   room_id: z.string(),
   player_id: z.string().optional(),
   data: z.record(z.any()),
-  created_at: z.date().default(() => new Date())
+  created_at: z.date().default(() => new Date()),
 });
 
 export type RoomEvent = z.infer<typeof RoomEventSchema>;

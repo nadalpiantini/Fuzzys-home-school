@@ -47,11 +47,29 @@ export interface MemoryCardsGame {
 export interface CrosswordGame {
   id: string;
   title: string;
-  words: { word: string; clue: string; x: number; y: number; direction: 'across' | 'down' }[];
+  words: {
+    word: string;
+    clue: string;
+    x: number;
+    y: number;
+    direction: 'across' | 'down';
+  }[];
   grid: (string | null)[][];
   clues: {
-    across: { number: number; clue: string; answer: string; startRow: number; startCol: number }[];
-    down: { number: number; clue: string; answer: string; startRow: number; startCol: number }[];
+    across: {
+      number: number;
+      clue: string;
+      answer: string;
+      startRow: number;
+      startCol: number;
+    }[];
+    down: {
+      number: number;
+      clue: string;
+      answer: string;
+      startRow: number;
+      startCol: number;
+    }[];
   };
 }
 
@@ -78,7 +96,13 @@ export interface HotspotGame {
   id: string;
   title: string;
   image: string;
-  hotspots: { x: number; y: number; width: number; height: number; feedback: string }[];
+  hotspots: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    feedback: string;
+  }[];
 }
 
 export interface MatchGame {
@@ -128,6 +152,9 @@ export interface H5PContent {
   title: string;
   library: string;
   params: any;
+  description?: string;
+  type?: string;
+  language?: string;
 }
 
 export interface H5PLibrary {

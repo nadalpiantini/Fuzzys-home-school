@@ -18,8 +18,8 @@ export default function IntegrationTest() {
         </CardHeader>
         <CardContent>
           <p className="text-gray-600">
-            Las pruebas de integración están siendo configuradas.
-            Sistema de testing incluye:
+            Las pruebas de integración están siendo configuradas. Sistema de
+            testing incluye:
           </p>
           <ul className="mt-4 space-y-2 text-sm">
             <li>• Pruebas de componentes H5P</li>

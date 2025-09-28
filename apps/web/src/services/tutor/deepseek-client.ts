@@ -1,4 +1,9 @@
-import { DeepSeekConfig, TutorResponse, QueryType, UnderstandingLevel } from './types';
+import {
+  DeepSeekConfig,
+  TutorResponse,
+  QueryType,
+  UnderstandingLevel,
+} from './types';
 
 interface DeepSeekMessage {
   role: 'system' | 'user' | 'assistant';
@@ -34,31 +39,33 @@ export class DeepSeekClient {
       understandingLevel: UnderstandingLevel;
       language: 'es' | 'en';
       learningStyle?: string;
-    }
+    },
   ): Promise<TutorResponse> {
     try {
       // Prepare system prompt with context
       const systemPrompt = this.buildSystemPrompt(context);
 
-      const response = await fetch(`${this.config.baseURL}/v1/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.config.baseURL}/v1/chat/completions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: this.config.model,
+            messages: [{ role: 'system', content: systemPrompt }, ...messages],
+            temperature: this.config.temperature,
+            max_tokens: this.config.maxTokens,
+          }),
         },
-        body: JSON.stringify({
-          model: this.config.model,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            ...messages
-          ],
-          temperature: this.config.temperature,
-          max_tokens: this.config.maxTokens,
-        }),
-      });
+      );
 
       if (!response.ok) {
-        throw new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `DeepSeek API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data: DeepSeekResponse = await response.json();
@@ -66,17 +73,17 @@ export class DeepSeekClient {
 
       // Parse and structure the response
       return this.parseResponse(content, context);
-
     } catch (error) {
       console.error('Error calling DeepSeek API:', error);
 
       // Fallback response
       return {
-        content: context.language === 'es'
-          ? 'Lo siento, estoy teniendo problemas técnicos. ¿Podrías repetir tu pregunta?'
-          : 'Sorry, I\'m having technical issues. Could you repeat your question?',
+        content:
+          context.language === 'es'
+            ? 'Lo siento, estoy teniendo problemas técnicos. ¿Podrías repetir tu pregunta?'
+            : "Sorry, I'm having technical issues. Could you repeat your question?",
         type: 'clarification',
-        confidence: 0.1
+        confidence: 0.1,
       };
     }
   }
@@ -84,9 +91,15 @@ export class DeepSeekClient {
   async detectUnderstanding(
     studentResponse: string,
     concept: string,
-    context: { subject: string; grade: number; language: 'es' | 'en' }
-  ): Promise<{ level: UnderstandingLevel; reasoning: string; nextAction: string }> {
-    const prompt = context.language === 'es' ? `
+    context: { subject: string; grade: number; language: 'es' | 'en' },
+  ): Promise<{
+    level: UnderstandingLevel;
+    reasoning: string;
+    nextAction: string;
+  }> {
+    const prompt =
+      context.language === 'es'
+        ? `
       Analiza la respuesta del estudiante para determinar su nivel de comprensión del concepto "${concept}" en ${context.subject} para grado ${context.grade}.
 
       Respuesta del estudiante: "${studentResponse}"
@@ -104,7 +117,8 @@ export class DeepSeekClient {
         "reasoning": "explicación_breve",
         "nextAction": "acción_recomendada"
       }
-    ` : `
+    `
+        : `
       Analyze the student's response to determine their understanding level of the concept "${concept}" in ${context.subject} for grade ${context.grade}.
 
       Student response: "${studentResponse}"
@@ -125,19 +139,22 @@ export class DeepSeekClient {
     `;
 
     try {
-      const response = await fetch(`${this.config.baseURL}/v1/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.config.baseURL}/v1/chat/completions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: this.config.model,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.3, // Lower temperature for more consistent analysis
+            max_tokens: 300,
+          }),
         },
-        body: JSON.stringify({
-          model: this.config.model,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.3, // Lower temperature for more consistent analysis
-          max_tokens: 300,
-        }),
-      });
+      );
 
       const data: DeepSeekResponse = await response.json();
       const content = data.choices[0]?.message?.content || '';
@@ -148,23 +165,22 @@ export class DeepSeekClient {
         return {
           level: parsed.level as UnderstandingLevel,
           reasoning: parsed.reasoning,
-          nextAction: parsed.nextAction
+          nextAction: parsed.nextAction,
         };
       } catch (parseError) {
         // Fallback if JSON parsing fails
         return {
           level: 'partial_understanding',
           reasoning: 'Unable to analyze response properly',
-          nextAction: 'Ask clarifying questions'
+          nextAction: 'Ask clarifying questions',
         };
       }
-
     } catch (error) {
       console.error('Error detecting understanding:', error);
       return {
         level: 'partial_understanding',
         reasoning: 'Technical error in analysis',
-        nextAction: 'Continue with explanation'
+        nextAction: 'Continue with explanation',
       };
     }
   }
@@ -172,9 +188,11 @@ export class DeepSeekClient {
   async generateFollowUpQuestions(
     concept: string,
     currentUnderstanding: UnderstandingLevel,
-    context: { subject: string; grade: number; language: 'es' | 'en' }
+    context: { subject: string; grade: number; language: 'es' | 'en' },
   ): Promise<string[]> {
-    const prompt = context.language === 'es' ? `
+    const prompt =
+      context.language === 'es'
+        ? `
       Genera 3 preguntas de seguimiento para verificar la comprensión del concepto "${concept}" en ${context.subject} para grado ${context.grade}.
 
       Nivel actual de comprensión: ${currentUnderstanding}
@@ -186,7 +204,8 @@ export class DeepSeekClient {
       4. Ser formuladas de manera amigable y motivadora
 
       Responde solo con las 3 preguntas, una por línea.
-    ` : `
+    `
+        : `
       Generate 3 follow-up questions to verify understanding of the concept "${concept}" in ${context.subject} for grade ${context.grade}.
 
       Current understanding level: ${currentUnderstanding}
@@ -201,38 +220,45 @@ export class DeepSeekClient {
     `;
 
     try {
-      const response = await fetch(`${this.config.baseURL}/v1/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.config.baseURL}/v1/chat/completions`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.config.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: this.config.model,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.8,
+            max_tokens: 400,
+          }),
         },
-        body: JSON.stringify({
-          model: this.config.model,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.8,
-          max_tokens: 400,
-        }),
-      });
+      );
 
       const data: DeepSeekResponse = await response.json();
       const content = data.choices[0]?.message?.content || '';
 
-      return content.split('\n').filter(line => line.trim().length > 0).slice(0, 3);
-
+      return content
+        .split('\n')
+        .filter((line) => line.trim().length > 0)
+        .slice(0, 3);
     } catch (error) {
       console.error('Error generating follow-up questions:', error);
 
       // Fallback questions
-      return context.language === 'es' ? [
-        '¿Puedes explicarme con tus propias palabras lo que acabamos de ver?',
-        '¿Qué parte te parece más difícil de entender?',
-        '¿Puedes darme un ejemplo de esto en la vida real?'
-      ] : [
-        'Can you explain what we just covered in your own words?',
-        'What part seems most difficult to understand?',
-        'Can you give me a real-life example of this?'
-      ];
+      return context.language === 'es'
+        ? [
+            '¿Puedes explicarme con tus propias palabras lo que acabamos de ver?',
+            '¿Qué parte te parece más difícil de entender?',
+            '¿Puedes darme un ejemplo de esto en la vida real?',
+          ]
+        : [
+            'Can you explain what we just covered in your own words?',
+            'What part seems most difficult to understand?',
+            'Can you give me a real-life example of this?',
+          ];
     }
   }
 
@@ -244,7 +270,9 @@ export class DeepSeekClient {
     language: 'es' | 'en';
     learningStyle?: string;
   }): string {
-    const basePrompt = context.language === 'es' ? `
+    const basePrompt =
+      context.language === 'es'
+        ? `
       Eres Fuzzy, un tutor de IA amigable y paciente especializado en educación dominicana. Tu objetivo es ayudar a estudiantes de grado ${context.grade} a entender ${context.subject}.
 
       CARACTERÍSTICAS CLAVE:
@@ -271,7 +299,8 @@ export class DeepSeekClient {
       - Usa ejemplos dominicanos cuando sea posible
       - Si sugiere práctica, que sea específica y alcanzable
       - Celebra el progreso y mantén motivación alta
-    ` : `
+    `
+        : `
       You are Fuzzy, a friendly and patient AI tutor specialized in Dominican education. Your goal is to help grade ${context.grade} students understand ${context.subject}.
 
       KEY CHARACTERISTICS:
@@ -309,11 +338,20 @@ export class DeepSeekClient {
 
     if (content.includes('?')) {
       type = 'socratic_question';
-    } else if (content.toLowerCase().includes('ejemplo') || content.toLowerCase().includes('example')) {
+    } else if (
+      content.toLowerCase().includes('ejemplo') ||
+      content.toLowerCase().includes('example')
+    ) {
       type = 'example';
-    } else if (content.toLowerCase().includes('paso') || content.toLowerCase().includes('step')) {
+    } else if (
+      content.toLowerCase().includes('paso') ||
+      content.toLowerCase().includes('step')
+    ) {
       type = 'step_by_step';
-    } else if (content.toLowerCase().includes('práctica') || content.toLowerCase().includes('practice')) {
+    } else if (
+      content.toLowerCase().includes('práctica') ||
+      content.toLowerCase().includes('practice')
+    ) {
       type = 'practice_suggestion';
     }
 
@@ -321,11 +359,17 @@ export class DeepSeekClient {
       content: content.trim(),
       type,
       confidence: 0.8, // Would be calculated based on various factors
-      followUpSuggestions: this.extractFollowUpSuggestions(content, context.language)
+      followUpSuggestions: this.extractFollowUpSuggestions(
+        content,
+        context.language,
+      ),
     };
   }
 
-  private extractFollowUpSuggestions(content: string, language: 'es' | 'en'): string[] {
+  private extractFollowUpSuggestions(
+    content: string,
+    language: 'es' | 'en',
+  ): string[] {
     // Extract potential follow-up actions from the response
     const suggestions: string[] = [];
 

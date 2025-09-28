@@ -2,7 +2,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,7 +27,7 @@ import {
   Target,
   ChevronRight,
   Star,
-  Play
+  Play,
 } from 'lucide-react';
 
 interface GameCategory {
@@ -61,7 +67,8 @@ const gameCategories: GameCategory[] = [
       {
         id: 'phet-simulations',
         title: 'PhET Simulations',
-        description: 'Simulaciones interactivas de física, química y matemáticas',
+        description:
+          'Simulaciones interactivas de física, química y matemáticas',
         difficulty: 'intermediate',
         ageRange: '8-18',
         duration: '15-45 min',
@@ -70,7 +77,7 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=phet',
         tags: ['STEM', 'Simulación', 'Experimentos'],
         rating: 4.9,
-        plays: 15420
+        plays: 15420,
       },
       {
         id: 'blockly-programming',
@@ -84,7 +91,7 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=blockly',
         tags: ['Programación', 'Lógica', 'Visual'],
         rating: 4.8,
-        plays: 23150
+        plays: 23150,
       },
       {
         id: 'music-blocks',
@@ -98,7 +105,7 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=music',
         tags: ['Música', 'Matemáticas', 'Creatividad'],
         rating: 4.7,
-        plays: 8934
+        plays: 8934,
       },
       {
         id: 'colonial-zone-ar',
@@ -112,9 +119,9 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=ar',
         tags: ['Historia', 'AR', 'Cultura', 'RD'],
         rating: 4.9,
-        plays: 5678
-      }
-    ]
+        plays: 5678,
+      },
+    ],
   },
   {
     id: 'traditional-games',
@@ -135,7 +142,7 @@ const gameCategories: GameCategory[] = [
         url: '/games/demo?game=math-solver',
         tags: ['Matemáticas', 'Álgebra', 'Paso a paso'],
         rating: 4.6,
-        plays: 12340
+        plays: 12340,
       },
       {
         id: 'code-challenge',
@@ -149,9 +156,9 @@ const gameCategories: GameCategory[] = [
         url: '/games/demo?game=code-challenge',
         tags: ['Programación', 'Algoritmos', 'Python'],
         rating: 4.5,
-        plays: 8765
-      }
-    ]
+        plays: 8765,
+      },
+    ],
   },
   {
     id: 'curriculum-integrated',
@@ -172,7 +179,7 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=phet&sim=forces-and-motion-basics',
         tags: ['Física', 'Ciencias Naturales', '3ro'],
         rating: 4.8,
-        plays: 6789
+        plays: 6789,
       },
       {
         id: 'fractions-intro',
@@ -186,10 +193,10 @@ const gameCategories: GameCategory[] = [
         url: '/games/external?type=phet&sim=fractions-intro',
         tags: ['Matemáticas', 'Fracciones', '3ro-5to'],
         rating: 4.7,
-        plays: 9876
-      }
-    ]
-  }
+        plays: 9876,
+      },
+    ],
+  },
 ];
 
 export default function GamesPage() {
@@ -197,31 +204,40 @@ export default function GamesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const allGames = gameCategories.flatMap(category => category.games);
+  const allGames = gameCategories.flatMap((category) => category.games);
   const featuredGames = gameCategories
-    .filter(cat => cat.featured)
-    .flatMap(cat => cat.games)
+    .filter((cat) => cat.featured)
+    .flatMap((cat) => cat.games)
     .slice(0, 4);
 
-  const filteredCategories = selectedCategory === 'all'
-    ? gameCategories
-    : gameCategories.filter(cat => cat.id === selectedCategory);
+  const filteredCategories =
+    selectedCategory === 'all'
+      ? gameCategories
+      : gameCategories.filter((cat) => cat.id === selectedCategory);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'beginner':
+        return 'bg-green-100 text-green-800';
+      case 'intermediate':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'advanced':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getDifficultyLabel = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'Principiante';
-      case 'intermediate': return 'Intermedio';
-      case 'advanced': return 'Avanzado';
-      default: return difficulty;
+      case 'beginner':
+        return 'Principiante';
+      case 'intermediate':
+        return 'Intermedio';
+      case 'advanced':
+        return 'Avanzado';
+      default:
+        return difficulty;
     }
   };
 
@@ -263,17 +279,21 @@ export default function GamesPage() {
       <section className="container mx-auto px-6 py-8">
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <Star className="w-6 h-6 text-yellow-500" />
-            ✨ Recursos Destacados - Open Source
+            <Star className="w-6 h-6 text-yellow-500" />✨ Recursos Destacados -
+            Open Source
           </h2>
           <p className="text-gray-600 mb-6">
             Descubre nuestra colección de recursos educativos de alta calidad,
-            incluyendo simulaciones PhET, programación Blockly, música creativa y experiencias AR.
+            incluyendo simulaciones PhET, programación Blockly, música creativa
+            y experiencias AR.
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredGames.map((game) => (
-              <Card key={game.id} className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group">
+              <Card
+                key={game.id}
+                className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+              >
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <Badge className={getDifficultyColor(game.difficulty)}>
@@ -437,7 +457,10 @@ export default function GamesPage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {category.games.map((game) => (
-                <Card key={game.id} className="hover:shadow-md transition-all duration-300 cursor-pointer group">
+                <Card
+                  key={game.id}
+                  className="hover:shadow-md transition-all duration-300 cursor-pointer group"
+                >
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <Badge className={getDifficultyColor(game.difficulty)}>
@@ -465,7 +488,11 @@ export default function GamesPage() {
 
                       <div className="flex flex-wrap gap-1">
                         {game.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {tag}
                           </Badge>
                         ))}
@@ -475,10 +502,7 @@ export default function GamesPage() {
                         <span className="text-sm text-gray-500">
                           {game.plays.toLocaleString()} jugadas
                         </span>
-                        <Button
-                          size="sm"
-                          onClick={() => router.push(game.url)}
-                        >
+                        <Button size="sm" onClick={() => router.push(game.url)}>
                           Jugar
                         </Button>
                       </div>
@@ -498,8 +522,9 @@ export default function GamesPage() {
             ¿Listo para comenzar tu aventura de aprendizaje?
           </h2>
           <p className="text-purple-100 mb-8 max-w-2xl mx-auto">
-            Con más de 100 actividades educativas, desde simulaciones científicas hasta
-            experiencias de realidad aumentada, nunca ha sido tan divertido aprender.
+            Con más de 100 actividades educativas, desde simulaciones
+            científicas hasta experiencias de realidad aumentada, nunca ha sido
+            tan divertido aprender.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

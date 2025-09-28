@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Link2, Check, X, RotateCcw } from 'lucide-react';
-import type { MatchGame } from '@fuzzy/game-engine';
+import type { MatchGame } from '@/types/game-types';
 
 // Safe defaults para evitar undefined en build/runtime
 const toStr = (v: unknown): string | null => (typeof v === 'string' ? v : null);
@@ -26,26 +26,28 @@ export const Match: React.FC<MatchProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [leftColumn, setLeftColumn] = useState<string[]>([]);
   const [rightColumn, setRightColumn] = useState<string[]>([]);
-  const [connections, setConnections] = useState<{ left: string; right: string }[]>([]);
+  const [connections, setConnections] = useState<
+    { left: string; right: string }[]
+  >([]);
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [selectedRight, setSelectedRight] = useState<string | null>(null);
 
   // Normaliza pares y filtra undefined/null
   const safePairs = (game.pairs ?? [])
-    .map(p => ({ left: toStr(p?.left), right: toStr(p?.right) }))
-    .filter(p => p.left && p.right) as { left: string; right: string }[];
+    .map((p) => ({ left: toStr(p?.left), right: toStr(p?.right) }))
+    .filter((p) => p.left && p.right) as { left: string; right: string }[];
 
   // Columnas base
-  const baseLeftItems  = safePairs.map(p => p.left);
-  const baseRightItems = safePairs.map(p => p.right);
+  const baseLeftItems = safePairs.map((p) => p.left);
+  const baseRightItems = safePairs.map((p) => p.right);
 
   useEffect(() => {
     // Clona para no mutar base y aplica shuffle solo si corresponde
-    const left  = [...baseLeftItems];
+    const left = [...baseLeftItems];
     const right = [...baseRightItems];
 
     if (game.shuffle !== false && !showFeedback) {
@@ -64,7 +66,7 @@ export const Match: React.FC<MatchProps> = ({
 
       // Remove any existing connections with these items
       const filteredConnections = connections.filter(
-        conn => conn.left !== selectedLeft && conn.right !== selectedRight
+        (conn) => conn.left !== selectedLeft && conn.right !== selectedRight,
       );
 
       setConnections([...filteredConnections, newConnection]);
@@ -104,28 +106,37 @@ export const Match: React.FC<MatchProps> = ({
   };
 
   const getConnectionForLeft = (leftItem: string) => {
-    return connections.find(conn => conn.left === leftItem);
+    return connections.find((conn) => conn.left === leftItem);
   };
 
   const getConnectionForRight = (rightItem: string) => {
-    return connections.find(conn => conn.right === rightItem);
+    return connections.find((conn) => conn.right === rightItem);
   };
 
   const isCorrectConnection = (left: string, right: string) => {
     if (!showFeedback || !left || !right) return null;
-    return safePairs.some(p => p.left === left && p.right === right);
+    return safePairs.some((p) => p.left === left && p.right === right);
   };
 
-  const getItemStyle = (item: string, side: 'left' | 'right', isConnected: boolean) => {
-    const isSelected = side === 'left' ? selectedLeft === item : selectedRight === item;
+  const getItemStyle = (
+    item: string,
+    side: 'left' | 'right',
+    isConnected: boolean,
+  ) => {
+    const isSelected =
+      side === 'left' ? selectedLeft === item : selectedRight === item;
 
     if (showFeedback && isConnected) {
-      const connection = side === 'left'
-        ? getConnectionForLeft(item)
-        : getConnectionForRight(item);
+      const connection =
+        side === 'left'
+          ? getConnectionForLeft(item)
+          : getConnectionForRight(item);
 
       if (connection) {
-        const isCorrect = isCorrectConnection(connection.left, connection.right);
+        const isCorrect = isCorrectConnection(
+          connection.left,
+          connection.right,
+        );
         if (isCorrect) {
           return 'bg-green-100 border-green-500';
         } else {
@@ -151,8 +162,15 @@ export const Match: React.FC<MatchProps> = ({
 
     if (leftIndex === -1 || rightIndex === -1) return null;
 
-    const isCorrect = showFeedback ? isCorrectConnection(leftItem, rightItem) : null;
-    const color = isCorrect === true ? 'stroke-green-500' : isCorrect === false ? 'stroke-red-500' : 'stroke-purple-400';
+    const isCorrect = showFeedback
+      ? isCorrectConnection(leftItem, rightItem)
+      : null;
+    const color =
+      isCorrect === true
+        ? 'stroke-green-500'
+        : isCorrect === false
+          ? 'stroke-red-500'
+          : 'stroke-purple-400';
 
     return (
       <svg
@@ -162,12 +180,12 @@ export const Match: React.FC<MatchProps> = ({
       >
         <line
           x1="33%"
-          y1={`${(leftIndex * 80) + 60}px`}
+          y1={`${leftIndex * 80 + 60}px`}
           x2="67%"
-          y2={`${(rightIndex * 80) + 60}px`}
+          y2={`${rightIndex * 80 + 60}px`}
           className={color}
           strokeWidth="2"
-          strokeDasharray={isCorrect === false ? "5,5" : "0"}
+          strokeDasharray={isCorrect === false ? '5,5' : '0'}
         />
       </svg>
     );
@@ -201,10 +219,13 @@ export const Match: React.FC<MatchProps> = ({
         {/* Matching Area */}
         <div className="relative min-h-[400px]">
           {/* Connection Lines */}
-          {connections.map(conn => renderConnection(conn.left, conn.right))}
+          {connections.map((conn) => renderConnection(conn.left, conn.right))}
 
           {/* Columns */}
-          <div className="grid grid-cols-3 gap-8 relative" style={{ zIndex: 1 }}>
+          <div
+            className="grid grid-cols-3 gap-8 relative"
+            style={{ zIndex: 1 }}
+          >
             {/* Left Column */}
             <div className="space-y-4">
               {leftColumn.map((item, index) => {
@@ -219,13 +240,17 @@ export const Match: React.FC<MatchProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item}</span>
-                      {showFeedback && isConnected && connection && (
-                        isCorrectConnection(connection.left, connection.right) ? (
+                      {showFeedback &&
+                        isConnected &&
+                        connection &&
+                        (isCorrectConnection(
+                          connection.left,
+                          connection.right,
+                        ) ? (
                           <Check className="w-5 h-5 text-green-600" />
                         ) : (
                           <X className="w-5 h-5 text-red-600" />
-                        )
-                      )}
+                        ))}
                     </div>
                   </Card>
                 );
@@ -251,13 +276,17 @@ export const Match: React.FC<MatchProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item}</span>
-                      {showFeedback && isConnected && connection && (
-                        isCorrectConnection(connection.left, connection.right) ? (
+                      {showFeedback &&
+                        isConnected &&
+                        connection &&
+                        (isCorrectConnection(
+                          connection.left,
+                          connection.right,
+                        ) ? (
                           <Check className="w-5 h-5 text-green-600" />
                         ) : (
                           <X className="w-5 h-5 text-red-600" />
-                        )
-                      )}
+                        ))}
                     </div>
                   </Card>
                 );
@@ -269,16 +298,19 @@ export const Match: React.FC<MatchProps> = ({
         {/* Instructions */}
         {!showFeedback && (
           <div className="text-sm text-gray-600 text-center">
-            Haz clic en un elemento de la izquierda y luego en su pareja de la derecha para conectarlos
+            Haz clic en un elemento de la izquierda y luego en su pareja de la
+            derecha para conectarlos
           </div>
         )}
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
               {feedback.correct
                 ? '¡Perfecto! Todas las conexiones son correctas.'
-                : `${connections.filter(conn => isCorrectConnection(conn.left, conn.right)).length} de ${safePairs.length} conexiones correctas.`}
+                : `${connections.filter((conn) => isCorrectConnection(conn.left, conn.right)).length} de ${safePairs.length} conexiones correctas.`}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>

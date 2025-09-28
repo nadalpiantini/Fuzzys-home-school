@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { ReactNode } from 'react'
-import { I18nProvider } from '@/lib/i18n/provider'
-import { TRPCProvider } from '@/lib/trpc/provider'
-import { Toaster } from 'sonner'
+import { ReactNode } from 'react';
+import { I18nProvider } from '@/lib/i18n/provider';
+import { TRPCProvider } from '@/lib/trpc/provider';
+import { Toaster } from 'sonner';
 
 interface ProvidersProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {
@@ -17,5 +17,5 @@ export function Providers({ children }: ProvidersProps) {
         <Toaster richColors position="top-center" />
       </I18nProvider>
     </TRPCProvider>
-  )
+  );
 }

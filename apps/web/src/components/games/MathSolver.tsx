@@ -31,7 +31,7 @@ export const MathSolver: React.FC<MathSolverProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [userSteps, setUserSteps] = useState<string[]>(['']);
@@ -49,7 +49,10 @@ export const MathSolver: React.FC<MathSolverProps> = ({
   };
 
   const handleSubmit = () => {
-    onAnswer(userAnswer, userSteps.filter(step => step.trim() !== ''));
+    onAnswer(
+      userAnswer,
+      userSteps.filter((step) => step.trim() !== ''),
+    );
   };
 
   const handleShowNextHint = () => {
@@ -60,10 +63,14 @@ export const MathSolver: React.FC<MathSolverProps> = ({
 
   const getDifficultyColor = () => {
     switch (game.difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'hard':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -74,12 +81,19 @@ export const MathSolver: React.FC<MathSolverProps> = ({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Calculator className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-medium text-gray-900">Resuelve la Ecuación</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Resuelve la Ecuación
+            </h3>
           </div>
           {game.difficulty && (
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor()}`}>
-              {game.difficulty === 'easy' ? 'Fácil' :
-               game.difficulty === 'medium' ? 'Medio' : 'Difícil'}
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor()}`}
+            >
+              {game.difficulty === 'easy'
+                ? 'Fácil'
+                : game.difficulty === 'medium'
+                  ? 'Medio'
+                  : 'Difícil'}
             </span>
           )}
         </div>
@@ -110,11 +124,7 @@ export const MathSolver: React.FC<MathSolverProps> = ({
                     {showHints ? 'Ocultar' : 'Mostrar'} Pistas
                   </Button>
                 )}
-                <Button
-                  onClick={handleAddStep}
-                  variant="outline"
-                  size="sm"
-                >
+                <Button onClick={handleAddStep} variant="outline" size="sm">
                   + Agregar Paso
                 </Button>
               </div>
@@ -185,7 +195,9 @@ export const MathSolver: React.FC<MathSolverProps> = ({
 
         {/* Feedback */}
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <div className="flex items-center gap-2">
               {feedback.correct ? (
                 <Check className="w-5 h-5" />
@@ -198,7 +210,10 @@ export const MathSolver: React.FC<MathSolverProps> = ({
             </div>
             {!feedback.correct && feedback.correctAnswer && (
               <p className="mt-2">
-                Respuesta correcta: <span className="font-mono font-bold">{feedback.correctAnswer}</span>
+                Respuesta correcta:{' '}
+                <span className="font-mono font-bold">
+                  {feedback.correctAnswer}
+                </span>
               </p>
             )}
             {feedback.explanation && (
@@ -220,7 +235,8 @@ export const MathSolver: React.FC<MathSolverProps> = ({
                   ))}
                   <div className="mt-2 pt-2 border-t">
                     <p className="text-sm font-medium">
-                      Respuesta: <span className="font-mono">{game.answer}</span>
+                      Respuesta:{' '}
+                      <span className="font-mono">{game.answer}</span>
                     </p>
                   </div>
                 </div>

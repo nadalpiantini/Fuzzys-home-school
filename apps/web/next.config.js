@@ -12,7 +12,7 @@ const nextConfig = {
     '@fuzzy/sandbox-connector',
     '@fuzzy/schemas',
     '@fuzzy/simulation-engine',
-    '@fuzzy/vr-ar-adapter'
+    '@fuzzy/vr-ar-adapter',
   ],
   images: {
     domains: ['localhost', 'supabase.co', 'fuzzyandfriends.com'],
@@ -45,12 +45,12 @@ const nextConfig = {
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        'undici': false,
+        undici: false,
       };
     }
 
     return config;
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

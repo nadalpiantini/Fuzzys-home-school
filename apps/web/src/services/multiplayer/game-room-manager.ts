@@ -6,7 +6,7 @@ import {
   PlayerStatus,
   QuizBattleConfig,
   PowerUp,
-  GameAnalytics
+  GameAnalytics,
 } from './types';
 
 export class GameRoomManager {
@@ -24,7 +24,7 @@ export class GameRoomManager {
       players: [],
       leaderboard: [],
       chat: [],
-      gameData: this.initializeGameData(config.gameType)
+      gameData: this.initializeGameData(config.gameType),
     };
 
     this.rooms.set(config.id, room);
@@ -70,7 +70,7 @@ export class GameRoomManager {
       playerName: 'Sistema',
       message: `${player.name} se unió a la sala`,
       timestamp: new Date(),
-      type: 'system'
+      type: 'system',
     });
 
     console.log(`Player ${player.name} joined room ${roomId}`);
@@ -84,7 +84,7 @@ export class GameRoomManager {
     const room = this.rooms.get(roomId);
     if (!room) return null;
 
-    const playerIndex = room.players.findIndex(p => p.id === playerId);
+    const playerIndex = room.players.findIndex((p) => p.id === playerId);
     if (playerIndex === -1) return room;
 
     const player = room.players[playerIndex];
@@ -101,7 +101,7 @@ export class GameRoomManager {
       playerName: 'Sistema',
       message: `${player.name} salió de la sala`,
       timestamp: new Date(),
-      type: 'system'
+      type: 'system',
     });
 
     // Check if room should be closed
@@ -151,7 +151,7 @@ export class GameRoomManager {
           playerName: 'Sistema',
           message: `El juego comienza en ${countdown}...`,
           timestamp: new Date(),
-          type: 'system'
+          type: 'system',
         });
       }
     }, 1000);
@@ -162,7 +162,7 @@ export class GameRoomManager {
       playerName: 'Sistema',
       message: '¡El juego está comenzando!',
       timestamp: new Date(),
-      type: 'system'
+      type: 'system',
     });
 
     return room;
@@ -186,7 +186,7 @@ export class GameRoomManager {
       playerName: 'Sistema',
       message: '¡El juego ha comenzado! ¡Buena suerte!',
       timestamp: new Date(),
-      type: 'system'
+      type: 'system',
     });
   }
 
@@ -197,19 +197,21 @@ export class GameRoomManager {
     roomId: string,
     playerId: string,
     answer: string | string[],
-    timeSpent: number
+    timeSpent: number,
   ): GameRoom | null {
     const room = this.rooms.get(roomId);
     if (!room || room.status !== 'active' || !room.currentQuestion) return null;
 
-    const player = room.players.find(p => p.id === playerId);
+    const player = room.players.find((p) => p.id === playerId);
     if (!player) return null;
 
     // Check if player already answered
     if (room.currentQuestion.answers[playerId]) return room;
 
     // Record answer
-    room.currentQuestion.answers[playerId] = Array.isArray(answer) ? answer.join(',') : answer;
+    room.currentQuestion.answers[playerId] = Array.isArray(answer)
+      ? answer.join(',')
+      : answer;
 
     // Update player status
     player.status = 'finished';
@@ -224,7 +226,7 @@ export class GameRoomManager {
       answer,
       timeSpent,
       correct: isCorrect,
-      points
+      points,
     };
 
     player.answers.push(questionAnswer);
@@ -240,8 +242,8 @@ export class GameRoomManager {
     this.updateLeaderboard(roomId);
 
     // Check if all players answered
-    const allAnswered = room.players.every(p =>
-      room.currentQuestion!.answers[p.id] !== undefined
+    const allAnswered = room.players.every(
+      (p) => room.currentQuestion!.answers[p.id] !== undefined,
     );
 
     if (allAnswered) {
@@ -267,21 +269,23 @@ export class GameRoomManager {
     }
 
     // Reset player statuses
-    room.players.forEach(player => {
+    room.players.forEach((player) => {
       player.status = 'connected';
     });
 
     // Set up new question
     const questionId = this.generateQuestionId(room, nextQuestionIndex);
     const startTime = new Date();
-    const endTime = new Date(startTime.getTime() + room.config.timePerQuestion * 1000);
+    const endTime = new Date(
+      startTime.getTime() + room.config.timePerQuestion * 1000,
+    );
 
     room.currentQuestion = {
       index: nextQuestionIndex,
       questionId,
       startTime,
       endTime,
-      answers: {}
+      answers: {},
     };
 
     // Set timer for question end
@@ -309,14 +313,14 @@ export class GameRoomManager {
     }
 
     // Process results for players who didn't answer
-    room.players.forEach(player => {
+    room.players.forEach((player) => {
       if (!room.currentQuestion!.answers[player.id]) {
         player.answers.push({
           questionId: room.currentQuestion!.questionId,
           answer: '',
           timeSpent: room.config.timePerQuestion * 1000,
           correct: false,
-          points: 0
+          points: 0,
         });
         player.streak = 0;
       }
@@ -363,7 +367,7 @@ export class GameRoomManager {
       playerName: 'Sistema',
       message: `¡Juego terminado! Ganador: ${winner?.name || 'Empate'}`,
       timestamp: new Date(),
-      type: 'system'
+      type: 'system',
     });
 
     console.log(`Game ended in room ${roomId}. Winner: ${winner?.name}`);
@@ -382,7 +386,7 @@ export class GameRoomManager {
     if (!room) return;
 
     // Remove all players from room map
-    room.players.forEach(player => {
+    room.players.forEach((player) => {
       this.playerRoomMap.delete(player.id);
     });
 
@@ -403,7 +407,10 @@ export class GameRoomManager {
   /**
    * Add chat message
    */
-  addChatMessage(roomId: string, message: GameRoom['chat'][0]): GameRoom | null {
+  addChatMessage(
+    roomId: string,
+    message: GameRoom['chat'][0],
+  ): GameRoom | null {
     const room = this.rooms.get(roomId);
     if (!room) return null;
 
@@ -425,17 +432,17 @@ export class GameRoomManager {
     if (!room) return;
 
     room.leaderboard = room.players
-      .map(player => ({
+      .map((player) => ({
         playerId: player.id,
         name: player.name,
         score: player.score,
         rank: 0, // Will be set below
-        streak: player.streak
+        streak: player.streak,
       }))
       .sort((a, b) => b.score - a.score)
       .map((entry, index) => ({
         ...entry,
-        rank: index + 1
+        rank: index + 1,
       }));
   }
 
@@ -471,13 +478,13 @@ export class GameRoomManager {
           bonusMultipliers: {
             streak: 1.2,
             speed: 1.5,
-            perfect: 2.0
-          }
+            perfect: 2.0,
+          },
         };
       case 'collaborative_solve':
         return {
           phases: [],
-          sharedWorkspace: {}
+          sharedWorkspace: {},
         };
       default:
         return {};
@@ -498,10 +505,10 @@ export class GameRoomManager {
 
   private initializeQuizBattle(room: GameRoom): void {
     // Initialize quiz battle specific logic
-    room.players.forEach(player => {
+    room.players.forEach((player) => {
       player.powerUps = [
         { type: 'double_points', count: 1 },
-        { type: 'time_freeze', count: 1 }
+        { type: 'time_freeze', count: 1 },
       ];
     });
   }
@@ -521,30 +528,42 @@ export class GameRoomManager {
     return Math.random() > 0.3; // 70% chance of correct answer
   }
 
-  private calculatePoints(room: GameRoom, isCorrect: boolean, timeSpent: number): number {
+  private calculatePoints(
+    room: GameRoom,
+    isCorrect: boolean,
+    timeSpent: number,
+  ): number {
     if (!isCorrect) return 0;
 
     const basePoints = 100;
-    const timeBonus = Math.max(0, (room.config.timePerQuestion * 1000 - timeSpent) / 1000);
+    const timeBonus = Math.max(
+      0,
+      (room.config.timePerQuestion * 1000 - timeSpent) / 1000,
+    );
 
     return Math.round(basePoints + timeBonus);
   }
 
   private generateGameAnalytics(room: GameRoom): GameAnalytics {
-    const playerPerformance = room.players.map(player => ({
+    const playerPerformance = room.players.map((player) => ({
       playerId: player.id,
       finalScore: player.score,
-      finalRank: room.leaderboard.find(l => l.playerId === player.id)?.rank || 0,
-      questionsCorrect: player.answers.filter(a => a.correct).length,
-      averageAnswerTime: player.answers.reduce((sum, a) => sum + a.timeSpent, 0) / player.answers.length,
-      streakRecord: Math.max(...player.answers.map((_, index, arr) => {
-        let streak = 0;
-        for (let i = index; i < arr.length && arr[i].correct; i++) {
-          streak++;
-        }
-        return streak;
-      })),
-      engagement: this.calculateEngagementScore(player, room)
+      finalRank:
+        room.leaderboard.find((l) => l.playerId === player.id)?.rank || 0,
+      questionsCorrect: player.answers.filter((a) => a.correct).length,
+      averageAnswerTime:
+        player.answers.reduce((sum, a) => sum + a.timeSpent, 0) /
+        player.answers.length,
+      streakRecord: Math.max(
+        ...player.answers.map((_, index, arr) => {
+          let streak = 0;
+          for (let i = index; i < arr.length && arr[i].correct; i++) {
+            streak++;
+          }
+          return streak;
+        }),
+      ),
+      engagement: this.calculateEngagementScore(player, room),
     }));
 
     return {
@@ -554,16 +573,23 @@ export class GameRoomManager {
       endTime: new Date(),
       playerCount: room.players.length,
       totalQuestions: room.config.totalQuestions,
-      averageScore: playerPerformance.reduce((sum, p) => sum + p.finalScore, 0) / playerPerformance.length,
-      completionRate: room.players.filter(p => p.answers.length === room.config.totalQuestions).length / room.players.length,
+      averageScore:
+        playerPerformance.reduce((sum, p) => sum + p.finalScore, 0) /
+        playerPerformance.length,
+      completionRate:
+        room.players.filter(
+          (p) => p.answers.length === room.config.totalQuestions,
+        ).length / room.players.length,
       engagementMetrics: {
-        averageAnswerTime: playerPerformance.reduce((sum, p) => sum + p.averageAnswerTime, 0) / playerPerformance.length,
-        chatMessages: room.chat.filter(c => c.type === 'message').length,
+        averageAnswerTime:
+          playerPerformance.reduce((sum, p) => sum + p.averageAnswerTime, 0) /
+          playerPerformance.length,
+        chatMessages: room.chat.filter((c) => c.type === 'message').length,
         powerUpsUsed: 0, // Would be tracked
-        disconnections: 0 // Would be tracked
+        disconnections: 0, // Would be tracked
       },
       questionAnalytics: [], // Would be populated with question-specific data
-      playerPerformance
+      playerPerformance,
     };
   }
 
@@ -575,12 +601,20 @@ export class GameRoomManager {
     score += (player.answers.length / room.config.totalQuestions) * 0.4;
 
     // Chat participation
-    const playerMessages = room.chat.filter(c => c.playerId === player.id).length;
+    const playerMessages = room.chat.filter(
+      (c) => c.playerId === player.id,
+    ).length;
     score += Math.min(playerMessages / 10, 0.2); // Up to 0.2 for chat participation
 
     // Average answer time (faster = more engaged)
-    const avgTime = player.answers.reduce((sum, a) => sum + a.timeSpent, 0) / player.answers.length;
-    const timeScore = Math.max(0, (room.config.timePerQuestion * 1000 - avgTime) / (room.config.timePerQuestion * 1000));
+    const avgTime =
+      player.answers.reduce((sum, a) => sum + a.timeSpent, 0) /
+      player.answers.length;
+    const timeScore = Math.max(
+      0,
+      (room.config.timePerQuestion * 1000 - avgTime) /
+        (room.config.timePerQuestion * 1000),
+    );
     score += timeScore * 0.4;
 
     return Math.min(1, score);

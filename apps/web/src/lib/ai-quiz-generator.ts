@@ -8,17 +8,28 @@ export const QuizQuestionSchema = z.object({
   category: z.string(),
   topic: z.string(),
   stem: z.string(),
-  choices: z.array(z.object({
-    id: z.string(),
-    text: z.string(),
-    correct: z.boolean()
-  })).optional(),
+  choices: z
+    .array(
+      z.object({
+        id: z.string(),
+        text: z.string(),
+        correct: z.boolean(),
+      }),
+    )
+    .optional(),
   correctAnswer: z.string().optional(),
   explanation: z.string(),
   points: z.number().default(100),
   timeLimit: z.number().default(30),
-  bloomsTaxonomy: z.enum(['remember', 'understand', 'apply', 'analyze', 'evaluate', 'create']),
-  keywords: z.array(z.string())
+  bloomsTaxonomy: z.enum([
+    'remember',
+    'understand',
+    'apply',
+    'analyze',
+    'evaluate',
+    'create',
+  ]),
+  keywords: z.array(z.string()),
 });
 
 export const GeneratedQuizSchema = z.object({
@@ -34,7 +45,7 @@ export const GeneratedQuizSchema = z.object({
     difficultyDistribution: z.object({
       easy: z.number(),
       medium: z.number(),
-      hard: z.number()
+      hard: z.number(),
     }),
     taxonomyDistribution: z.object({
       remember: z.number(),
@@ -42,9 +53,9 @@ export const GeneratedQuizSchema = z.object({
       apply: z.number(),
       analyze: z.number(),
       evaluate: z.number(),
-      create: z.number()
-    })
-  })
+      create: z.number(),
+    }),
+  }),
 });
 
 export type QuizQuestion = z.infer<typeof QuizQuestionSchema>;
@@ -53,8 +64,12 @@ export type GeneratedQuiz = z.infer<typeof GeneratedQuizSchema>;
 export interface QuizGenerationOptions {
   questionCount?: number;
   difficulty?: 'easy' | 'medium' | 'hard' | 'mixed';
-  questionTypes?: Array<'mcq' | 'true_false' | 'short_answer' | 'fill_blank' | 'essay'>;
-  bloomsLevels?: Array<'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create'>;
+  questionTypes?: Array<
+    'mcq' | 'true_false' | 'short_answer' | 'fill_blank' | 'essay'
+  >;
+  bloomsLevels?: Array<
+    'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create'
+  >;
   language?: 'es' | 'en';
   gradeLevel?: string;
   subject?: string;
@@ -68,7 +83,8 @@ export class AIQuizGenerator {
 
   constructor(apiKey?: string, baseUrl?: string) {
     this.apiKey = apiKey || process.env.DEEPSEEK_API_KEY || '';
-    this.baseUrl = baseUrl || process.env.OPENAI_BASE_URL || 'https://api.deepseek.com';
+    this.baseUrl =
+      baseUrl || process.env.OPENAI_BASE_URL || 'https://api.deepseek.com';
   }
 
   /**
@@ -76,7 +92,7 @@ export class AIQuizGenerator {
    */
   async generateFromText(
     content: string,
-    options: QuizGenerationOptions = {}
+    options: QuizGenerationOptions = {},
   ): Promise<GeneratedQuiz> {
     const prompt = this.buildQuizPrompt(content, options);
 
@@ -85,7 +101,7 @@ export class AIQuizGenerator {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
@@ -94,16 +110,16 @@ export class AIQuizGenerator {
               role: 'system',
               content: `You are an expert educational content creator specializing in generating high-quality quiz questions.
               Create questions that are pedagogically sound, age-appropriate, and aligned with learning objectives.
-              Always respond with valid JSON that matches the expected schema.`
+              Always respond with valid JSON that matches the expected schema.`,
             },
             {
               role: 'user',
-              content: prompt
-            }
+              content: prompt,
+            },
           ],
           temperature: 0.7,
           max_tokens: 4000,
-          response_format: { type: 'json_object' }
+          response_format: { type: 'json_object' },
         }),
       });
 
@@ -118,7 +134,9 @@ export class AIQuizGenerator {
       return this.validateAndTransformQuiz(rawQuiz, content, options);
     } catch (error) {
       console.error('Error generating quiz:', error);
-      throw new Error(`Failed to generate quiz: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to generate quiz: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
     }
   }
 
@@ -127,12 +145,12 @@ export class AIQuizGenerator {
    */
   async generateFromDocument(
     file: File,
-    options: QuizGenerationOptions = {}
+    options: QuizGenerationOptions = {},
   ): Promise<GeneratedQuiz> {
     const content = await this.extractTextFromFile(file);
     return this.generateFromText(content, {
       ...options,
-      subject: options.subject || this.inferSubjectFromFilename(file.name)
+      subject: options.subject || this.inferSubjectFromFilename(file.name),
     });
   }
 
@@ -141,7 +159,7 @@ export class AIQuizGenerator {
    */
   async generateFromUrl(
     url: string,
-    options: QuizGenerationOptions = {}
+    options: QuizGenerationOptions = {},
   ): Promise<GeneratedQuiz> {
     const content = await this.extractTextFromUrl(url);
     return this.generateFromText(content, options);
@@ -151,8 +169,13 @@ export class AIQuizGenerator {
    * Generate adaptive questions based on student performance
    */
   async generateAdaptiveQuestions(
-    previousAnswers: Array<{ questionId: string; correct: boolean; topic: string; difficulty: string }>,
-    options: QuizGenerationOptions = {}
+    previousAnswers: Array<{
+      questionId: string;
+      correct: boolean;
+      topic: string;
+      difficulty: string;
+    }>,
+    options: QuizGenerationOptions = {},
   ): Promise<QuizQuestion[]> {
     // Analyze performance patterns
     const performanceAnalysis = this.analyzePerformance(previousAnswers);
@@ -162,17 +185,27 @@ export class AIQuizGenerator {
       ...options,
       difficulty: performanceAnalysis.suggestedDifficulty,
       focusTopics: performanceAnalysis.weakTopics,
-      bloomsLevels: performanceAnalysis.targetTaxonomyLevels as ("remember" | "understand" | "apply" | "analyze" | "evaluate" | "create")[]
+      bloomsLevels: performanceAnalysis.targetTaxonomyLevels as (
+        | 'remember'
+        | 'understand'
+        | 'apply'
+        | 'analyze'
+        | 'evaluate'
+        | 'create'
+      )[],
     };
 
-    const prompt = this.buildAdaptivePrompt(performanceAnalysis, adaptiveOptions);
+    const prompt = this.buildAdaptivePrompt(
+      performanceAnalysis,
+      adaptiveOptions,
+    );
 
     try {
       const response = await fetch(`${this.baseUrl}/v1/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
@@ -180,16 +213,16 @@ export class AIQuizGenerator {
             {
               role: 'system',
               content: `You are an adaptive learning AI that creates personalized quiz questions based on student performance data.
-              Generate questions that address knowledge gaps and gradually increase difficulty.`
+              Generate questions that address knowledge gaps and gradually increase difficulty.`,
             },
             {
               role: 'user',
-              content: prompt
-            }
+              content: prompt,
+            },
           ],
           temperature: 0.8,
           max_tokens: 3000,
-          response_format: { type: 'json_object' }
+          response_format: { type: 'json_object' },
         }),
       });
 
@@ -199,11 +232,16 @@ export class AIQuizGenerator {
       return questions.map((q: any) => QuizQuestionSchema.parse(q));
     } catch (error) {
       console.error('Error generating adaptive questions:', error);
-      throw new Error(`Failed to generate adaptive questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to generate adaptive questions: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
     }
   }
 
-  private buildQuizPrompt(content: string, options: QuizGenerationOptions): string {
+  private buildQuizPrompt(
+    content: string,
+    options: QuizGenerationOptions,
+  ): string {
     const {
       questionCount = 10,
       difficulty = 'mixed',
@@ -211,7 +249,7 @@ export class AIQuizGenerator {
       bloomsLevels = ['remember', 'understand', 'apply'],
       language = 'es',
       gradeLevel = 'middle school',
-      subject = 'general'
+      subject = 'general',
     } = options;
 
     return `Generate a quiz with ${questionCount} questions based on the following content:
@@ -269,7 +307,7 @@ Return your response as a JSON object with this structure:
 
   private buildAdaptivePrompt(
     performanceAnalysis: any,
-    options: QuizGenerationOptions
+    options: QuizGenerationOptions,
   ): string {
     return `Generate ${options.questionCount || 5} adaptive quiz questions based on this performance analysis:
 
@@ -289,28 +327,38 @@ ADAPTIVE STRATEGY:
 Return questions in JSON format following the same schema as before.`;
   }
 
-  private analyzePerformance(answers: Array<{ questionId: string; correct: boolean; topic: string; difficulty: string }>) {
+  private analyzePerformance(
+    answers: Array<{
+      questionId: string;
+      correct: boolean;
+      topic: string;
+      difficulty: string;
+    }>,
+  ) {
     const totalAnswers = answers.length;
-    const correctAnswers = answers.filter(a => a.correct).length;
+    const correctAnswers = answers.filter((a) => a.correct).length;
     const accuracy = (correctAnswers / totalAnswers) * 100;
 
     // Group by topic
-    const topicPerformance = answers.reduce((acc, answer) => {
-      if (!acc[answer.topic]) {
-        acc[answer.topic] = { correct: 0, total: 0 };
-      }
-      acc[answer.topic].total++;
-      if (answer.correct) acc[answer.topic].correct++;
-      return acc;
-    }, {} as Record<string, { correct: number; total: number }>);
+    const topicPerformance = answers.reduce(
+      (acc, answer) => {
+        if (!acc[answer.topic]) {
+          acc[answer.topic] = { correct: 0, total: 0 };
+        }
+        acc[answer.topic].total++;
+        if (answer.correct) acc[answer.topic].correct++;
+        return acc;
+      },
+      {} as Record<string, { correct: number; total: number }>,
+    );
 
     // Identify weak and strong topics
     const weakTopics = Object.entries(topicPerformance)
-      .filter(([_, perf]) => (perf.correct / perf.total) < 0.6)
+      .filter(([_, perf]) => perf.correct / perf.total < 0.6)
       .map(([topic]) => topic);
 
     const strongTopics = Object.entries(topicPerformance)
-      .filter(([_, perf]) => (perf.correct / perf.total) >= 0.8)
+      .filter(([_, perf]) => perf.correct / perf.total >= 0.8)
       .map(([topic]) => topic);
 
     // Determine suggested difficulty
@@ -320,9 +368,10 @@ Return questions in JSON format following the same schema as before.`;
     else suggestedDifficulty = 'easy';
 
     // Determine target taxonomy levels
-    const targetTaxonomyLevels = accuracy >= 70
-      ? ['apply', 'analyze', 'evaluate']
-      : ['remember', 'understand', 'apply'];
+    const targetTaxonomyLevels =
+      accuracy >= 70
+        ? ['apply', 'analyze', 'evaluate']
+        : ['remember', 'understand', 'apply'];
 
     return {
       accuracy,
@@ -330,7 +379,7 @@ Return questions in JSON format following the same schema as before.`;
       strongTopics,
       suggestedDifficulty,
       targetTaxonomyLevels,
-      learningGaps: weakTopics // Simplified for this example
+      learningGaps: weakTopics, // Simplified for this example
     };
   }
 
@@ -354,7 +403,10 @@ Return questions in JSON format following the same schema as before.`;
       const response = await fetch(url);
       const html = await response.text();
       // Extract text from HTML (simplified)
-      const textContent = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      const textContent = html
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
       return textContent.substring(0, 10000); // Limit length
     } catch (error) {
       throw new Error(`Failed to extract content from URL: ${error}`);
@@ -363,24 +415,35 @@ Return questions in JSON format following the same schema as before.`;
 
   private inferSubjectFromFilename(filename: string): string {
     const name = filename.toLowerCase();
-    if (name.includes('math') || name.includes('matemática')) return 'Mathematics';
+    if (name.includes('math') || name.includes('matemática'))
+      return 'Mathematics';
     if (name.includes('science') || name.includes('ciencia')) return 'Science';
     if (name.includes('history') || name.includes('historia')) return 'History';
-    if (name.includes('language') || name.includes('lengua')) return 'Language Arts';
-    if (name.includes('geography') || name.includes('geografía')) return 'Geography';
+    if (name.includes('language') || name.includes('lengua'))
+      return 'Language Arts';
+    if (name.includes('geography') || name.includes('geografía'))
+      return 'Geography';
     return 'General';
   }
 
-  private validateAndTransformQuiz(rawQuiz: any, sourceContent: string, options: QuizGenerationOptions): GeneratedQuiz {
+  private validateAndTransformQuiz(
+    rawQuiz: any,
+    sourceContent: string,
+    options: QuizGenerationOptions,
+  ): GeneratedQuiz {
     // Add generation metadata
     const quiz = {
       ...rawQuiz,
       metadata: {
         sourceDocument: sourceContent.substring(0, 100) + '...',
         generationDate: new Date(),
-        difficultyDistribution: this.calculateDifficultyDistribution(rawQuiz.questions),
-        taxonomyDistribution: this.calculateTaxonomyDistribution(rawQuiz.questions)
-      }
+        difficultyDistribution: this.calculateDifficultyDistribution(
+          rawQuiz.questions,
+        ),
+        taxonomyDistribution: this.calculateTaxonomyDistribution(
+          rawQuiz.questions,
+        ),
+      },
     };
 
     // Validate against schema
@@ -389,15 +452,22 @@ Return questions in JSON format following the same schema as before.`;
 
   private calculateDifficultyDistribution(questions: any[]) {
     const distribution = { easy: 0, medium: 0, hard: 0 };
-    questions.forEach(q => {
+    questions.forEach((q) => {
       distribution[q.difficulty as keyof typeof distribution]++;
     });
     return distribution;
   }
 
   private calculateTaxonomyDistribution(questions: any[]) {
-    const distribution = { remember: 0, understand: 0, apply: 0, analyze: 0, evaluate: 0, create: 0 };
-    questions.forEach(q => {
+    const distribution = {
+      remember: 0,
+      understand: 0,
+      apply: 0,
+      analyze: 0,
+      evaluate: 0,
+      create: 0,
+    };
+    questions.forEach((q) => {
       distribution[q.bloomsTaxonomy as keyof typeof distribution]++;
     });
     return distribution;
@@ -408,13 +478,18 @@ Return questions in JSON format following the same schema as before.`;
 export class QuizUtils {
   static shuffleChoices(question: QuizQuestion): QuizQuestion {
     if (question.type === 'mcq' && question.choices) {
-      const shuffledChoices = [...question.choices].sort(() => Math.random() - 0.5);
+      const shuffledChoices = [...question.choices].sort(
+        () => Math.random() - 0.5,
+      );
       return { ...question, choices: shuffledChoices };
     }
     return question;
   }
 
-  static validateQuizQuality(quiz: GeneratedQuiz): { isValid: boolean; issues: string[] } {
+  static validateQuizQuality(quiz: GeneratedQuiz): {
+    isValid: boolean;
+    issues: string[];
+  } {
     const issues: string[] = [];
 
     // Check question distribution
@@ -422,32 +497,41 @@ export class QuizUtils {
     const total = difficulties.easy + difficulties.medium + difficulties.hard;
 
     if (difficulties.easy / total > 0.7) {
-      issues.push('Too many easy questions - consider adding more challenging content');
+      issues.push(
+        'Too many easy questions - consider adding more challenging content',
+      );
     }
 
     if (difficulties.hard / total > 0.5) {
-      issues.push('Too many hard questions - consider adding easier introductory questions');
+      issues.push(
+        'Too many hard questions - consider adding easier introductory questions',
+      );
     }
 
     // Check taxonomy distribution
     const taxonomy = quiz.metadata.taxonomyDistribution;
     const lowerOrder = taxonomy.remember + taxonomy.understand;
-    const higherOrder = taxonomy.apply + taxonomy.analyze + taxonomy.evaluate + taxonomy.create;
+    const higherOrder =
+      taxonomy.apply + taxonomy.analyze + taxonomy.evaluate + taxonomy.create;
 
     if (lowerOrder / total > 0.8) {
-      issues.push('Focus too heavily on lower-order thinking - add more application and analysis questions');
+      issues.push(
+        'Focus too heavily on lower-order thinking - add more application and analysis questions',
+      );
     }
 
     // Check for duplicate content
-    const stems = quiz.questions.map(q => q.stem.toLowerCase());
-    const duplicates = stems.filter((stem, index) => stems.indexOf(stem) !== index);
+    const stems = quiz.questions.map((q) => q.stem.toLowerCase());
+    const duplicates = stems.filter(
+      (stem, index) => stems.indexOf(stem) !== index,
+    );
     if (duplicates.length > 0) {
       issues.push('Duplicate questions detected');
     }
 
     return {
       isValid: issues.length === 0,
-      issues
+      issues,
     };
   }
 

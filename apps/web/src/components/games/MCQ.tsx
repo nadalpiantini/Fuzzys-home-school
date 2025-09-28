@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
-import type { MCQGame } from '@fuzzy/game-engine';
+import type { MCQGame } from '@/types/game-types';
 
 interface MCQProps {
   game: MCQGame;
@@ -23,19 +23,21 @@ export const MCQ: React.FC<MCQProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  const isMultiple = game.multipleAnswers || (game.choices?.filter(c => c.correct).length || 0) > 1;
+  const isMultiple =
+    game.multipleAnswers ||
+    (game.choices?.filter((c) => c.correct).length || 0) > 1;
 
   const handleSelect = (choiceId: string) => {
     if (showFeedback) return;
 
     if (isMultiple) {
-      setSelectedAnswers(prev =>
+      setSelectedAnswers((prev) =>
         prev.includes(choiceId)
-          ? prev.filter(id => id !== choiceId)
-          : [...prev, choiceId]
+          ? prev.filter((id) => id !== choiceId)
+          : [...prev, choiceId],
       );
     } else {
       setSelectedAnswers([choiceId]);
@@ -81,9 +83,7 @@ export const MCQ: React.FC<MCQProps> = ({
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-4">
-        <div className="text-lg font-medium text-gray-900">
-          {game.stem}
-        </div>
+        <div className="text-lg font-medium text-gray-900">{game.stem}</div>
 
         {isMultiple && !showFeedback && (
           <p className="text-sm text-gray-500">
@@ -92,21 +92,25 @@ export const MCQ: React.FC<MCQProps> = ({
         )}
 
         <div className="space-y-3">
-          {game.choices?.filter(choice => choice?.id).map((choice) => (
-            <button
-              key={choice.id}
-              onClick={() => handleSelect(choice.id!)}
-              disabled={showFeedback}
-              className={`w-full text-left p-4 rounded-lg border-2 transition-all flex items-center justify-between ${getChoiceStyle(choice.id!)}`}
-            >
-              <span>{choice.text}</span>
-              {getChoiceIcon(choice.id!)}
-            </button>
-          ))}
+          {game.choices
+            ?.filter((choice) => choice?.id)
+            .map((choice) => (
+              <button
+                key={choice.id}
+                onClick={() => handleSelect(choice.id!)}
+                disabled={showFeedback}
+                className={`w-full text-left p-4 rounded-lg border-2 transition-all flex items-center justify-between ${getChoiceStyle(choice.id!)}`}
+              >
+                <span>{choice.text}</span>
+                {getChoiceIcon(choice.id!)}
+              </button>
+            ))}
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
               {feedback.correct ? '¡Correcto!' : 'Incorrecto'}
             </p>

@@ -15,19 +15,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
-import {
-  FileText, Upload, Link, Brain, Wand2, Download,
-  CheckCircle, AlertCircle, BarChart3, Settings,
-  Lightbulb, Target, Clock, BookOpen
+  FileText,
+  Upload,
+  Link,
+  Brain,
+  Wand2,
+  Download,
+  CheckCircle,
+  AlertCircle,
+  BarChart3,
+  Settings,
+  Lightbulb,
+  Target,
+  Clock,
+  BookOpen,
 } from 'lucide-react';
 
-import { AIQuizGenerator, QuizGenerationOptions, GeneratedQuiz, QuizUtils } from '@/lib/ai-quiz-generator';
+import {
+  AIQuizGenerator,
+  QuizGenerationOptions,
+  GeneratedQuiz,
+  QuizUtils,
+} from '@/lib/ai-quiz-generator';
 
 interface QuizGeneratorProps {
   onQuizGenerated?: (quiz: GeneratedQuiz) => void;
@@ -36,12 +47,14 @@ interface QuizGeneratorProps {
 
 export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
   onQuizGenerated,
-  onClose
+  onClose,
 }) => {
   const [activeTab, setActiveTab] = useState('text');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [generatedQuiz, setGeneratedQuiz] = useState<GeneratedQuiz | null>(null);
+  const [generatedQuiz, setGeneratedQuiz] = useState<GeneratedQuiz | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   // Form states
@@ -55,7 +68,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
     bloomsLevels: ['remember', 'understand', 'apply'],
     language: 'es',
     gradeLevel: 'middle school',
-    subject: 'general'
+    subject: 'general',
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +92,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
       // Simulate progress updates
       const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + 10, 90));
+        setProgress((prev) => Math.min(prev + 10, 90));
       }, 500);
 
       switch (activeTab) {
@@ -119,9 +132,12 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
       setGeneratedQuiz(quiz);
       onQuizGenerated?.(quiz);
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido al generar el quiz');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error desconocido al generar el quiz',
+      );
     } finally {
       setIsGenerating(false);
       setProgress(0);
@@ -146,7 +162,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
   const handleDownloadQuiz = () => {
     if (!generatedQuiz) return;
 
-    const blob = new Blob([JSON.stringify(generatedQuiz, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(generatedQuiz, null, 2)], {
+      type: 'application/json',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -159,10 +177,14 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'hard':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -173,7 +195,7 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
       apply: 'bg-green-100 text-green-800',
       analyze: 'bg-yellow-100 text-yellow-800',
       evaluate: 'bg-orange-100 text-orange-800',
-      create: 'bg-red-100 text-red-800'
+      create: 'bg-red-100 text-red-800',
     };
     return colors[level as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -197,7 +219,11 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleDownloadReport}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadReport}
+              >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Reporte
               </Button>
@@ -211,7 +237,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           {/* Quiz Statistics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{generatedQuiz.questions.length}</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {generatedQuiz.questions.length}
+              </div>
               <div className="text-sm text-gray-600">Preguntas</div>
             </div>
             <div className="text-center">
@@ -241,7 +269,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           {generatedQuiz.questions.map((question, index) => (
             <Card key={question.id} className="p-4">
               <div className="flex justify-between items-start mb-3">
-                <span className="font-semibold text-lg">Pregunta {index + 1}</span>
+                <span className="font-semibold text-lg">
+                  Pregunta {index + 1}
+                </span>
                 <div className="flex gap-1">
                   <Badge className={getDifficultyColor(question.difficulty)}>
                     {question.difficulty}
@@ -265,8 +295,13 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                             : 'bg-gray-50 border-gray-200'
                         }`}
                       >
-                        <span className="font-medium">{choice.id.toUpperCase()})</span> {choice.text}
-                        {choice.correct && <CheckCircle className="inline w-4 h-4 ml-2" />}
+                        <span className="font-medium">
+                          {choice.id.toUpperCase()})
+                        </span>{' '}
+                        {choice.text}
+                        {choice.correct && (
+                          <CheckCircle className="inline w-4 h-4 ml-2" />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -303,8 +338,12 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-2xl font-bold mb-2">Generador de Quiz con IA</h2>
-            <p className="text-gray-600">Crea quizzes automáticamente desde cualquier contenido</p>
+            <h2 className="text-2xl font-bold mb-2">
+              Generador de Quiz con IA
+            </h2>
+            <p className="text-gray-600">
+              Crea quizzes automáticamente desde cualquier contenido
+            </p>
           </div>
           <div className="text-right">
             <Brain className="w-8 h-8 text-blue-500 mx-auto mb-1" />
@@ -353,7 +392,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
                 {selectedFile ? (
                   <div>
                     <p className="font-medium">{selectedFile.name}</p>
-                    <p className="text-sm text-gray-500">{Math.round(selectedFile.size / 1024)} KB</p>
+                    <p className="text-sm text-gray-500">
+                      {Math.round(selectedFile.size / 1024)} KB
+                    </p>
                   </div>
                 ) : (
                   <div>
@@ -404,7 +445,12 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               <Label htmlFor="questionCount">Número de preguntas</Label>
               <Select
                 value={options.questionCount?.toString()}
-                onValueChange={(value) => setOptions(prev => ({ ...prev, questionCount: parseInt(value) }))}
+                onValueChange={(value) =>
+                  setOptions((prev) => ({
+                    ...prev,
+                    questionCount: parseInt(value),
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -422,7 +468,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               <Label htmlFor="difficulty">Dificultad</Label>
               <Select
                 value={options.difficulty}
-                onValueChange={(value: any) => setOptions(prev => ({ ...prev, difficulty: value }))}
+                onValueChange={(value: any) =>
+                  setOptions((prev) => ({ ...prev, difficulty: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -440,7 +488,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               <Label htmlFor="gradeLevel">Nivel educativo</Label>
               <Select
                 value={options.gradeLevel}
-                onValueChange={(value) => setOptions(prev => ({ ...prev, gradeLevel: value }))}
+                onValueChange={(value) =>
+                  setOptions((prev) => ({ ...prev, gradeLevel: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -459,7 +509,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               <Input
                 id="subject"
                 value={options.subject}
-                onChange={(e) => setOptions(prev => ({ ...prev, subject: e.target.value }))}
+                onChange={(e) =>
+                  setOptions((prev) => ({ ...prev, subject: e.target.value }))
+                }
                 placeholder="Ej: Matemáticas, Historia..."
               />
             </div>
@@ -468,7 +520,9 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
               <Label htmlFor="language">Idioma</Label>
               <Select
                 value={options.language}
-                onValueChange={(value: any) => setOptions(prev => ({ ...prev, language: value }))}
+                onValueChange={(value: any) =>
+                  setOptions((prev) => ({ ...prev, language: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -510,13 +564,12 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
           )}
           <Button
             onClick={handleGenerate}
-            disabled={isGenerating || (
-              activeTab === 'text' && !textContent.trim()
-            ) || (
-              activeTab === 'file' && !selectedFile
-            ) || (
-              activeTab === 'url' && !url.trim()
-            )}
+            disabled={
+              isGenerating ||
+              (activeTab === 'text' && !textContent.trim()) ||
+              (activeTab === 'file' && !selectedFile) ||
+              (activeTab === 'url' && !url.trim())
+            }
             className="px-8"
           >
             {isGenerating ? (

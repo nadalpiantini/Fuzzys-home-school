@@ -6,9 +6,24 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
-  Users, Trophy, Timer, Play, User, Crown, Zap, Star,
-  Flame, Heart, Target, Medal, Volume2, VolumeX,
-  Settings, Share2, BarChart3, Gift
+  Users,
+  Trophy,
+  Timer,
+  Play,
+  User,
+  Crown,
+  Zap,
+  Star,
+  Flame,
+  Heart,
+  Target,
+  Medal,
+  Volume2,
+  VolumeX,
+  Settings,
+  Share2,
+  BarChart3,
+  Gift,
 } from 'lucide-react';
 
 interface LiveQuizAdvancedProps {
@@ -64,7 +79,13 @@ interface GameSettings {
 }
 
 interface GameState {
-  status: 'lobby' | 'countdown' | 'question' | 'results' | 'leaderboard' | 'finished';
+  status:
+    | 'lobby'
+    | 'countdown'
+    | 'question'
+    | 'results'
+    | 'leaderboard'
+    | 'finished';
   pin?: string;
   players: Player[];
   currentQuestion?: Question;
@@ -73,15 +94,36 @@ interface GameState {
   timeRemaining?: number;
   leaderboard?: Player[];
   settings: GameSettings;
-  answers?: Array<{ playerId: string; choice: string; responseTime: number; correct: boolean }>;
+  answers?: Array<{
+    playerId: string;
+    choice: string;
+    responseTime: number;
+    correct: boolean;
+  }>;
   countdownValue?: number;
 }
 
 const DEFAULT_POWERUPS: PowerUp[] = [
   { type: 'double_points', name: 'Puntos Dobles', icon: '2️⃣', used: false },
-  { type: 'freeze_time', name: 'Congelar Tiempo', icon: '❄️', duration: 5, used: false },
-  { type: 'eliminate_wrong', name: 'Eliminar Incorrectas', icon: '🎯', used: false },
-  { type: 'second_chance', name: 'Segunda Oportunidad', icon: '🔄', used: false }
+  {
+    type: 'freeze_time',
+    name: 'Congelar Tiempo',
+    icon: '❄️',
+    duration: 5,
+    used: false,
+  },
+  {
+    type: 'eliminate_wrong',
+    name: 'Eliminar Incorrectas',
+    icon: '🎯',
+    used: false,
+  },
+  {
+    type: 'second_chance',
+    name: 'Segunda Oportunidad',
+    icon: '🔄',
+    used: false,
+  },
 ];
 
 const SAMPLE_QUESTIONS: Question[] = [
@@ -93,12 +135,12 @@ const SAMPLE_QUESTIONS: Question[] = [
       { id: 'a', text: 'Santo Domingo', correct: true },
       { id: 'b', text: 'Santiago', correct: false },
       { id: 'c', text: 'La Romana', correct: false },
-      { id: 'd', text: 'Puerto Plata', correct: false }
+      { id: 'd', text: 'Puerto Plata', correct: false },
     ],
     timeLimit: 20,
     points: 100,
     difficulty: 'easy',
-    category: 'Geografía'
+    category: 'Geografía',
   },
   {
     id: '2',
@@ -108,13 +150,13 @@ const SAMPLE_QUESTIONS: Question[] = [
       { id: 'a', text: '1821', correct: false },
       { id: 'b', text: '1844', correct: true },
       { id: 'c', text: '1865', correct: false },
-      { id: 'd', text: '1898', correct: false }
+      { id: 'd', text: '1898', correct: false },
     ],
     timeLimit: 25,
     points: 150,
     difficulty: 'medium',
-    category: 'Historia'
-  }
+    category: 'Historia',
+  },
 ];
 
 export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
@@ -123,7 +165,7 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
   onJoin,
   onStart,
   onAnswer,
-  onClose
+  onClose,
 }) => {
   const [gameState, setGameState] = useState<GameState>({
     status: 'lobby',
@@ -135,8 +177,8 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
       powerUpsEnabled: true,
       teamMode: false,
       soundEffects: true,
-      showLeaderboardAfterEach: true
-    }
+      showLeaderboardAfterEach: true,
+    },
   });
 
   const [joinPin, setJoinPin] = useState('');
@@ -151,7 +193,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sound effects
-  const playSound = (type: 'correct' | 'incorrect' | 'countdown' | 'powerup') => {
+  const playSound = (
+    type: 'correct' | 'incorrect' | 'countdown' | 'powerup',
+  ) => {
     if (!gameState.settings.soundEffects) return;
 
     // In a real implementation, you would load and play actual sound files
@@ -161,33 +205,50 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
   // Mock game initialization
   useEffect(() => {
     if (mode === 'host' && quizId) {
-      setGameState(prev => ({
+      setGameState((prev) => ({
         ...prev,
         pin: generateGamePin(),
         totalQuestions: SAMPLE_QUESTIONS.length,
         players: [
           {
-            id: '1', nickname: 'Juan', score: 0, answered: false, streak: 0,
-            correctAnswers: 0, totalAnswers: 0, averageResponseTime: 0,
-            powerUps: [...DEFAULT_POWERUPS], avatar: '🧑'
+            id: '1',
+            nickname: 'Juan',
+            score: 0,
+            answered: false,
+            streak: 0,
+            correctAnswers: 0,
+            totalAnswers: 0,
+            averageResponseTime: 0,
+            powerUps: [...DEFAULT_POWERUPS],
+            avatar: '🧑',
           },
           {
-            id: '2', nickname: 'María', score: 0, answered: false, streak: 0,
-            correctAnswers: 0, totalAnswers: 0, averageResponseTime: 0,
-            powerUps: [...DEFAULT_POWERUPS], avatar: '👩'
-          }
-        ]
+            id: '2',
+            nickname: 'María',
+            score: 0,
+            answered: false,
+            streak: 0,
+            correctAnswers: 0,
+            totalAnswers: 0,
+            averageResponseTime: 0,
+            powerUps: [...DEFAULT_POWERUPS],
+            avatar: '👩',
+          },
+        ],
       }));
     }
   }, [mode, quizId]);
 
   // Timer management
   useEffect(() => {
-    if (gameState.status === 'question' && gameState.timeRemaining !== undefined) {
+    if (
+      gameState.status === 'question' &&
+      gameState.timeRemaining !== undefined
+    ) {
       timerRef.current = setTimeout(() => {
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          timeRemaining: Math.max(0, (prev.timeRemaining || 0) - 1)
+          timeRemaining: Math.max(0, (prev.timeRemaining || 0) - 1),
         }));
       }, 1000);
 
@@ -205,9 +266,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
     if (onJoin && joinPin && nickname) {
       onJoin(joinPin, nickname);
       // Mock successful join
-      setGameState(prev => ({
+      setGameState((prev) => ({
         ...prev,
-        status: 'lobby'
+        status: 'lobby',
       }));
     }
   };
@@ -215,15 +276,15 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
   const handleStartGame = () => {
     if (onStart) onStart();
 
-    setGameState(prev => ({
+    setGameState((prev) => ({
       ...prev,
       status: 'countdown',
-      countdownValue: 3
+      countdownValue: 3,
     }));
 
     // Countdown sequence
     const countdown = setInterval(() => {
-      setGameState(prev => {
+      setGameState((prev) => {
         if (prev.countdownValue === 1) {
           clearInterval(countdown);
           return {
@@ -232,12 +293,12 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
             questionNumber: 1,
             currentQuestion: SAMPLE_QUESTIONS[0],
             timeRemaining: SAMPLE_QUESTIONS[0].timeLimit,
-            countdownValue: 0
+            countdownValue: 0,
           };
         }
         return {
           ...prev,
-          countdownValue: (prev.countdownValue || 0) - 1
+          countdownValue: (prev.countdownValue || 0) - 1,
         };
       });
     }, 1000);
@@ -252,15 +313,17 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
       setHasAnswered(true);
 
       // Mock answer processing
-      const isCorrect = gameState.currentQuestion?.choices?.find(c => c.id === selectedAnswer)?.correct || false;
+      const isCorrect =
+        gameState.currentQuestion?.choices?.find((c) => c.id === selectedAnswer)
+          ?.correct || false;
       playSound(isCorrect ? 'correct' : 'incorrect');
 
       // Update player stats (mock)
       if (mode === 'player') {
         setTimeout(() => {
-          setGameState(prev => ({
+          setGameState((prev) => ({
             ...prev,
-            status: 'results'
+            status: 'results',
           }));
         }, 2000);
       }
@@ -276,9 +339,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
     // Apply power-up effects
     switch (powerUp.type) {
       case 'freeze_time':
-        setGameState(prev => ({
+        setGameState((prev) => ({
           ...prev,
-          timeRemaining: prev.timeRemaining! + (powerUp.duration || 5)
+          timeRemaining: prev.timeRemaining! + (powerUp.duration || 5),
         }));
         break;
       case 'eliminate_wrong':
@@ -288,18 +351,18 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
     }
 
     // Mark as used
-    setGameState(prev => ({
+    setGameState((prev) => ({
       ...prev,
-      players: prev.players.map(player =>
+      players: prev.players.map((player) =>
         player.id === '1' // Current player
           ? {
               ...player,
-              powerUps: player.powerUps.map(p =>
-                p.type === powerUp.type ? { ...p, used: true } : p
-              )
+              powerUps: player.powerUps.map((p) =>
+                p.type === powerUp.type ? { ...p, used: true } : p,
+              ),
             }
-          : player
-      )
+          : player,
+      ),
     }));
   };
 
@@ -310,7 +373,7 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
       a: 'bg-red-500 hover:bg-red-600 active:scale-95',
       b: 'bg-blue-500 hover:bg-blue-600 active:scale-95',
       c: 'bg-yellow-500 hover:bg-yellow-600 active:scale-95',
-      d: 'bg-green-500 hover:bg-green-600 active:scale-95'
+      d: 'bg-green-500 hover:bg-green-600 active:scale-95',
     };
     return colors[choiceId as keyof typeof colors] || 'bg-gray-500';
   };
@@ -319,7 +382,7 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
     const variants = {
       easy: 'bg-green-100 text-green-800',
       medium: 'bg-yellow-100 text-yellow-800',
-      hard: 'bg-red-100 text-red-800'
+      hard: 'bg-red-100 text-red-800',
     };
     return variants[difficulty as keyof typeof variants] || 'bg-gray-100';
   };
@@ -355,10 +418,15 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                   <input
                     type="checkbox"
                     checked={gameState.settings.powerUpsEnabled}
-                    onChange={(e) => setGameState(prev => ({
-                      ...prev,
-                      settings: { ...prev.settings, powerUpsEnabled: e.target.checked }
-                    }))}
+                    onChange={(e) =>
+                      setGameState((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          powerUpsEnabled: e.target.checked,
+                        },
+                      }))
+                    }
                   />
                   <span className="text-sm">Power-ups</span>
                 </label>
@@ -366,10 +434,15 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                   <input
                     type="checkbox"
                     checked={gameState.settings.streakBonus}
-                    onChange={(e) => setGameState(prev => ({
-                      ...prev,
-                      settings: { ...prev.settings, streakBonus: e.target.checked }
-                    }))}
+                    onChange={(e) =>
+                      setGameState((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          streakBonus: e.target.checked,
+                        },
+                      }))
+                    }
                   />
                   <span className="text-sm">Bonus por racha</span>
                 </label>
@@ -377,10 +450,15 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                   <input
                     type="checkbox"
                     checked={gameState.settings.soundEffects}
-                    onChange={(e) => setGameState(prev => ({
-                      ...prev,
-                      settings: { ...prev.settings, soundEffects: e.target.checked }
-                    }))}
+                    onChange={(e) =>
+                      setGameState((prev) => ({
+                        ...prev,
+                        settings: {
+                          ...prev.settings,
+                          soundEffects: e.target.checked,
+                        },
+                      }))
+                    }
                   />
                   <span className="text-sm">Efectos de sonido</span>
                 </label>
@@ -391,8 +469,12 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-blue-100 rounded-lg p-6 text-center">
               <p className="text-lg text-gray-600 mb-2">PIN del juego:</p>
-              <p className="text-6xl font-bold text-blue-600 font-mono">{gameState.pin}</p>
-              <p className="text-sm text-gray-500 mt-2">Los jugadores pueden unirse en kahoot.it</p>
+              <p className="text-6xl font-bold text-blue-600 font-mono">
+                {gameState.pin}
+              </p>
+              <p className="text-sm text-gray-500 mt-2">
+                Los jugadores pueden unirse en kahoot.it
+              </p>
             </div>
 
             <div className="space-y-4">
@@ -401,16 +483,23 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                   <Users className="inline mr-2" />
                   Jugadores: {gameState.players.length}
                 </span>
-                <Badge variant="outline">{gameState.totalQuestions} preguntas</Badge>
+                <Badge variant="outline">
+                  {gameState.totalQuestions} preguntas
+                </Badge>
               </div>
 
               <div className="max-h-48 overflow-y-auto space-y-2">
                 {gameState.players.map((player, index) => (
-                  <div key={player.id} className="bg-white p-3 rounded-lg shadow-sm flex items-center justify-between">
+                  <div
+                    key={player.id}
+                    className="bg-white p-3 rounded-lg shadow-sm flex items-center justify-between"
+                  >
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">{player.avatar}</span>
                       <span className="font-medium">{player.nickname}</span>
-                      {index === 0 && <Crown className="w-4 h-4 text-yellow-500" />}
+                      {index === 0 && (
+                        <Crown className="w-4 h-4 text-yellow-500" />
+                      )}
                     </div>
                     <div className="flex items-center space-x-1">
                       {player.streak > 0 && (
@@ -465,19 +554,28 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <span className="text-lg">
-                Pregunta {gameState.questionNumber} de {gameState.totalQuestions}
+                Pregunta {gameState.questionNumber} de{' '}
+                {gameState.totalQuestions}
               </span>
-              <Badge className={getDifficultyBadge(gameState.currentQuestion?.difficulty || 'easy')}>
+              <Badge
+                className={getDifficultyBadge(
+                  gameState.currentQuestion?.difficulty || 'easy',
+                )}
+              >
                 {gameState.currentQuestion?.difficulty}
               </Badge>
               {gameState.currentQuestion?.category && (
-                <Badge variant="outline">{gameState.currentQuestion.category}</Badge>
+                <Badge variant="outline">
+                  {gameState.currentQuestion.category}
+                </Badge>
               )}
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-xl">
                 <Timer className="w-6 h-6" />
-                <span className={`font-bold ${gameState.timeRemaining! <= 5 ? 'text-red-500 animate-pulse' : ''}`}>
+                <span
+                  className={`font-bold ${gameState.timeRemaining! <= 5 ? 'text-red-500 animate-pulse' : ''}`}
+                >
                   {gameState.timeRemaining}s
                 </span>
               </div>
@@ -490,7 +588,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
           </div>
 
           <div className="text-center">
-            <h3 className="text-3xl font-bold mb-8">{gameState.currentQuestion?.stem}</h3>
+            <h3 className="text-3xl font-bold mb-8">
+              {gameState.currentQuestion?.stem}
+            </h3>
 
             <div className="grid grid-cols-2 gap-6">
               {gameState.currentQuestion?.choices?.map((choice) => (
@@ -499,7 +599,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                   className={`p-8 rounded-lg text-white font-medium text-xl transition-all duration-200 ${getAnswerButtonColor(choice.id)}`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">{choice.id.toUpperCase()}</span>
+                    <span className="text-2xl font-bold">
+                      {choice.id.toUpperCase()}
+                    </span>
                     <span className="flex-1 text-center">{choice.text}</span>
                   </div>
                 </div>
@@ -510,10 +612,11 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex justify-between items-center">
               <p className="text-gray-600">
-                {gameState.players.filter(p => p.answered).length} de {gameState.players.length} jugadores respondieron
+                {gameState.players.filter((p) => p.answered).length} de{' '}
+                {gameState.players.length} jugadores respondieron
               </p>
               <div className="flex space-x-2">
-                {gameState.players.map(player => (
+                {gameState.players.map((player) => (
                   <div
                     key={player.id}
                     className={`w-3 h-3 rounded-full ${
@@ -537,11 +640,15 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
         <div className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Unirse al Quiz</h2>
-            <p className="text-gray-600">Ingresa el PIN y tu nombre para comenzar</p>
+            <p className="text-gray-600">
+              Ingresa el PIN y tu nombre para comenzar
+            </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">PIN del juego</label>
+            <label className="block text-sm font-medium mb-2">
+              PIN del juego
+            </label>
             <Input
               type="text"
               value={joinPin}
@@ -561,7 +668,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
               placeholder="Ingresa tu nombre"
               maxLength={20}
             />
-            <p className="text-xs text-gray-500 mt-1">{nickname.length}/20 caracteres</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {nickname.length}/20 caracteres
+            </p>
           </div>
 
           <Button
@@ -579,7 +688,7 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
 
   // Player View - Answer Question
   if (mode === 'player' && gameState.status === 'question') {
-    const currentPlayer = gameState.players.find(p => p.id === '1'); // Mock current player
+    const currentPlayer = gameState.players.find((p) => p.id === '1'); // Mock current player
 
     return (
       <Card className="p-6 max-w-md mx-auto">
@@ -589,7 +698,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
               <Badge variant="outline">#{gameState.questionNumber}</Badge>
               <div className="flex items-center space-x-2">
                 <Timer className="w-4 h-4" />
-                <span className={`font-bold ${gameState.timeRemaining! <= 5 ? 'text-red-500' : ''}`}>
+                <span
+                  className={`font-bold ${gameState.timeRemaining! <= 5 ? 'text-red-500' : ''}`}
+                >
                   {gameState.timeRemaining}s
                 </span>
               </div>
@@ -610,27 +721,31 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
           {/* Power-ups */}
           {gameState.settings.powerUpsEnabled && currentPlayer?.powerUps && (
             <div className="flex justify-center space-x-2 mb-4">
-              {currentPlayer.powerUps.filter(p => !p.used).map(powerUp => (
-                <Button
-                  key={powerUp.type}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePowerUp(powerUp)}
-                  className="p-2 h-auto"
-                  title={powerUp.name}
-                >
-                  <span className="text-lg">{powerUp.icon}</span>
-                </Button>
-              ))}
+              {currentPlayer.powerUps
+                .filter((p) => !p.used)
+                .map((powerUp) => (
+                  <Button
+                    key={powerUp.type}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePowerUp(powerUp)}
+                    className="p-2 h-auto"
+                    title={powerUp.name}
+                  >
+                    <span className="text-lg">{powerUp.icon}</span>
+                  </Button>
+                ))}
             </div>
           )}
 
           {!hasAnswered ? (
             <>
-              <p className="text-center text-gray-600 text-sm">Selecciona tu respuesta:</p>
+              <p className="text-center text-gray-600 text-sm">
+                Selecciona tu respuesta:
+              </p>
 
               <div className="grid grid-cols-2 gap-3">
-                {['a', 'b', 'c', 'd'].map(choice => (
+                {['a', 'b', 'c', 'd'].map((choice) => (
                   <Button
                     key={choice}
                     onClick={() => {
@@ -640,7 +755,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                     className={`h-20 ${getAnswerButtonColor(choice)} text-white transform transition-all duration-200 hover:scale-105`}
                     disabled={gameState.timeRemaining === 0}
                   >
-                    <span className="text-3xl font-bold">{choice.toUpperCase()}</span>
+                    <span className="text-3xl font-bold">
+                      {choice.toUpperCase()}
+                    </span>
                   </Button>
                 ))}
               </div>
@@ -675,7 +792,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
               <Trophy className="inline mr-2 text-yellow-500" />
               Tabla de Posiciones
             </h2>
-            <p className="text-gray-600">Pregunta {gameState.questionNumber} de {gameState.totalQuestions}</p>
+            <p className="text-gray-600">
+              Pregunta {gameState.questionNumber} de {gameState.totalQuestions}
+            </p>
           </div>
 
           <div className="space-y-3">
@@ -683,28 +802,40 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
               <div
                 key={player.id}
                 className={`flex items-center justify-between p-4 rounded-lg transition-all duration-300 ${
-                  index === 0 ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 border-2 border-yellow-300' :
-                  index === 1 ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-gray-300' :
-                  index === 2 ? 'bg-gradient-to-r from-orange-100 to-orange-200 border-2 border-orange-300' :
-                  'bg-white border'
+                  index === 0
+                    ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 border-2 border-yellow-300'
+                    : index === 1
+                      ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-2 border-gray-300'
+                      : index === 2
+                        ? 'bg-gradient-to-r from-orange-100 to-orange-200 border-2 border-orange-300'
+                        : 'bg-white border'
                 }`}
               >
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center">
                     {index < 3 ? (
-                      <Medal className={`w-8 h-8 ${
-                        index === 0 ? 'text-yellow-500' :
-                        index === 1 ? 'text-gray-500' : 'text-orange-500'
-                      }`} />
+                      <Medal
+                        className={`w-8 h-8 ${
+                          index === 0
+                            ? 'text-yellow-500'
+                            : index === 1
+                              ? 'text-gray-500'
+                              : 'text-orange-500'
+                        }`}
+                      />
                     ) : (
-                      <span className="text-2xl font-bold w-8 text-center">{index + 1}</span>
+                      <span className="text-2xl font-bold w-8 text-center">
+                        {index + 1}
+                      </span>
                     )}
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl">{player.avatar}</span>
                     <div>
-                      <span className="text-lg font-medium">{player.nickname}</span>
+                      <span className="text-lg font-medium">
+                        {player.nickname}
+                      </span>
                       {player.streak > 0 && (
                         <div className="flex items-center text-orange-500 text-sm">
                           <Flame className="w-3 h-3 mr-1" />
@@ -732,7 +863,9 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
                 Ver Estadísticas
               </Button>
               <Button onClick={() => {}} size="lg">
-                {gameState.questionNumber === gameState.totalQuestions ? 'Ver Resultados Finales' : 'Siguiente Pregunta'}
+                {gameState.questionNumber === gameState.totalQuestions
+                  ? 'Ver Resultados Finales'
+                  : 'Siguiente Pregunta'}
               </Button>
             </div>
           )}

@@ -34,7 +34,7 @@ export const WordSearch: React.FC<WordSearchProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [selectedCells, setSelectedCells] = useState<CellPosition[]>([]);
   const [foundWords, setFoundWords] = useState<string[]>([]);
@@ -59,7 +59,9 @@ export const WordSearch: React.FC<WordSearchProps> = ({
 
     if (rowDiff <= 1 && colDiff <= 1 && (rowDiff > 0 || colDiff > 0)) {
       // Valid adjacent cell
-      const cellExists = currentSelection.some(cell => cell.row === row && cell.col === col);
+      const cellExists = currentSelection.some(
+        (cell) => cell.row === row && cell.col === col,
+      );
       if (!cellExists) {
         setCurrentSelection([...currentSelection, { row, col }]);
       }
@@ -71,7 +73,7 @@ export const WordSearch: React.FC<WordSearchProps> = ({
 
     // Check if selected cells form a word
     const word = currentSelection
-      .map(cell => game.grid[cell.row][cell.col])
+      .map((cell) => game.grid[cell.row][cell.col])
       .join('');
 
     const reversedWord = word.split('').reverse().join('');
@@ -99,8 +101,12 @@ export const WordSearch: React.FC<WordSearchProps> = ({
   };
 
   const getCellStyle = (row: number, col: number) => {
-    const isSelected = selectedCells.some(cell => cell.row === row && cell.col === col);
-    const isCurrentlySelecting = currentSelection.some(cell => cell.row === row && cell.col === col);
+    const isSelected = selectedCells.some(
+      (cell) => cell.row === row && cell.col === col,
+    );
+    const isCurrentlySelecting = currentSelection.some(
+      (cell) => cell.row === row && cell.col === col,
+    );
 
     if (showFeedback && isSelected) {
       return 'bg-green-200 border-green-500';
@@ -129,7 +135,9 @@ export const WordSearch: React.FC<WordSearchProps> = ({
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Sopa de Letras</h3>
+            <h3 className="text-lg font-medium text-gray-900">
+              Sopa de Letras
+            </h3>
             {game.theme && (
               <p className="text-sm text-gray-600">Tema: {game.theme}</p>
             )}
@@ -161,8 +169,12 @@ export const WordSearch: React.FC<WordSearchProps> = ({
                     <div
                       key={`${rowIndex}-${colIndex}`}
                       className={`w-10 h-10 border border-gray-400 flex items-center justify-center cursor-pointer font-bold ${getCellStyle(rowIndex, colIndex)}`}
-                      onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                      onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                      onMouseDown={() =>
+                        handleCellMouseDown(rowIndex, colIndex)
+                      }
+                      onMouseEnter={() =>
+                        handleCellMouseEnter(rowIndex, colIndex)
+                      }
                     >
                       {letter}
                     </div>
@@ -198,9 +210,13 @@ export const WordSearch: React.FC<WordSearchProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Excelente! Encontraste todas las palabras.' : `Encontraste ${foundWords.length} de ${game.words.length} palabras.`}
+              {feedback.correct
+                ? '¡Excelente! Encontraste todas las palabras.'
+                : `Encontraste ${foundWords.length} de ${game.words.length} palabras.`}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>

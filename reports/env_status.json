@@ -1,0 +1,269 @@
+{
+  "auditDate": "2025-09-28",
+  "status": "WARNING",
+  "summary": {
+    "totalEnvFiles": 6,
+    "variablesDetected": 28,
+    "criticalExposures": 1,
+    "missingKeys": 4,
+    "hardcodedSecrets": 1,
+    "clientFixedStatus": "RESOLVED"
+  },
+  "publicVars": [
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "status": "defined",
+      "usageCount": 8,
+      "files": [
+        "apps/web/src/lib/supabase/client.ts:7",
+        "apps/web/src/lib/supabase/server.ts:5",
+        "apps/web/src/services/adaptive/AdaptiveService.ts:7",
+        "apps/web/src/services/externalGames.ts:63",
+        "apps/web/src/services/quiz/QuizService.ts:9",
+        "scripts/seed-educational-content.ts:20",
+        "scripts/run-migrations.js:8",
+        "scripts/seed-games.ts:10"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "status": "defined",
+      "usageCount": 7,
+      "files": [
+        "apps/web/src/lib/supabase/client.ts:8",
+        "apps/web/src/lib/supabase/server.ts:6",
+        "apps/web/src/services/adaptive/AdaptiveService.ts:8",
+        "apps/web/src/services/externalGames.ts:64",
+        "apps/web/src/services/quiz/QuizService.ts:10"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_APP_URL",
+      "status": "defined",
+      "usageCount": 1,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_WEBSOCKET_URL",
+      "status": "missing",
+      "usageCount": 1,
+      "files": ["apps/web/src/services/multiplayer/websocket-manager.ts:30"]
+    },
+    {
+      "name": "NEXT_PUBLIC_EXTERNAL_GAMES_ENABLED",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_PHET_ENABLED",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_BLOCKLY_ENABLED",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_MUSIC_BLOCKS_ENABLED",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_AR_ENABLED",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_AR_MARKER_BASE_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_AR_MODELS_BASE_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_PHET_BASE_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_PHET_LANGUAGE",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_BLOCKLY_BASE_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_BLOCKLY_LANGUAGE",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_MUSIC_BLOCKS_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NEXT_PUBLIC_VERCEL_ANALYTICS_ID",
+      "status": "optional",
+      "usageCount": 0,
+      "files": ["config"]
+    }
+  ],
+  "privateVars": [
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "status": "defined",
+      "usageCount": 6,
+      "files": [
+        "apps/web/src/lib/supabase/server.ts:6",
+        "scripts/seed-educational-content.ts:21",
+        "scripts/run-migrations.js:9"
+      ]
+    },
+    {
+      "name": "SUPABASE_JWT_SECRET",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "DEEPSEEK_API_KEY",
+      "status": "defined",
+      "usageCount": 4,
+      "files": [
+        "apps/web/src/app/api/tutor/route.ts:8",
+        "apps/web/src/app/api/deepseek/route.ts:11",
+        "apps/web/src/lib/ai-quiz-generator.ts:70",
+        "apps/web/scripts/seed-games.ts:19"
+      ]
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "status": "defined",
+      "usageCount": 2,
+      "files": [
+        "apps/web/src/app/api/tutor/route.ts:8"
+      ]
+    },
+    {
+      "name": "OPENAI_BASE_URL",
+      "status": "defined",
+      "usageCount": 2,
+      "files": [
+        "apps/web/src/app/api/tutor/route.ts:9",
+        "apps/web/src/lib/ai-quiz-generator.ts:71"
+      ]
+    },
+    {
+      "name": "DATABASE_URL",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    },
+    {
+      "name": "NODE_ENV",
+      "status": "defined",
+      "usageCount": 0,
+      "files": ["config"]
+    }
+  ],
+  "usedKeys": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_WEBSOCKET_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "DEEPSEEK_API_KEY",
+    "OPENAI_API_KEY",
+    "OPENAI_BASE_URL"
+  ],
+  "missingKeys": [
+    "NEXT_PUBLIC_WEBSOCKET_URL",
+    "SUPABASE_SERVICE_KEY"
+  ],
+  "clientLeaks": [
+    {
+      "service": "AdaptiveService",
+      "file": "apps/web/src/services/adaptive/AdaptiveService.ts",
+      "lines": [7, 8],
+      "issue": "Direct env access from potential client context",
+      "severity": "medium"
+    },
+    {
+      "service": "ExternalGames",
+      "file": "apps/web/src/services/externalGames.ts",
+      "lines": [63, 64],
+      "issue": "Direct env access from potential client context",
+      "severity": "medium"
+    },
+    {
+      "service": "QuizService",
+      "file": "apps/web/src/services/quiz/QuizService.ts",
+      "lines": [9, 10],
+      "issue": "Direct env access from potential client context",
+      "severity": "medium"
+    }
+  ],
+  "duplicates": [
+    {
+      "standardName": "SUPABASE_SERVICE_ROLE_KEY",
+      "alternativeNames": ["SUPABASE_SERVICE_KEY"],
+      "files": [
+        "scripts/seed-games.ts:11",
+        "apps/web/scripts/seed-games.ts:9",
+        "apps/web/scripts/run-migrations.ts:10"
+      ]
+    }
+  ],
+  "orphans": [],
+  "hardcodedSecrets": [
+    {
+      "file": "apps/web/src/lib/supabase/server.ts",
+      "line": 5,
+      "type": "supabase_url",
+      "value": "https://ggnt****nsex.supabase.co",
+      "severity": "critical"
+    },
+    {
+      "file": "apps/web/src/lib/supabase/server.ts",
+      "line": 6,
+      "type": "jwt_token",
+      "value": "eyJh****t8",
+      "severity": "critical"
+    }
+  ],
+  "fixedIssues": [
+    {
+      "file": "apps/web/src/lib/supabase/client.ts",
+      "issue": "Hardcoded secrets removed",
+      "status": "resolved",
+      "fixedDate": "2025-09-28"
+    }
+  ],
+  "suggestions": [
+    "Remove hardcoded fallbacks from server.ts",
+    "Standardize SUPABASE_SERVICE_ROLE_KEY naming in all scripts",
+    "Refactor client services to use server actions",
+    "Add NEXT_PUBLIC_WEBSOCKET_URL to environment configuration",
+    "Implement runtime environment validation",
+    "Create automated security scanning"
+  ]
+}

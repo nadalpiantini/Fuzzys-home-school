@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
-import type { TrueFalseGame } from '@fuzzy/game-engine';
+import type { TrueFalseGame } from '@/types/game-types';
 
 interface TrueFalseProps {
   game: TrueFalseGame;
@@ -23,7 +23,7 @@ export const TrueFalse: React.FC<TrueFalseProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
 
@@ -83,7 +83,9 @@ export const TrueFalse: React.FC<TrueFalseProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
               {feedback.correct ? '¡Correcto!' : 'Incorrecto'}
             </p>

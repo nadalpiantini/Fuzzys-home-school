@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Trophy, Timer, RotateCcw } from 'lucide-react';
-import type { MemoryCardsGame } from '@fuzzy/game-engine';
+import type { MemoryCardsGame } from '@/types/game-types';
 
 interface MemoryCardsProps {
   game: MemoryCardsGame;
@@ -31,7 +31,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   const safePairs = game.pairs ?? [];
   const safeGridSize = game.gridSize ?? { cols: 4, rows: 4 };
@@ -46,14 +46,14 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   useEffect(() => {
     // Initialize and shuffle cards
     const cardPairs: CardItem[] = [];
-    safePairs.forEach(pair => {
+    safePairs.forEach((pair) => {
       // Add front card
       cardPairs.push({
         id: (pair?.id || '') + '-front',
         content: pair?.front || '',
         image: pair?.image,
         isFlipped: false,
-        isMatched: false
+        isMatched: false,
       });
       // Add back card (matching pair)
       cardPairs.push({
@@ -61,7 +61,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
         content: pair?.back || '',
         image: pair?.image,
         isFlipped: false,
-        isMatched: false
+        isMatched: false,
       });
     });
 
@@ -137,10 +137,10 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
 
   const handleReset = () => {
     const shuffled = [...cards].sort(() => Math.random() - 0.5);
-    const reset = shuffled.map(card => ({
+    const reset = shuffled.map((card) => ({
       ...card,
       isFlipped: false,
-      isMatched: false
+      isMatched: false,
     }));
     setCards(reset);
     setFlippedCards([]);
@@ -184,7 +184,9 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
     <Card className="p-6 max-w-5xl mx-auto">
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">Juego de Memoria</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            Juego de Memoria
+          </h3>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Timer className="w-4 h-4" />
@@ -194,7 +196,10 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
               Movimientos: <span className="font-bold">{moves}</span>
             </div>
             <div className="text-sm">
-              Pares: <span className="font-bold">{matchedPairs}/{safePairs.length}</span>
+              Pares:{' '}
+              <span className="font-bold">
+                {matchedPairs}/{safePairs.length}
+              </span>
             </div>
             {!showFeedback && !isComplete && (
               <Button
@@ -214,7 +219,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
           className="grid gap-4"
           style={{
             gridTemplateColumns: `repeat(${safeGridSize.cols}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${safeGridSize.rows}, minmax(0, 1fr))`
+            gridTemplateRows: `repeat(${safeGridSize.rows}, minmax(0, 1fr))`,
           }}
         >
           {cards.map((card, index) => (
@@ -239,14 +244,17 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5" />
               <p className="font-medium">
-                ¡Felicidades! Completaste el juego en {moves} movimientos y {formatTime(elapsedTime)}.
+                ¡Felicidades! Completaste el juego en {moves} movimientos y{' '}
+                {formatTime(elapsedTime)}.
               </p>
             </div>
           </div>
         )}
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-yellow-50 text-yellow-800'}`}
+          >
             <p className="font-medium">Juego completado</p>
             {feedback.score && (
               <p className="text-sm">Puntuación: {feedback.score} puntos</p>

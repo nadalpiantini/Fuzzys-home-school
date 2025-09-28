@@ -21,7 +21,7 @@ export class WebSocketManager {
     this.config = {
       reconnectInterval: 5000,
       maxReconnectAttempts: 5,
-      ...config
+      ...config,
     };
   }
 
@@ -72,7 +72,7 @@ export class WebSocketManager {
       const message: WebSocketMessage = {
         type,
         data,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
       this.ws.send(JSON.stringify(message));
     } else {
@@ -97,17 +97,19 @@ export class WebSocketManager {
   private emit(type: string, data: any): void {
     const typeListeners = this.listeners.get(type);
     if (typeListeners) {
-      typeListeners.forEach(callback => callback(data));
+      typeListeners.forEach((callback) => callback(data));
     }
   }
 
   private handleReconnect(): void {
     if (this.reconnectAttempts < this.config.maxReconnectAttempts!) {
       this.reconnectAttempts++;
-      console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.config.maxReconnectAttempts})`);
-      
+      console.log(
+        `Attempting to reconnect (${this.reconnectAttempts}/${this.config.maxReconnectAttempts})`,
+      );
+
       setTimeout(() => {
-        this.connect().catch(error => {
+        this.connect().catch((error) => {
           console.error('Reconnection failed:', error);
         });
       }, this.config.reconnectInterval);
@@ -121,6 +123,8 @@ export class WebSocketManager {
   }
 }
 
-export const createWebSocketManager = (config: WebSocketConfig): WebSocketManager => {
+export const createWebSocketManager = (
+  config: WebSocketConfig,
+): WebSocketManager => {
   return new WebSocketManager(config);
 };

@@ -33,9 +33,12 @@ export class TutorEngine {
   private sessions: Map<string, TutorSession> = new Map();
   private studentProfiles: Map<string, StudentProfile> = new Map();
 
-  async startSession(studentId: string, subject: string): Promise<TutorSession> {
+  async startSession(
+    studentId: string,
+    subject: string,
+  ): Promise<TutorSession> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const session: TutorSession = {
       id: sessionId,
       studentId,
@@ -43,14 +46,18 @@ export class TutorEngine {
       level: 'beginner', // Default level
       startTime: new Date(),
       messages: [],
-      progress: 0
+      progress: 0,
     };
 
     this.sessions.set(sessionId, session);
     return session;
   }
 
-  async sendMessage(sessionId: string, content: string, role: 'student' | 'tutor' = 'student'): Promise<TutorMessage> {
+  async sendMessage(
+    sessionId: string,
+    content: string,
+    role: 'student' | 'tutor' = 'student',
+  ): Promise<TutorMessage> {
     const session = this.sessions.get(sessionId);
     if (!session) {
       throw new Error('Session not found');
@@ -60,7 +67,7 @@ export class TutorEngine {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       role,
       content,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     session.messages.push(message);
@@ -78,11 +85,16 @@ export class TutorEngine {
     }
   }
 
-  async getStudentProfile(studentId: string): Promise<StudentProfile | undefined> {
+  async getStudentProfile(
+    studentId: string,
+  ): Promise<StudentProfile | undefined> {
     return this.studentProfiles.get(studentId);
   }
 
-  async updateStudentProfile(studentId: string, profile: Partial<StudentProfile>): Promise<void> {
+  async updateStudentProfile(
+    studentId: string,
+    profile: Partial<StudentProfile>,
+  ): Promise<void> {
     const existing = this.studentProfiles.get(studentId);
     if (existing) {
       this.studentProfiles.set(studentId, { ...existing, ...profile });

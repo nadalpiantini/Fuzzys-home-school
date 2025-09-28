@@ -7,7 +7,7 @@ import {
   ConfusionIndicator,
   ProgressTracking,
   LearningAnalytics,
-  ExplanationStrategy
+  ExplanationStrategy,
 } from './types';
 
 export class TutorEngine {
@@ -26,7 +26,7 @@ export class TutorEngine {
   async startSession(
     userId: string,
     subject: string,
-    studentProfile?: TutorSession['studentProfile']
+    studentProfile?: TutorSession['studentProfile'],
   ): Promise<TutorSession> {
     const session: TutorSession = {
       id: this.generateSessionId(),
@@ -41,8 +41,8 @@ export class TutorEngine {
         understandingLevel: 'partial_understanding',
         confusionPoints: [],
         strategiesUsed: [],
-        progressTracking: null
-      }
+        progressTracking: null,
+      },
     };
 
     this.activeSessions.set(session.id, session);
@@ -60,7 +60,7 @@ export class TutorEngine {
   async processQuery(
     sessionId: string,
     query: string,
-    metadata?: { concept?: string; context?: string }
+    metadata?: { concept?: string; context?: string },
   ): Promise<TutorResponse> {
     const session = this.activeSessions.get(sessionId);
     if (!session) {
@@ -72,7 +72,11 @@ export class TutorEngine {
 
     // Analyze query type and understanding level
     const queryType = this.detectQueryType(query);
-    const understandingLevel = await this.assessUnderstanding(session, query, metadata?.concept);
+    const understandingLevel = await this.assessUnderstanding(
+      session,
+      query,
+      metadata?.concept,
+    );
 
     // Detect confusion indicators
     const confusionIndicators = this.detectConfusion(query, session.context);
@@ -82,7 +86,7 @@ export class TutorEngine {
       queryType,
       understandingLevel,
       confusionIndicators,
-      session.studentProfile
+      session.studentProfile,
     );
 
     // Generate response using DeepSeek
@@ -94,8 +98,8 @@ export class TutorEngine {
         queryType,
         understandingLevel,
         language: session.language,
-        learningStyle: session.studentProfile?.learningStyle
-      }
+        learningStyle: session.studentProfile?.learningStyle,
+      },
     );
 
     // Adapt response based on strategy and context
@@ -110,7 +114,7 @@ export class TutorEngine {
       understandingLevel,
       confusionIndicators,
       strategy: strategy.name,
-      concept: metadata?.concept
+      concept: metadata?.concept,
     });
 
     return adaptedResponse;
@@ -121,14 +125,15 @@ export class TutorEngine {
    */
   async generateCheckUnderstanding(
     sessionId: string,
-    concept: string
+    concept: string,
   ): Promise<string[]> {
     const session = this.activeSessions.get(sessionId);
     if (!session) {
       throw new Error('Session not found');
     }
 
-    const currentLevel = session.context?.understandingLevel || 'partial_understanding';
+    const currentLevel =
+      session.context?.understandingLevel || 'partial_understanding';
 
     return this.deepseekClient.generateFollowUpQuestions(
       concept,
@@ -136,8 +141,8 @@ export class TutorEngine {
       {
         subject: session.subject,
         grade: session.studentProfile?.grade || 8,
-        language: session.language
-      }
+        language: session.language,
+      },
     );
   }
 
@@ -147,16 +152,17 @@ export class TutorEngine {
   async provideStepByStep(
     sessionId: string,
     concept: string,
-    context?: string
+    context?: string,
   ): Promise<TutorResponse> {
     const session = this.activeSessions.get(sessionId);
     if (!session) {
       throw new Error('Session not found');
     }
 
-    const stepByStepPrompt = session.language === 'es'
-      ? `Por favor, explícame paso a paso cómo ${concept}. ${context ? `Contexto: ${context}` : ''}`
-      : `Please explain step by step how ${concept}. ${context ? `Context: ${context}` : ''}`;
+    const stepByStepPrompt =
+      session.language === 'es'
+        ? `Por favor, explícame paso a paso cómo ${concept}. ${context ? `Contexto: ${context}` : ''}`
+        : `Please explain step by step how ${concept}. ${context ? `Context: ${context}` : ''}`;
 
     return this.processQuery(sessionId, stepByStepPrompt, { concept });
   }
@@ -167,7 +173,7 @@ export class TutorEngine {
   async requestExamples(
     sessionId: string,
     concept: string,
-    type: 'local' | 'visual' | 'analogies' = 'local'
+    type: 'local' | 'visual' | 'analogies' = 'local',
   ): Promise<TutorResponse> {
     const session = this.activeSessions.get(sessionId);
     if (!session) {
@@ -228,36 +234,71 @@ export class TutorEngine {
     const lowerQuery = query.toLowerCase();
 
     // Spanish patterns
-    if (lowerQuery.includes('no entiendo') || lowerQuery.includes('no comprendo') || lowerQuery.includes('confuso')) {
+    if (
+      lowerQuery.includes('no entiendo') ||
+      lowerQuery.includes('no comprendo') ||
+      lowerQuery.includes('confuso')
+    ) {
       return 'explanation_request';
     }
-    if (lowerQuery.includes('cómo resuelvo') || lowerQuery.includes('cómo hago') || lowerQuery.includes('ayúdame con')) {
+    if (
+      lowerQuery.includes('cómo resuelvo') ||
+      lowerQuery.includes('cómo hago') ||
+      lowerQuery.includes('ayúdame con')
+    ) {
       return 'problem_solving';
     }
-    if (lowerQuery.includes('diferencia entre') || lowerQuery.includes('qué es') || lowerQuery.includes('cuál es')) {
+    if (
+      lowerQuery.includes('diferencia entre') ||
+      lowerQuery.includes('qué es') ||
+      lowerQuery.includes('cuál es')
+    ) {
       return 'concept_clarification';
     }
-    if (lowerQuery.includes('ejemplo') || lowerQuery.includes('dame un ejemplo')) {
+    if (
+      lowerQuery.includes('ejemplo') ||
+      lowerQuery.includes('dame un ejemplo')
+    ) {
       return 'example_request';
     }
-    if (lowerQuery.includes('tarea') || lowerQuery.includes('homework') || lowerQuery.includes('deber')) {
+    if (
+      lowerQuery.includes('tarea') ||
+      lowerQuery.includes('homework') ||
+      lowerQuery.includes('deber')
+    ) {
       return 'homework_help';
     }
-    if (lowerQuery.includes('cómo estudio') || lowerQuery.includes('examen') || lowerQuery.includes('preparar')) {
+    if (
+      lowerQuery.includes('cómo estudio') ||
+      lowerQuery.includes('examen') ||
+      lowerQuery.includes('preparar')
+    ) {
       return 'study_guidance';
     }
 
     // English patterns
-    if (lowerQuery.includes("don't understand") || lowerQuery.includes("confused")) {
+    if (
+      lowerQuery.includes("don't understand") ||
+      lowerQuery.includes('confused')
+    ) {
       return 'explanation_request';
     }
-    if (lowerQuery.includes('how do I solve') || lowerQuery.includes('help me with')) {
+    if (
+      lowerQuery.includes('how do I solve') ||
+      lowerQuery.includes('help me with')
+    ) {
       return 'problem_solving';
     }
-    if (lowerQuery.includes('difference between') || lowerQuery.includes('what is')) {
+    if (
+      lowerQuery.includes('difference between') ||
+      lowerQuery.includes('what is')
+    ) {
       return 'concept_clarification';
     }
-    if (lowerQuery.includes('example') || lowerQuery.includes('give me an example')) {
+    if (
+      lowerQuery.includes('example') ||
+      lowerQuery.includes('give me an example')
+    ) {
       return 'example_request';
     }
 
@@ -267,7 +308,7 @@ export class TutorEngine {
   private async assessUnderstanding(
     session: TutorSession,
     query: string,
-    concept?: string
+    concept?: string,
   ): Promise<UnderstandingLevel> {
     if (!concept) {
       return session.context?.understandingLevel || 'partial_understanding';
@@ -279,8 +320,8 @@ export class TutorEngine {
       {
         subject: session.subject,
         grade: session.studentProfile?.grade || 8,
-        language: session.language
-      }
+        language: session.language,
+      },
     );
 
     return analysis.level;
@@ -291,32 +332,46 @@ export class TutorEngine {
     const lowerQuery = query.toLowerCase();
 
     // Vocabulary confusion
-    if (lowerQuery.includes('qué significa') || lowerQuery.includes('no sé qué es') || lowerQuery.includes('what does') || lowerQuery.includes("don't know what")) {
+    if (
+      lowerQuery.includes('qué significa') ||
+      lowerQuery.includes('no sé qué es') ||
+      lowerQuery.includes('what does') ||
+      lowerQuery.includes("don't know what")
+    ) {
       indicators.push({
         type: 'vocabulary',
         severity: 'medium',
-        description: 'Student doesn\'t understand key terms',
-        suggestedIntervention: 'Define terms clearly with examples'
+        description: "Student doesn't understand key terms",
+        suggestedIntervention: 'Define terms clearly with examples',
       });
     }
 
     // Procedural confusion
-    if (lowerQuery.includes('cómo se hace') || lowerQuery.includes('pasos') || lowerQuery.includes('how to') || lowerQuery.includes('steps')) {
+    if (
+      lowerQuery.includes('cómo se hace') ||
+      lowerQuery.includes('pasos') ||
+      lowerQuery.includes('how to') ||
+      lowerQuery.includes('steps')
+    ) {
       indicators.push({
         type: 'procedure',
         severity: 'medium',
         description: 'Student needs step-by-step guidance',
-        suggestedIntervention: 'Provide clear procedural steps'
+        suggestedIntervention: 'Provide clear procedural steps',
       });
     }
 
     // Application confusion
-    if (lowerQuery.includes('cuándo uso') || lowerQuery.includes('para qué sirve') || lowerQuery.includes('when do I use')) {
+    if (
+      lowerQuery.includes('cuándo uso') ||
+      lowerQuery.includes('para qué sirve') ||
+      lowerQuery.includes('when do I use')
+    ) {
       indicators.push({
         type: 'application',
         severity: 'medium',
-        description: 'Student doesn\'t know when to apply concept',
-        suggestedIntervention: 'Provide real-world applications and contexts'
+        description: "Student doesn't know when to apply concept",
+        suggestedIntervention: 'Provide real-world applications and contexts',
       });
     }
 
@@ -327,22 +382,25 @@ export class TutorEngine {
     queryType: QueryType,
     understandingLevel: UnderstandingLevel,
     confusionIndicators: ConfusionIndicator[],
-    studentProfile?: TutorSession['studentProfile']
+    studentProfile?: TutorSession['studentProfile'],
   ): ExplanationStrategy {
     // Default strategy
     let strategyName = 'basic_explanation';
 
     // Adjust based on understanding level
-    if (understandingLevel === 'no_understanding' || understandingLevel === 'minimal_understanding') {
+    if (
+      understandingLevel === 'no_understanding' ||
+      understandingLevel === 'minimal_understanding'
+    ) {
       strategyName = 'foundational_building';
     } else if (understandingLevel === 'excellent_understanding') {
       strategyName = 'advanced_exploration';
     }
 
     // Adjust based on confusion indicators
-    if (confusionIndicators.some(c => c.type === 'vocabulary')) {
+    if (confusionIndicators.some((c) => c.type === 'vocabulary')) {
       strategyName = 'vocabulary_focus';
-    } else if (confusionIndicators.some(c => c.type === 'procedure')) {
+    } else if (confusionIndicators.some((c) => c.type === 'procedure')) {
       strategyName = 'step_by_step';
     }
 
@@ -353,21 +411,26 @@ export class TutorEngine {
       strategyName = 'hands_on_explanation';
     }
 
-    return this.explanationStrategies.get(strategyName) || this.explanationStrategies.get('basic_explanation')!;
+    return (
+      this.explanationStrategies.get(strategyName) ||
+      this.explanationStrategies.get('basic_explanation')!
+    );
   }
 
   private adaptResponse(
     response: TutorResponse,
     strategy: ExplanationStrategy,
-    session: TutorSession
+    session: TutorSession,
   ): TutorResponse {
     let adaptedContent = response.content;
 
     // Apply strategy-specific adaptations
     if (strategy.name === 'visual_explanation') {
-      adaptedContent += '\n\n💡 *Imagina esto como una imagen mental mientras lees.*';
+      adaptedContent +=
+        '\n\n💡 *Imagina esto como una imagen mental mientras lees.*';
     } else if (strategy.name === 'hands_on_explanation') {
-      adaptedContent += '\n\n🤲 *Trata de hacer esto con tus manos o objetos reales.*';
+      adaptedContent +=
+        '\n\n🤲 *Trata de hacer esto con tus manos o objetos reales.*';
     }
 
     // Add learning style adaptations
@@ -376,8 +439,10 @@ export class TutorEngine {
         {
           type: 'diagram',
           description: 'Diagrama conceptual del tema explicado',
-          url: '/api/generate-visual?concept=' + encodeURIComponent(adaptedContent.substring(0, 50))
-        }
+          url:
+            '/api/generate-visual?concept=' +
+            encodeURIComponent(adaptedContent.substring(0, 50)),
+        },
       ];
     }
 
@@ -387,27 +452,33 @@ export class TutorEngine {
       adaptations: [
         {
           reason: `Applied ${strategy.name} strategy`,
-          modification: 'Content adapted based on understanding level and learning style'
-        }
-      ]
+          modification:
+            'Content adapted based on understanding level and learning style',
+        },
+      ],
     };
   }
 
   private buildMessageHistory(session: TutorSession) {
-    return session.messages.slice(-10).map(msg => ({ // Last 10 messages for context
-      role: msg.role === 'user' ? 'user' as const : 'assistant' as const,
-      content: msg.content
+    return session.messages.slice(-10).map((msg) => ({
+      // Last 10 messages for context
+      role: msg.role === 'user' ? ('user' as const) : ('assistant' as const),
+      content: msg.content,
     }));
   }
 
-  private addMessage(sessionId: string, role: 'user' | 'assistant', content: string) {
+  private addMessage(
+    sessionId: string,
+    role: 'user' | 'assistant',
+    content: string,
+  ) {
     const session = this.activeSessions.get(sessionId);
     if (session) {
       session.messages.push({
         id: this.generateMessageId(),
         role,
         content,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
   }
@@ -416,56 +487,66 @@ export class TutorEngine {
     session.context = {
       ...session.context,
       ...update,
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
-  private async generateWelcomeMessage(session: TutorSession): Promise<TutorResponse> {
-    const welcome = session.language === 'es'
-      ? `¡Hola! Soy Fuzzy, tu tutor personal de ${session.subject}. Estoy aquí para ayudarte a entender cualquier tema paso a paso. ¿En qué puedo ayudarte hoy?`
-      : `Hi! I'm Fuzzy, your personal ${session.subject} tutor. I'm here to help you understand any topic step by step. How can I help you today?`;
+  private async generateWelcomeMessage(
+    session: TutorSession,
+  ): Promise<TutorResponse> {
+    const welcome =
+      session.language === 'es'
+        ? `¡Hola! Soy Fuzzy, tu tutor personal de ${session.subject}. Estoy aquí para ayudarte a entender cualquier tema paso a paso. ¿En qué puedo ayudarte hoy?`
+        : `Hi! I'm Fuzzy, your personal ${session.subject} tutor. I'm here to help you understand any topic step by step. How can I help you today?`;
 
     return {
       content: welcome,
       type: 'encouragement',
-      confidence: 1.0
+      confidence: 1.0,
     };
   }
 
   private generateLearningAnalytics(session: TutorSession): LearningAnalytics {
-    const timeSpent = session.endTime ?
-      Math.floor((session.endTime.getTime() - session.startTime.getTime()) / 1000) : 0;
+    const timeSpent = session.endTime
+      ? Math.floor(
+          (session.endTime.getTime() - session.startTime.getTime()) / 1000,
+        )
+      : 0;
 
-    const conceptsCovered = [...new Set(
-      session.messages
-        .filter(m => m.metadata?.concept)
-        .map(m => m.metadata!.concept)
-    )];
+    const conceptsCovered = [
+      ...new Set(
+        session.messages
+          .filter((m) => m.metadata?.concept)
+          .map((m) => m.metadata!.concept),
+      ),
+    ];
 
     return {
       sessionId: session.id,
       userId: session.userId,
       metrics: {
-        questionsAsked: session.messages.filter(m => m.role === 'user').length,
+        questionsAsked: session.messages.filter((m) => m.role === 'user')
+          .length,
         conceptsCovered,
         understandingProgression: [], // Would be tracked throughout session
         timeSpent,
         interventionsUsed: session.context?.strategiesUsed || [],
-        successfulExplanations: session.messages.filter(m =>
-          m.role === 'assistant' && m.metadata?.successful
+        successfulExplanations: session.messages.filter(
+          (m) => m.role === 'assistant' && m.metadata?.successful,
         ).length,
-        confusionPoints: session.context?.confusionPoints || []
+        confusionPoints: session.context?.confusionPoints || [],
       },
       insights: {
-        primaryLearningStyle: session.studentProfile?.learningStyle || 'unknown',
+        primaryLearningStyle:
+          session.studentProfile?.learningStyle || 'unknown',
         effectiveExplanationTypes: ['step_by_step', 'examples'], // Would be analyzed
         challengingConcepts: conceptsCovered.slice(0, 3), // Most discussed concepts
         recommendedNextSteps: [
           'Practice exercises on covered topics',
           'Review foundational concepts',
-          'Explore related advanced topics'
-        ]
-      }
+          'Explore related advanced topics',
+        ],
+      },
     };
   }
 
@@ -479,8 +560,8 @@ export class TutorEngine {
       adaptations: {
         visual: 'Include visual descriptions',
         auditory: 'Use rhythm and repetition',
-        kinesthetic: 'Include physical analogies'
-      }
+        kinesthetic: 'Include physical analogies',
+      },
     });
 
     this.explanationStrategies.set('foundational_building', {
@@ -492,8 +573,8 @@ export class TutorEngine {
       adaptations: {
         visual: 'Use diagrams and visual progression',
         auditory: 'Verbal step-by-step building',
-        kinesthetic: 'Hands-on building activities'
-      }
+        kinesthetic: 'Hands-on building activities',
+      },
     });
 
     this.explanationStrategies.set('visual_explanation', {
@@ -505,8 +586,8 @@ export class TutorEngine {
       adaptations: {
         visual: 'Rich visual descriptions',
         auditory: 'Describe visual elements verbally',
-        kinesthetic: 'Visualize through movement'
-      }
+        kinesthetic: 'Visualize through movement',
+      },
     });
 
     this.explanationStrategies.set('step_by_step', {
@@ -518,8 +599,8 @@ export class TutorEngine {
       adaptations: {
         visual: 'Visual flowcharts',
         auditory: 'Rhythmic counting',
-        kinesthetic: 'Physical movements for each step'
-      }
+        kinesthetic: 'Physical movements for each step',
+      },
     });
   }
 

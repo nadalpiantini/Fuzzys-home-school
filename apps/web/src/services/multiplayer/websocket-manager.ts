@@ -1,12 +1,13 @@
 'use client';
 
 import { io, Socket } from 'socket.io-client';
+import { ENV } from '@/lib/env';
 import {
   WebSocketMessage,
   GameRoom,
   Player,
   GameRoomStatus,
-  PlayerStatus
+  PlayerStatus,
 } from './types';
 
 export class WebSocketManager {
@@ -27,13 +28,13 @@ export class WebSocketManager {
   private initializeSocket() {
     if (typeof window === 'undefined') return; // Only run on client
 
-    this.socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'http://localhost:3001', {
+    this.socket = io(ENV.NEXT_PUBLIC_WEBSOCKET_URL, {
       transports: ['websocket', 'polling'],
       upgrade: true,
       rememberUpgrade: true,
       timeout: 20000,
       forceNew: false,
-      autoConnect: true
+      autoConnect: true,
     });
 
     this.setupEventListeners();
@@ -164,7 +165,9 @@ export class WebSocketManager {
     const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
 
     setTimeout(() => {
-      console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+      console.log(
+        `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
+      );
       this.socket?.connect();
     }, delay);
   }
@@ -174,7 +177,7 @@ export class WebSocketManager {
       this.send('join_room', {
         roomId: this.currentRoomId,
         playerId: this.playerId,
-        rejoin: true
+        rejoin: true,
       });
     }
   }
@@ -209,7 +212,7 @@ export class WebSocketManager {
 
       this.send('join_room', {
         roomId,
-        player
+        player,
       });
     });
   }
@@ -233,7 +236,7 @@ export class WebSocketManager {
       });
 
       this.send('leave_room', {
-        roomId: this.currentRoomId
+        roomId: this.currentRoomId,
       });
     });
   }
@@ -244,7 +247,7 @@ export class WebSocketManager {
     this.send('submit_answer', {
       roomId: this.currentRoomId,
       answer,
-      timeSpent
+      timeSpent,
     });
   }
 
@@ -253,7 +256,7 @@ export class WebSocketManager {
 
     this.send('send_chat', {
       roomId: this.currentRoomId,
-      message
+      message,
     });
   }
 
@@ -263,7 +266,7 @@ export class WebSocketManager {
     this.send('emoji_reaction', {
       roomId: this.currentRoomId,
       emoji,
-      targetPlayerId
+      targetPlayerId,
     });
   }
 
@@ -273,7 +276,7 @@ export class WebSocketManager {
     this.send('use_powerup', {
       roomId: this.currentRoomId,
       powerUpType,
-      targetPlayerId
+      targetPlayerId,
     });
   }
 
@@ -282,7 +285,7 @@ export class WebSocketManager {
 
     this.send('player_status_change', {
       roomId: this.currentRoomId,
-      status
+      status,
     });
   }
 
@@ -290,7 +293,7 @@ export class WebSocketManager {
     if (!this.currentRoomId) return;
 
     this.send('game_start', {
-      roomId: this.currentRoomId
+      roomId: this.currentRoomId,
     });
   }
 
@@ -298,7 +301,7 @@ export class WebSocketManager {
     if (!this.currentRoomId) return;
 
     this.send('game_pause', {
-      roomId: this.currentRoomId
+      roomId: this.currentRoomId,
     });
   }
 
@@ -306,7 +309,7 @@ export class WebSocketManager {
     if (!this.currentRoomId) return;
 
     this.send('game_resume', {
-      roomId: this.currentRoomId
+      roomId: this.currentRoomId,
     });
   }
 
@@ -336,7 +339,7 @@ export class WebSocketManager {
   private emit(event: string, data: any): void {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         try {
           handler(data);
         } catch (error) {
@@ -357,7 +360,7 @@ export class WebSocketManager {
       roomId: this.currentRoomId || '',
       playerId: this.playerId || undefined,
       data,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.socket.emit(type, message);

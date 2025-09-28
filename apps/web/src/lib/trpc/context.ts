@@ -1,9 +1,9 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabaseBrowser as supabase } from '@/lib/supabase/client';
 
 export async function createContext() {
   return {
     supabase,
-  }
+  };
 }
 
-export type Context = Awaited<ReturnType<typeof createContext>>
+export type Context = Awaited<ReturnType<typeof createContext>>;

@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { Globe } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Globe } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface LanguageToggleProps {
-  language: 'es' | 'en'
-  onToggle: () => void
+  language: 'es' | 'en';
+  onToggle: () => void;
 }
 
 export function LanguageToggle({ language, onToggle }: LanguageToggleProps) {
@@ -19,5 +19,5 @@ export function LanguageToggle({ language, onToggle }: LanguageToggleProps) {
       <Globe className="w-4 h-4" />
       <span className="font-medium">{language.toUpperCase()}</span>
     </Button>
-  )
+  );
 }

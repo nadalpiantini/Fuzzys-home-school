@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X, RefreshCw } from 'lucide-react';
-import type { ImageSequenceGame } from '@fuzzy/game-engine';
+import type { ImageSequenceGame } from '@/types/game-types';
 
 interface ImageSequenceProps {
   game: ImageSequenceGame;
@@ -23,7 +23,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   onAnswer,
   onNext,
   showFeedback = false,
-  feedback
+  feedback,
 }) => {
   // defaults seguros (no cambian el tipo, solo evitan undefined en build)
   const safeItems = game.items ?? [];
@@ -60,7 +60,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
     e.preventDefault();
     if (!draggedItem || showFeedback || !items) return;
 
-    const draggedIndex = items.findIndex(it => it?.id === draggedItem);
+    const draggedIndex = items.findIndex((it) => it?.id === draggedItem);
     if (draggedIndex === dropIndex) {
       setDraggedItem(null);
       setDragOverIndex(null);
@@ -77,8 +77,8 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   };
 
   const handleSubmit = () => {
-    const currentOrder = (items ?? []).map(it =>
-      (game.items ?? []).findIndex(o => o?.id === it?.id)
+    const currentOrder = (items ?? []).map((it) =>
+      (game.items ?? []).findIndex((o) => o?.id === it?.id),
     );
     onAnswer(currentOrder);
   };
@@ -97,7 +97,9 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
     }
 
     const itemId = getId(index);
-    const originalIndex = (game.items ?? []).findIndex(it => it?.id === itemId);
+    const originalIndex = (game.items ?? []).findIndex(
+      (it) => it?.id === itemId,
+    );
     const isCorrectPosition = safeOrder[index] === originalIndex;
 
     if (isCorrectPosition) {
@@ -111,7 +113,9 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
     if (!showFeedback) return null;
 
     const itemId = getId(index);
-    const originalIndex = (game.items ?? []).findIndex(it => it?.id === itemId);
+    const originalIndex = (game.items ?? []).findIndex(
+      (it) => it?.id === itemId,
+    );
     const isCorrectPosition = safeOrder[index] === originalIndex;
 
     if (isCorrectPosition) {
@@ -182,9 +186,13 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
         </div>
 
         {showFeedback && feedback && (
-          <div className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          <div
+            className={`p-4 rounded-lg ${feedback.correct ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}
+          >
             <p className="font-medium">
-              {feedback.correct ? '¡Perfecto! La secuencia es correcta.' : 'No es la secuencia correcta.'}
+              {feedback.correct
+                ? '¡Perfecto! La secuencia es correcta.'
+                : 'No es la secuencia correcta.'}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>
@@ -194,10 +202,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
 
         <div className="flex justify-between mt-6">
           {!showFeedback ? (
-            <Button
-              onClick={handleSubmit}
-              className="ml-auto"
-            >
+            <Button onClick={handleSubmit} className="ml-auto">
               Verificar Secuencia
             </Button>
           ) : (
