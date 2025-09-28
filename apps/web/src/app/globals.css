@@ -2,109 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 262 83% 58%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 262 83% 58%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 262 83% 58%;
-  }
+/* Variables CSS para colores tierra */
+:root {
+  --earth-50: #fdf8f6;
+  --earth-100: #f2e8e5;
+  --earth-200: #eaddd7;
+  --earth-300: #e0cec7;
+  --earth-400: #d2bab0;
+  --earth-500: #bfa094;
+  --earth-600: #a18072;
+  --earth-700: #977669;
+  --earth-800: #846358;
+  --earth-900: #43302b;
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--earth-50);
+    color: var(--earth-900);
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
-@layer utilities {
-  .fuzzy-gradient {
-    background: linear-gradient(135deg, #8b5cf6 0%, #10b981 100%);
+@layer components {
+  /* Efectos glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   }
 
-  .fuzzy-text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-fuzzy-purple to-fuzzy-green;
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  /* Componentes minimalistas */
+  .card-minimal {
+    @apply glass rounded-xl p-6 transition-all duration-300;
   }
 
-  .game-card {
-    @apply rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md;
+  .btn-earth {
+    background-color: var(--earth-600);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    font-weight: 500;
   }
 
-  /* Asegurar que los colores fuzzy estén disponibles */
-  .text-fuzzy-purple {
-    color: #8b5cf6;
+  .btn-earth:hover {
+    background-color: var(--earth-700);
   }
 
-  .text-fuzzy-green {
-    color: #10b981;
+  .btn-glass {
+    @apply glass;
+    color: var(--earth-800);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    font-weight: 500;
   }
 
-  .text-fuzzy-blue {
-    color: #3b82f6;
-  }
-
-  .text-fuzzy-yellow {
-    color: #f59e0b;
-  }
-
-  .bg-fuzzy-purple {
-    background-color: #8b5cf6;
-  }
-
-  .bg-fuzzy-green {
-    background-color: #10b981;
-  }
-
-  .bg-fuzzy-blue {
-    background-color: #3b82f6;
-  }
-
-  .bg-fuzzy-yellow {
-    background-color: #f59e0b;
+  .btn-glass:hover {
+    background-color: rgba(242, 232, 229, 0.5);
   }
 }

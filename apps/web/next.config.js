@@ -32,11 +32,36 @@ const nextConfig = {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
   },
-  // PRO Pack: Security Headers - CONSOLIDATED
+  // PRO Pack: Cache Headers + Security Headers - OPTIMIZED
   async headers() {
     return [
+      // Cache headers para estáticos (immutable) - PRIORIDAD ALTA
       {
-        source: '/(.*)',
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public,max-age=31536000,immutable' },
+        ],
+      },
+      {
+        source: '/assets/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public,max-age=31536000,immutable' },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public,max-age=31536000,immutable' },
+        ],
+      },
+      // Health endpoint - no cache
+      {
+        source: '/api/env/health',
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
+      },
+      // Security headers para páginas dinámicas (sin conflicto de caché)
+      {
+        source: '/((?!_next/static|assets|fonts).*)',
         headers: [
           // Prevenir clickjacking
           {
@@ -48,75 +73,68 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
-          // Control de referrer
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          // Política de permisos
-          {
-            key: 'Permissions-Policy',
-            value:
-              'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-          },
-          // Content Security Policy consolidada
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "img-src 'self' data: https: blob:",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com",
-              "style-src 'self' 'unsafe-inline' https:",
-              "connect-src 'self' https: wss: ws:",
-              "font-src 'self' data: https:",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'none'",
-            ].join('; '),
-          },
-          // HSTS (HTTP Strict Transport Security)
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload',
-          },
           // XSS Protection
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          // Referrer Policy
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          // Content Security Policy
+          {
+            key: 'Content-Security-Policy',
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self';",
+          },
+          // Permissions Policy
+          {
+            key: 'Permissions-Policy',
+            value:
+              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          // Cache control para páginas dinámicas
+          {
+            key: 'Cache-Control',
+            value: 'no-store',
+          },
         ],
       },
     ];
   },
-  webpack: (config, { isServer }) => {
-    config.resolve.fallback = {
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false,
-      buffer: false,
-      stream: false,
-    };
-
-    // Package resolution is handled by transpilePackages above
-
-    // Optimize for Cloudflare Pages
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        undici: false,
-      };
-    }
-
-    return config;
+  // PRO Pack: Redirects
+  async redirects() {
+    return [
+      {
+        source: '/admin',
+        destination: '/teacher',
+        permanent: false,
+      },
+    ];
+  },
+  // PRO Pack: Rewrites for API optimization
+  async rewrites() {
+    return [
+      {
+        source: '/api/health',
+        destination: '/api/cron/health',
+      },
+    ];
   },
 };
 
-const baseConfig = nextConfig;
-
-export default withSentryConfig(baseConfig, {
-  org: process.env.SENTRY_ORG,
-  project: process.env.SENTRY_PROJECT,
+export default withSentryConfig(nextConfig, {
+  org: 'fuzzy-and-friends',
+  project: 'fuzzys-home-school',
   silent: true,
+  widenClientFileUpload: true,
+  reactComponentAnnotation: {
+    enabled: true,
+  },
+  tunnelRoute: '/monitoring',
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: true,
 });

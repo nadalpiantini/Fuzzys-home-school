@@ -28,18 +28,31 @@ const externalResources = [
     icon: <Atom className="w-8 h-8" />,
     color: 'bg-blue-500',
     status: 'available',
-    url: 'https://phet.colorado.edu/',
+    url: '/games/external/phet',
     subjects: ['Física', 'Química', 'Biología', 'Matemáticas'],
+    features: [
+      'Simulaciones 3D',
+      'Accesibilidad',
+      'Multiidioma',
+      'Objetivos de aprendizaje',
+    ],
+    integration: 'embedded',
   },
   {
     id: 'blockly',
-    name: 'Blockly',
+    name: 'Blockly Games',
     description: 'Editor visual de programación para aprender a codificar',
     icon: <Blocks className="w-8 h-8" />,
     color: 'bg-orange-500',
     status: 'available',
-    url: 'https://developers.google.com/blockly',
+    url: '/games/external/blockly',
     subjects: ['Programación', 'Lógica', 'Algoritmos'],
+    features: [
+      'Progresión gradual',
+      'Juegos interactivos',
+      'Pensamiento computacional',
+    ],
+    integration: 'embedded',
   },
   {
     id: 'music-blocks',
@@ -48,8 +61,14 @@ const externalResources = [
     icon: <Music className="w-8 h-8" />,
     color: 'bg-purple-500',
     status: 'available',
-    url: 'https://musicblocks.sugarlabs.org/',
+    url: '/games/external/music-blocks',
     subjects: ['Música', 'Programación', 'Creatividad'],
+    features: [
+      'Composición musical',
+      'Matemáticas aplicadas',
+      'Exploración libre',
+    ],
+    integration: 'embedded',
   },
   {
     id: 'colonial-ar',
@@ -58,8 +77,10 @@ const externalResources = [
     icon: <MapPin className="w-8 h-8" />,
     color: 'bg-green-500',
     status: 'available',
-    url: '/colonial-rally',
+    url: '/games/external/colonial-ar',
     subjects: ['Historia', 'Geografía', 'Cultura'],
+    features: ['Realidad aumentada', 'Modelos 3D', 'Quiz interactivo', 'GPS'],
+    integration: 'embedded',
   },
   {
     id: 'scratch',
@@ -70,6 +91,12 @@ const externalResources = [
     status: 'available',
     url: 'https://scratch.mit.edu/',
     subjects: ['Programación', 'Creatividad', 'Lógica'],
+    features: [
+      'Proyectos colaborativos',
+      'Comunidad global',
+      'Creatividad ilimitada',
+    ],
+    integration: 'external',
   },
   {
     id: 'khan-academy',
@@ -80,6 +107,12 @@ const externalResources = [
     status: 'available',
     url: 'https://es.khanacademy.org/',
     subjects: ['Matemáticas', 'Ciencias', 'Historia', 'Arte'],
+    features: [
+      'Videos educativos',
+      'Ejercicios adaptativos',
+      'Progreso personalizado',
+    ],
+    integration: 'external',
   },
 ];
 
@@ -233,22 +266,66 @@ export default function ExternalGames() {
                     ))}
                   </div>
 
+                  {/* Features */}
+                  {resource.features && (
+                    <div className="mt-2">
+                      <div className="text-xs text-gray-500 mb-1">
+                        {language === 'es' ? 'Características:' : 'Features:'}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {resource.features.slice(0, 3).map((feature, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                          >
+                            {feature}
+                          </span>
+                        ))}
+                        {resource.features.length > 3 && (
+                          <span className="px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded-full">
+                            +{resource.features.length - 3} más
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        resource.status === 'available'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
-                      {resource.status === 'available'
-                        ? language === 'es'
-                          ? 'Disponible'
-                          : 'Available'
-                        : language === 'es'
-                          ? 'Próximamente'
-                          : 'Coming Soon'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          resource.status === 'available'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}
+                      >
+                        {resource.status === 'available'
+                          ? language === 'es'
+                            ? 'Disponible'
+                            : 'Available'
+                          : language === 'es'
+                            ? 'Próximamente'
+                            : 'Coming Soon'}
+                      </span>
+
+                      {resource.integration && (
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            resource.integration === 'embedded'
+                              ? 'bg-purple-100 text-purple-800'
+                              : 'bg-orange-100 text-orange-800'
+                          }`}
+                        >
+                          {resource.integration === 'embedded'
+                            ? language === 'es'
+                              ? 'Integrado'
+                              : 'Embedded'
+                            : language === 'es'
+                              ? 'Externo'
+                              : 'External'}
+                        </span>
+                      )}
+                    </div>
 
                     {resource.status === 'available' && (
                       <Button size="sm" className="flex items-center gap-1">

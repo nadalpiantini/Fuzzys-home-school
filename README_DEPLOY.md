@@ -1,228 +1,206 @@
-# 🚀 Fuzzy's Home School - Deploy Guide
+# Fuzzy's Home School — README_DEPLOY.md
 
-## 📋 Variables de Entorno
+Guía oficial para deploy PRO en Vercel con dominio en Cloudflare, Supabase Auth + RLS, Sentry y Cron opcional.
 
-### 🌐 Públicas (NEXT_PUBLIC_*)
+## 0) Resumen ejecutivo
+
+- **Hosting**: Vercel (SSR + CDN)
+- **Dominio**: homeschool.fuzzyandfriends.com (Cloudflare DNS → Vercel)
+- **Auth**: Supabase Auth + RLS (DB segura)
+- **Observabilidad**: Sentry (client/server/edge)
+- **Monitoreo**: Vercel Cron → /api/cron/health (opcional)
+- **Cacheo**: Estáticos immutable, APIs públicas con s-maxage, HTML no-store
+
+## 1) Prerrequisitos
+
+- Node 18.17+ o 20.x
+- Proyecto en Vercel conectado a GitHub
+- Proyecto Supabase configurado (URL + Keys)
+- Cloudflare gestionando fuzzyandfriends.com
+
 ```bash
-# Supabase (Cliente)
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
-# App
-NEXT_PUBLIC_APP_URL=https://homeschool.fuzzyandfriends.com
-NEXT_PUBLIC_APP_VERSION=0.1.0
-
-# External Games
-NEXT_PUBLIC_EXTERNAL_GAMES_ENABLED=true
-NEXT_PUBLIC_PHET_ENABLED=true
-NEXT_PUBLIC_BLOCKLY_ENABLED=true
-NEXT_PUBLIC_MUSIC_BLOCKS_ENABLED=true
-NEXT_PUBLIC_AR_ENABLED=true
-
-# AR Configuration
-NEXT_PUBLIC_AR_MARKER_BASE_URL=/ar-markers
-NEXT_PUBLIC_AR_MODELS_BASE_URL=/models
-
-# External Services
-NEXT_PUBLIC_PHET_BASE_URL=https://phet.colorado.edu
-NEXT_PUBLIC_PHET_LANGUAGE=es
-NEXT_PUBLIC_BLOCKLY_BASE_URL=https://blockly.games
-NEXT_PUBLIC_BLOCKLY_LANGUAGE=es
-NEXT_PUBLIC_MUSIC_BLOCKS_URL=https://musicblocks.sugarlabs.org
-
-# WebSocket
-NEXT_PUBLIC_WEBSOCKET_URL=wss://homeschool.fuzzyandfriends.com
+# Desde la raíz del monorepo
+node -v
+vercel -v
 ```
 
-### 🔒 Privadas (Server-only)
+## 2) Variables de entorno (Vercel → Production)
+
+**Vercel → Project → Settings → Environment Variables (Production)**
+
+**Regla**: no dupliques proveedor IA (usa DeepSeek o OpenAI, no ambos).
+
+### Públicas (Cliente)
+- `NEXT_PUBLIC_APP_URL` = `https://homeschool.fuzzyandfriends.com`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- (Opcional) `NEXT_PUBLIC_WEBSOCKET_URL`
+
+### Privadas (Server)
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_JWT_SECRET`
+
+### IA (elige uno):
+- `DEEPSEEK_API_KEY`
+- o `OPENAI_API_KEY` (+ `OPENAI_BASE_URL` si usas DeepSeek endpoint)
+
+### Monitoreo (opcional):
+- `HEALTH_URL` = `https://homeschool.fuzzyandfriends.com/api/env/health`
+- `ALERT_WEBHOOK_URL` = `https://hooks.slack.com/...` (o Discord)
+- `CRON_TOKEN` (opcional)
+
+## 3) Dominio (Cloudflare + Vercel)
+
+### En Vercel
+1. Project → Settings → Domains → Add Domain → `homeschool.fuzzyandfriends.com`
+2. Copia el CNAME target sugerido (p. ej. xxxx.vercel-dns-016.com).
+
+### En Cloudflare (DNS)
+- **Type**: CNAME
+- **Name**: homeschool
+- **Target**: `<cname.vercel-dns.com exacto>`
+- **Proxy**: DNS only (desactivado)
+- **TTL**: Auto
+
+### Volver a Vercel
+En Domains, pulsa Refresh hasta ver ✅ en el dominio.
+
+## 4) Supabase — Authentication URL
+
+**Supabase → Authentication → URL Configuration**
+
+- **Site URL**: `https://homeschool.fuzzyandfriends.com`
+- (Si usas OAuth) Agrega tus redirect URLs.
+- **Save**.
+
+## 5) Cacheo PRO
+
+Ya configurado en `apps/web/next.config.js`:
+
+```javascript
+// Cache headers para estáticos (immutable)
+{ source: '/_next/static/:path*', headers: [{ key: 'Cache-Control', value: 'public,max-age=31536000,immutable' }] },
+{ source: '/assets/:path*', headers: [{ key: 'Cache-Control', value: 'public,max-age=31536000,immutable' }] },
+{ source: '/fonts/:path*', headers: [{ key: 'Cache-Control', value: 'public,max-age=31536000,immutable' }] },
+{ source: '/api/env/health', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
+{ source: '/(.*)', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
+```
+
+### API cache control (ejemplos)
+```javascript
+// Público (status/list/get): revalida en CDN
+return NextResponse.json({ ok: true, data }, {
+  headers: { "Cache-Control": "s-maxage=60, stale-while-revalidate=300" }
+});
+
+// Protegido o mutaciones (create/submitResult): sin cache
+return NextResponse.json({ ok: true, data }, {
+  headers: { "Cache-Control": "no-store" }
+});
+```
+
+## 6) Build & Deploy (sin caché)
+
 ```bash
-# Supabase (Server)
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_JWT_SECRET=tu-jwt-secret-aqui
+# Sincroniza envs de prod localmente
+vercel pull --yes --environment=production
 
-# Database
-DATABASE_URL=postgresql://postgres:password@db.supabase.co:5432/postgres
+# Build local opcional
+npm run -w apps/web build
 
-# AI Provider (SOLO uno)
-DEEPSEEK_API_KEY=sk-ecb8d6540d9e468f8393cf5cfe79d382
-# O
-OPENAI_API_KEY=sk-proj-...
-OPENAI_BASE_URL=https://api.openai.com/v1
-
-# Environment
-NODE_ENV=production
+# Deploy a producción, forzando build fresco
+vercel --prod --force
 ```
 
-## 🚀 Flujos de Deploy
+## 7) Smoke Tests (producción)
 
-### 1. Deploy a Vercel (Automático)
 ```bash
-# Push a main branch
-git add .
-git commit -m "feat: new feature"
-git push origin main
+# Health
+curl -s https://homeschool.fuzzyandfriends.com/api/env/health | jq
 
-# Vercel automáticamente:
-# 1. Detecta cambios
-# 2. Instala dependencias
-# 3. Ejecuta build
-# 4. Despliega a producción
+# Quiz público: status
+curl -s -X POST https://homeschool.fuzzyandfriends.com/api/quiz \
+  -H 'Content-Type: application/json' -d '{"op":"status"}' | jq
+
+# Caché de estáticos (immutable)
+curl -I https://homeschool.fuzzyandfriends.com/_next/static/chunks/main.js | grep -i cache-control
+
+# Caché API pública (si aplicaste s-maxage)
+curl -I -X POST https://homeschool.fuzzyandfriends.com/api/quiz \
+  -H 'Content-Type: application/json' --data '{"op":"status"}' | grep -i cache-control
 ```
 
-### 2. Deploy Manual (Si es necesario)
+**Criterio GO:**
+- `/api/env/health` → `{ ok: true }`
+- `status/list/get` → OK sin login
+- `create` → solo admin (403 si no)
+- `submitResult` → requiere sesión (401 si no)
+
+## 8) Observabilidad (Sentry) & Cron (opcional)
+
+- **Sentry**: fuerza un 404 y confirma evento en el dashboard (client/server/edge). Sourcemaps habilitados.
+- **Vercel Cron**: `/api/cron/health` cada 5 min → revisa logs. Asegura `HEALTH_URL` y `ALERT_WEBHOOK_URL`.
+
+## 9) Troubleshooting PRO
+
+- **500 con client-reference-manifest**: cerrar dev, `rm -rf .next`, re-levantar.
+- **Tailwind sin aplicar**: usar solo `apps/web/postcss.config.cjs`; `layout.tsx` debe importar `./globals.css`.
+- **PostCSS/ESM**: con `"type":"module"`, evita `postcss.config.js/.mjs`. Usa `.cjs`.
+- **IA duplicada**: no mezclar `DEEPSEEK_API_KEY` y `OPENAI_API_KEY` a la vez.
+- **Auth que no vuelve**: revalidar Supabase Site URL.
+- **Cloudflare proxy ON**: testear WebSockets y SSR; si hay problemas, usar DNS only.
+
+## 10) Rollback en 10s
+
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Login
-vercel login
-
-# Deploy
-vercel --prod
+vercel list         # copia el deployment anterior
+vercel rollback <deployment-url>
 ```
 
-### 3. Rollback (Si algo falla)
+## 11) Local Dev Quickstart
+
 ```bash
-# En Vercel Dashboard:
-# 1. Ve a Deployments
-# 2. Selecciona versión anterior
-# 3. Click "Promote to Production"
+# En monorepo
+npm i
+cd apps/web
+npm run dev
+# http://localhost:3000
 ```
 
-## 🔍 Smoke Test Checklist
+**ENV local mínimo** (`apps/web/.env.local`):
 
-### ✅ Pre-Deploy
-- [ ] Build local exitoso: `npm run build`
-- [ ] Variables de entorno configuradas en Vercel
-- [ ] Supabase Site URL configurado
-- [ ] Solo un proveedor de IA configurado
-
-### ✅ Post-Deploy
-- [ ] **Homepage**: `https://homeschool.fuzzyandfriends.com`
-- [ ] **Health Check**: `curl -s https://homeschool.fuzzyandfriends.com/api/env/health`
-- [ ] **Auth**: Login/Register funciona
-- [ ] **Games**: Juegos cargan correctamente
-- [ ] **Teacher Dashboard**: Acceso a analytics/settings
-
-### ✅ Health Check Response
-```json
-{
-  "ok": true,
-  "service": "env-health",
-  "ts": 1695823456789,
-  "publicConfig": {
-    "supabaseUrl": true,
-    "anonKey": true,
-    "websocketConfigured": true,
-    "features": {
-      "externalGames": true,
-      "phet": true,
-      "blockly": true,
-      "music": true,
-      "ar": true
-    }
-  },
-  "serverGuards": {
-    "hasServiceRole": true,
-    "hasJwtSecret": true,
-    "iaProvider": "deepseek"
-  },
-  "version": {
-    "app": "0.1.0",
-    "nodeEnv": "production"
-  }
-}
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON
+# IA → solo uno
+DEEPSEEK_API_KEY=xxxx
+# o
+# OPENAI_API_KEY=xxxx
 ```
 
-## 🛠️ Troubleshooting
+## 12) Checklist final
 
-### ❌ Build Fails
-```bash
-# Error: Env validation failed
-# Solución: Verificar variables en Vercel Dashboard
-```
-
-### ❌ Auth Issues
-```bash
-# Error: Auth domain mismatch
-# Solución: Supabase Dashboard → Authentication → URL Configuration
-# Site URL = https://homeschool.fuzzyandfriends.com
-```
-
-### ❌ 403/401 Errors
-```bash
-# Error: RLS policies blocking access
-# Solución: Verificar políticas en Supabase Dashboard
-```
-
-### ❌ AI Provider Errors
-```bash
-# Error: Multiple AI providers configured
-# Solución: Usar solo DeepSeek O OpenAI, no ambos
-```
-
-## 📊 Monitoring
-
-### 🔍 Vercel Analytics
-- **Performance**: Core Web Vitals
-- **Errors**: 4xx/5xx responses
-- **Usage**: Bandwidth, requests
-
-### 🔍 Sentry (Configurado)
-- **Errors**: JavaScript exceptions
-- **Performance**: Page load times
-- **Releases**: Deploy tracking
-
-### 🔍 Supabase Dashboard
-- **Database**: Query performance
-- **Auth**: User sessions
-- **Storage**: File usage
-
-## 🚨 Emergency Procedures
-
-### 🆘 Rollback Rápido
-1. Vercel Dashboard → Deployments
-2. Seleccionar versión estable anterior
-3. "Promote to Production"
-4. Verificar en 2-3 minutos
-
-### 🆘 Database Issues
-1. Supabase Dashboard → Database
-2. Verificar conexiones activas
-3. Revisar logs de queries
-4. Contactar soporte si es necesario
-
-### 🆘 Auth Issues
-1. Supabase Dashboard → Authentication
-2. Verificar URL Configuration
-3. Revisar RLS policies
-4. Test con usuario de prueba
-
-## 📞 Support Contacts
-
-- **Vercel**: [vercel.com/support](https://vercel.com/support)
-- **Supabase**: [supabase.com/support](https://supabase.com/support)
-- **Sentry**: [sentry.io/support](https://sentry.io/support)
+- [ ] Variables en Vercel (sin IA duplicada)
+- [ ] DNS Cloudflare (CNAME, DNS only)
+- [ ] Supabase Site URL apuntando al subdominio
+- [ ] Deploy --prod --force OK
+- [ ] Smoke tests OK (health + api)
+- [ ] Sentry recibe eventos (si activado)
+- [ ] Cron de health en verde (si activado)
 
 ---
 
-## 🎯 Quick Commands
+**Owner**: Alan Nadal Piantini  
+**Infra**: Vercel + Supabase + Cloudflare + Sentry  
+**Última actualización**: {{coloca fecha}}
 
-```bash
-# Local development
-npm run dev
+¡Listo, Alan! 🙌 Dejé el README_DEPLOY.md — Fuzzy's Home School en el canvas, con TODO lo necesario: variables en Vercel, CNAME en Cloudflare, Supabase Auth URL, caché PRO, comandos de deploy, smoke tests, rollback y troubleshooting.
 
-# Build test
-npm run build
+¿Pasos siguientes?
 
-# Deploy
-git push origin main
+1. Revisa la sección 2–4 (Vercel/Cloudflare/Supabase) y márcalos ✅.
+2. Ejecuta los comandos de la sección 6 para el deploy.
+3. Corre los smoke tests (sección 7).
 
-# Health check
-curl -s https://homeschool.fuzzyandfriends.com/api/env/health
-
-# Check logs
-vercel logs --follow
-```
-
-**¡Deploy exitoso! 🚀**
+Cuando me digas "GO totalmente verde", te dejo un README_OPERATIONS.md corto para el equipo (incidentes, rotación de claves y playbook de rollback). ¡Qué nivel, productor! 🚀🛡️

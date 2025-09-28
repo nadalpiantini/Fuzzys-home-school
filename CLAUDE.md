@@ -18,14 +18,29 @@ npm run dev
 # Build for production
 npm run build
 
+# Build packages only (excluding web app)
+npm run build:packages
+
 # Start production server
 npm run start
 
 # Linting
 npm run lint
 
+# Type checking
+npm run typecheck
+
 # Clean build artifacts
 npm run clean
+
+# Seed games database
+npm run seed
+
+# E2E testing with Playwright
+npm run test:e2e
+npm run test:e2e:ui        # With UI
+npm run test:e2e:headed    # In headed mode
+npm run test:e2e:debug     # Debug mode
 
 # Deploy to Vercel (recommended)
 npm run deploy:vercel
@@ -44,6 +59,14 @@ npm run deploy:netlify
   - `packages/game-engine` - Quiz and game logic
   - `packages/schemas` - Zod validation schemas
   - `packages/i18n` - Internationalization
+  - `packages/adaptive-engine` - AI-powered adaptive learning
+  - `packages/creative-tools` - Content creation utilities
+  - `packages/external-games` - Third-party game integrations
+  - `packages/h5p-adapter` - H5P content integration
+  - `packages/quiz-generator` - AI quiz generation
+  - `packages/simulation-engine` - Interactive simulations
+  - `packages/vr-ar-adapter` - VR/AR content support
+  - `packages/sandbox-connector` - Sandboxed execution environment
 
 ### API Architecture
 - **tRPC Router**: `apps/web/src/lib/trpc/router.ts` - Main API router
@@ -98,6 +121,22 @@ Required environment variables in `apps/web/.env.local`:
 - `/colonial-rally/*` - AR/QR exploration feature
 - `/debug/*` - Debug pages (development only)
 
+## Testing
+
+- **E2E Testing**: Playwright configured for cross-browser testing
+- **Test Directory**: `tests/e2e/`
+- **Browsers**: Chrome, Firefox, Safari (desktop and mobile)
+- **Test Server**: Automatically starts dev server on localhost:3000
+- **Configuration**: `playwright.config.ts` in project root
+
+## Code Quality
+
+- **ESLint**: Configured with Next.js, React, and TypeScript rules
+- **Prettier**: Code formatting with consistent style
+- **Husky**: Git hooks for pre-commit validation
+- **Lint-staged**: Runs linting and formatting on staged files
+- **TypeScript**: Strict mode enabled with comprehensive type checking
+
 ## Deployment Notes
 
 - **Output**: Standalone mode for edge deployment
@@ -105,3 +144,4 @@ Required environment variables in `apps/web/.env.local`:
 - **Locales**: Spanish (default) and English
 - **Transpiled packages**: All workspace packages are transpiled
 - **Webpack fallbacks**: Node.js modules disabled for browser compatibility
+- **Sentry**: Error tracking and performance monitoring configured
