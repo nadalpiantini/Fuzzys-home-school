@@ -74,18 +74,33 @@ CREATE TABLE IF NOT EXISTS brain_runs (
 CREATE INDEX IF NOT EXISTS idx_brain_runs_job_id ON brain_runs(job_id);
 CREATE INDEX IF NOT EXISTS idx_brain_runs_created_at ON brain_runs(created_at);
 
--- 6. Crear índice único para anti-duplicados
+-- 6. Limpiar duplicados antes de crear índice único
+-- Eliminar duplicados manteniendo el más reciente (por id)
+WITH duplicates AS (
+  SELECT id,
+         ROW_NUMBER() OVER (
+           PARTITION BY lower(title), subject_id, grade_level 
+           ORDER BY id DESC
+         ) as rn
+  FROM games
+)
+DELETE FROM games 
+WHERE id IN (
+  SELECT id FROM duplicates WHERE rn > 1
+);
+
+-- 7. Crear índice único para anti-duplicados
 CREATE UNIQUE INDEX IF NOT EXISTS uq_games_tsg
   ON games (lower(title), subject_id, grade_level);
 
--- 7. Insertar configuraciones por defecto
+-- 8. Insertar configuraciones por defecto
 INSERT INTO brain_config (name, value) VALUES
   ('default', '{"subjects":["matemáticas"],"gradeLevel":[3,4,5],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":5}'),
   ('rd_primary', '{"subjects":["matemáticas","ciencias"],"gradeLevel":[3,4,5],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":3}'),
   ('rd_secondary', '{"subjects":["matemáticas","lengua","ciencias"],"gradeLevel":[6,7,8],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":4}')
 ON CONFLICT (name) DO NOTHING;
 
--- 8. Crear triggers para updated_at
+-- 9. Crear triggers para updated_at
 CREATE OR REPLACE FUNCTION update_brain_config_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN

@@ -14,14 +14,28 @@ export class GameGenerator {
     const withCurr = curriculumAdjust(p);
     const withDiff = difficultyAdjust(withCurr);
 
-    // Log request (temporarily disabled for build)
-    // try { await s.from('brain_logs').insert({ kind:'request', payload: JSON.stringify(withDiff).slice(0,8000) }); } catch {}
+    // Log request
+    try {
+      await s
+        .from('brain_logs')
+        .insert({
+          kind: 'request',
+          payload: JSON.stringify(withDiff).slice(0, 8000),
+        } as any);
+    } catch {}
 
     const messages = genPrompt(withDiff);
     const raw = await llmChat(messages);
 
-    // Log response (temporarily disabled for build)
-    // try { await s.from('brain_logs').insert({ kind:'response', payload: String(raw).slice(0,8000) }); } catch {}
+    // Log response
+    try {
+      await s
+        .from('brain_logs')
+        .insert({
+          kind: 'response',
+          payload: String(raw).slice(0, 8000),
+        } as any);
+    } catch {}
 
     const out = safeParseGames(raw);
     const validator = new QualityValidator();
@@ -50,12 +64,54 @@ export class GameGenerator {
         subjectMap[g.subject.toLowerCase()] ||
         '84b1c3d4-619b-43e2-802a-5f1baf1e2760'; // Default to math
 
-      // TODO: Temporarily skip database operations for build
-      console.log('💾 Skipping database insertion for now...');
-      console.log('✅ Game processed (database insertion skipped)');
-      
-      // Generate temp ID for now
-      ids.push(`game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+      // Anti-duplicados por índice único (23505)
+      const { data: game, error: ge } = await s
+        .from('games')
+        .insert({
+          title: g.title,
+          description: `Juego de ${g.subject} para grado ${g.grade}`,
+          type: 'quiz',
+          subject_id: subjectId,
+          difficulty: 'medium',
+          grade_level: g.grade,
+          data: {
+            questions: g.questions,
+            metadata: g.metadata,
+            language: g.language,
+          },
+          instructions: `Responde las preguntas sobre ${g.subject}`,
+          points: 100,
+          is_active: true,
+        } as any)
+        .select('id')
+        .single();
+
+      if (ge) {
+        if ((ge as any).code === '23505') {
+          try {
+            await s
+              .from('brain_logs')
+              .insert({
+                kind: 'parse_issues',
+                payload: `duplicate: ${g.title}/${g.subject}/${g.grade}`,
+              } as any);
+          } catch {}
+          continue;
+        }
+        try {
+          await s
+            .from('brain_logs')
+            .insert({
+              kind: 'parse_issues',
+              payload: `insert_game_error: ${ge.message}`,
+            } as any);
+        } catch {}
+        continue;
+      }
+
+      // Questions are now stored in the data field of the games table
+      // No need to insert into quiz_questions table separately
+      ids.push((game as any).id);
     }
 
     // si nada se creó, deja pistas en la respuesta
