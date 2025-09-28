@@ -49,6 +49,10 @@ export interface CrosswordGame {
   title: string;
   words: { word: string; clue: string; x: number; y: number; direction: 'across' | 'down' }[];
   grid: (string | null)[][];
+  clues: {
+    across: { number: number; clue: string; answer: string; startRow: number; startCol: number }[];
+    down: { number: number; clue: string; answer: string; startRow: number; startCol: number }[];
+  };
 }
 
 export interface BranchingScenarioGame {
