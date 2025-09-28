@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X, HelpCircle } from 'lucide-react';
-import type { CrosswordGame } from '@fuzzy/game-engine';
+import type { CrosswordGame } from '@/types/workspace';
 
 interface CrosswordProps {
   game: CrosswordGame;

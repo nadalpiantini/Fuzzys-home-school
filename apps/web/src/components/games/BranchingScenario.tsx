@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ChevronRight, RotateCcw, Trophy, Heart } from 'lucide-react';
-import type { BranchingScenarioGame } from '@fuzzy/game-engine';
+import type { BranchingScenarioGame } from '@/types/workspace';
 
 interface BranchingScenarioProps {
   game: BranchingScenarioGame;

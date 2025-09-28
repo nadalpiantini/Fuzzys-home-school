@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
+  "buildCommand": "turbo run build",
   "outputDirectory": "apps/web/.next",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
