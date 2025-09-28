@@ -13,3 +13,6 @@ export const supabaseBrowser = createClient(
     },
   },
 );
+
+// Export createClient function for convenience
+export const createSupabaseClient = () => supabaseBrowser;

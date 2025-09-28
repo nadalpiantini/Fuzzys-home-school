@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
@@ -26,6 +26,13 @@ export const MCQ: React.FC<MCQProps> = ({
   feedback,
 }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+
+  // Shuffle choices to randomize order
+  const shuffledChoices = useMemo(() => {
+    if (!game.choices) return [];
+    return [...game.choices].sort(() => Math.random() - 0.5);
+  }, [game.choices]);
+
   const isMultiple =
     game.multipleAnswers ||
     (game.choices?.filter((c) => c.correct).length || 0) > 1;
@@ -92,7 +99,7 @@ export const MCQ: React.FC<MCQProps> = ({
         )}
 
         <div className="space-y-3">
-          {game.choices
+          {shuffledChoices
             ?.filter((choice) => choice?.id)
             .map((choice) => (
               <button

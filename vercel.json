@@ -1,12 +1,20 @@
 {
   "crons": [
     {
-      "path": "/api/brain/schedulers/generate-weekly",
-      "schedule": "0 9 * * 1"
+      "path": "/api/jobs/run",
+      "schedule": "*/5 * * * *"
     },
     {
-      "path": "/api/brain/worker",
-      "schedule": "0 */2 * * *"
+      "path": "/api/jobs/demand",
+      "schedule": "*/3 * * * *"
     }
-  ]
+  ],
+  "functions": {
+    "apps/web/src/app/api/jobs/run/route.ts": {
+      "maxDuration": 60
+    },
+    "apps/web/src/app/api/jobs/demand/route.ts": {
+      "maxDuration": 120
+    }
+  }
 }

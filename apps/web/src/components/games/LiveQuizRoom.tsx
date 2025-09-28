@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -59,6 +65,12 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   const wsManager = useRef(getWebSocketManager());
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Shuffle options to randomize order
+  const shuffledOptions = useMemo(() => {
+    if (!currentQuestion?.options) return [];
+    return [...currentQuestion.options].sort(() => Math.random() - 0.5);
+  }, [currentQuestion]);
 
   const joinRoom = useCallback(async () => {
     try {
@@ -383,7 +395,7 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
               <p className="text-xl mb-6">{currentQuestion.question}</p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {currentQuestion.options.map((option, index) => (
+                {shuffledOptions.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedAnswer(option)}

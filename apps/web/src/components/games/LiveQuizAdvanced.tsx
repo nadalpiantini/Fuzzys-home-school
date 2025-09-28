@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -187,6 +187,14 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
   const [hasAnswered, setHasAnswered] = useState(false);
   const [activePowerUp, setActivePowerUp] = useState<PowerUp | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState<number>(0);
+
+  // Shuffle choices to randomize order
+  const shuffledChoices = useMemo(() => {
+    if (!gameState.currentQuestion?.choices) return [];
+    return [...gameState.currentQuestion.choices].sort(
+      () => Math.random() - 0.5,
+    );
+  }, [gameState.currentQuestion]);
   const [showSettings, setShowSettings] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -593,7 +601,7 @@ export const LiveQuizAdvanced: React.FC<LiveQuizAdvancedProps> = ({
             </h3>
 
             <div className="grid grid-cols-2 gap-6">
-              {gameState.currentQuestion?.choices?.map((choice) => (
+              {shuffledChoices?.map((choice) => (
                 <div
                   key={choice.id}
                   className={`p-8 rounded-lg text-white font-medium text-xl transition-all duration-200 ${getAnswerButtonColor(choice.id)}`}

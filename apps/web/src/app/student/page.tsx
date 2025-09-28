@@ -29,7 +29,13 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useChildProfile } from '@/hooks/useChildProfile';
+import { useHookedSystem } from '@/hooks/useHookedSystem';
 import ChildOnboarding from '@/components/onboarding/ChildOnboarding';
+import MessageBar from '@/components/hooked/MessageBar';
+import Bell from '@/components/hooked/Bell';
+import OnboardingTour, {
+  useOnboardingTour,
+} from '@/components/hooked/OnboardingTour';
 import { toast } from 'sonner';
 
 export default function StudentDashboard() {
@@ -43,13 +49,21 @@ export default function StudentDashboard() {
     getPersonalizedGames,
     getAgeAppropriateLevel,
   } = useChildProfile();
-  const [streak, setStreak] = useState(7);
+  const {
+    todayQuest,
+    messages,
+    streak: hookedStreak,
+    getUnreadMessagesCount,
+    isTodayQuestCompleted,
+  } = useHookedSystem();
   const [points, setPoints] = useState(1250);
+  const [questCompleted, setQuestCompleted] = useState(false);
+  const { showTour, completeTour, skipTour } = useOnboardingTour();
 
   // Mostrar onboarding si no está completo
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
           <p className="text-pink-600">Cargando tu mundo de juegos...</p>
@@ -122,7 +136,7 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Mobile-Friendly Header */}
       <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3">
@@ -137,22 +151,41 @@ export default function StudentDashboard() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+              <Bell
+                hasUnread={getUnreadMessagesCount() > 0}
+                onClick={() => router.push('/inbox')}
+              />
+              <Button
+                id="profile-button"
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/profile')}
+                className="flex items-center gap-1"
+              >
                 <Trophy className="w-4 h-4 text-yellow-600" />
                 <span className="text-sm font-semibold text-yellow-700">
                   {points}
                 </span>
-              </div>
+              </Button>
               <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-full">
                 <Target className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-semibold text-green-700">
-                  {streak}
+                  {hookedStreak?.current_streak || 0}
                 </span>
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Message Bar */}
+      {todayQuest && !questCompleted && (
+        <MessageBar
+          quest={todayQuest}
+          onDismiss={() => setQuestCompleted(true)}
+          onStartQuest={(questId) => router.push(`/quest/${questId}`)}
+        />
+      )}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">
@@ -172,6 +205,7 @@ export default function StudentDashboard() {
         {/* Quick Actions - Mobile Friendly */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <Card
+            id="tutor-card"
             className="card-hover cursor-pointer bg-gradient-to-br from-purple-500 to-purple-600 text-white"
             onClick={handleAskTutor}
           >
@@ -192,6 +226,7 @@ export default function StudentDashboard() {
           </Card>
 
           <Card
+            id="games-card"
             className="card-hover cursor-pointer bg-gradient-to-br from-green-500 to-green-600 text-white"
             onClick={handlePlayGames}
           >
@@ -210,6 +245,7 @@ export default function StudentDashboard() {
           </Card>
 
           <Card
+            id="library-card"
             className="card-hover cursor-pointer bg-gradient-to-br from-blue-500 to-blue-600 text-white"
             onClick={handleExploreLibrary}
           >
@@ -357,7 +393,10 @@ export default function StudentDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="p-3 bg-white rounded-lg border border-green-200">
+                <div
+                  id="daily-quest-card"
+                  className="p-3 bg-white rounded-lg border border-green-200"
+                >
                   <h4 className="font-semibold mb-1 text-green-700">
                     🗺️ Reto de Geografía
                   </h4>
@@ -394,6 +433,13 @@ export default function StudentDashboard() {
           </Card>
         </div>
       </main>
+
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        isVisible={showTour}
+        onComplete={completeTour}
+        onSkip={skipTour}
+      />
     </div>
   );
 }

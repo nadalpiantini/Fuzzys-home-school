@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -50,6 +50,24 @@ export default function MCQGame({ gameData, onComplete }: MCQGameProps) {
   const { addGameSession } = useGameProgress();
 
   const currentQuestion = gameData.questions[currentQuestionIndex];
+
+  // Shuffle options for each question to randomize order
+  const shuffledOptions = useMemo(() => {
+    if (!currentQuestion?.options) return [];
+    return [...currentQuestion.options].sort(() => Math.random() - 0.5);
+  }, [currentQuestion]);
+
+  // Create mapping from shuffled index to original index
+  const originalIndexMap = useMemo(() => {
+    if (!currentQuestion?.options) return {};
+    const map: Record<number, number> = {};
+    shuffledOptions.forEach((option, shuffledIndex) => {
+      const originalIndex = currentQuestion.options.indexOf(option);
+      map[shuffledIndex] = originalIndex;
+    });
+    return map;
+  }, [currentQuestion, shuffledOptions]);
+
   const progress =
     ((currentQuestionIndex + 1) / gameData.questions.length) * 100;
 
@@ -68,8 +86,13 @@ export default function MCQGame({ gameData, onComplete }: MCQGameProps) {
       return;
     }
 
-    const isCorrect = selectedAnswer === currentQuestion.correct;
-    const newAnswers = { ...answers, [currentQuestion.id]: selectedAnswer };
+    // Convert shuffled index back to original index for comparison
+    const originalAnswerIndex = originalIndexMap[selectedAnswer];
+    const isCorrect = originalAnswerIndex === currentQuestion.correct;
+    const newAnswers = {
+      ...answers,
+      [currentQuestion.id]: originalAnswerIndex,
+    };
     setAnswers(newAnswers);
 
     if (isCorrect) {
@@ -258,50 +281,54 @@ export default function MCQGame({ gameData, onComplete }: MCQGameProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {currentQuestion.options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswerSelect(index)}
-                disabled={showExplanation}
-                className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                  selectedAnswer === index
-                    ? showExplanation
-                      ? index === currentQuestion.correct
+            {shuffledOptions.map((option, shuffledIndex) => {
+              const originalIndex = originalIndexMap[shuffledIndex];
+              const isCorrectAnswer = originalIndex === currentQuestion.correct;
+              const isSelected = selectedAnswer === shuffledIndex;
+
+              return (
+                <button
+                  key={shuffledIndex}
+                  onClick={() => handleAnswerSelect(shuffledIndex)}
+                  disabled={showExplanation}
+                  className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                    isSelected
+                      ? showExplanation
+                        ? isCorrectAnswer
+                          ? 'border-green-500 bg-green-50 text-green-800'
+                          : 'border-red-500 bg-red-50 text-red-800'
+                        : 'border-blue-500 bg-blue-50 text-blue-800'
+                      : showExplanation && isCorrectAnswer
                         ? 'border-green-500 bg-green-50 text-green-800'
-                        : 'border-red-500 bg-red-50 text-red-800'
-                      : 'border-blue-500 bg-blue-50 text-blue-800'
-                    : showExplanation && index === currentQuestion.correct
-                      ? 'border-green-500 bg-green-50 text-green-800'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                } ${showExplanation ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedAnswer === index
-                        ? showExplanation
-                          ? index === currentQuestion.correct
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                  } ${showExplanation ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        isSelected
+                          ? showExplanation
+                            ? isCorrectAnswer
+                              ? 'border-green-500 bg-green-500'
+                              : 'border-red-500 bg-red-500'
+                            : 'border-blue-500 bg-blue-500'
+                          : showExplanation && isCorrectAnswer
                             ? 'border-green-500 bg-green-500'
-                            : 'border-red-500 bg-red-500'
-                          : 'border-blue-500 bg-blue-500'
-                        : showExplanation && index === currentQuestion.correct
-                          ? 'border-green-500 bg-green-500'
-                          : 'border-gray-300'
-                    }`}
-                  >
-                    {selectedAnswer === index && (
-                      <CheckCircle className="h-4 w-4 text-white" />
-                    )}
-                    {showExplanation &&
-                      index === currentQuestion.correct &&
-                      selectedAnswer !== index && (
+                            : 'border-gray-300'
+                      }`}
+                    >
+                      {isSelected && (
                         <CheckCircle className="h-4 w-4 text-white" />
                       )}
+                      {showExplanation && isCorrectAnswer && !isSelected && (
+                        <CheckCircle className="h-4 w-4 text-white" />
+                      )}
+                    </div>
+                    <span className="font-medium">{option}</span>
                   </div>
-                  <span className="font-medium">{option}</span>
-                </div>
-              </button>
-            ))}
+                </button>
+              );
+            })}
           </div>
 
           {showExplanation && (

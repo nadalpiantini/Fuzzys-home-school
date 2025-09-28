@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { InstantGameSelector } from '@/components/games/InstantGameSelector';
 import {
   Gamepad2,
   BookOpen,
@@ -731,6 +732,7 @@ const gradeLevels: DifficultyLevel[] = [
 export default function GamesPage() {
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
+  const [showInstantGames, setShowInstantGames] = useState(true);
 
   const allGames = gradeLevels.flatMap((level) => level.games);
 
@@ -738,6 +740,15 @@ export default function GamesPage() {
     selectedLevel === 'all'
       ? gradeLevels
       : gradeLevels.filter((level) => level.id === selectedLevel);
+
+  const handleGameSelect = (game: any) => {
+    // Aquí puedes manejar la selección del juego
+    console.log('Game selected:', game);
+    // Por ahora, redirigir a una página de juego demo
+    router.push(
+      `/games/demo?game=${game.content?.type || 'quiz'}&id=${game.id}`,
+    );
+  };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -800,7 +811,7 @@ export default function GamesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Header */}
       <header className="bg-white/70 backdrop-blur-md shadow-sm border-b border-white/20 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-6">
@@ -832,6 +843,39 @@ export default function GamesPage() {
           </div>
         </div>
       </header>
+
+      {/* Juegos Instantáneos - Nueva Sección */}
+      {showInstantGames && (
+        <section className="container mx-auto px-6 py-6">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  ⚡ Juegos Listos para Jugar
+                  <Badge
+                    variant="secondary"
+                    className="bg-green-100 text-green-800"
+                  >
+                    Nuevo
+                  </Badge>
+                </h2>
+                <p className="text-gray-600">
+                  Juegos generados automáticamente, listos para jugar al
+                  instante
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowInstantGames(false)}
+                className="text-gray-500"
+              >
+                Ocultar
+              </Button>
+            </div>
+            <InstantGameSelector onGameSelect={handleGameSelect} />
+          </div>
+        </section>
+      )}
 
       {/* Level Selector */}
       <section className="container mx-auto px-6 py-6">

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react';
@@ -12,7 +13,7 @@ export default function HomePage() {
   const { t, language, setLanguage } = useTranslation();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-earth-50 via-earth-100 to-earth-200">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Header */}
       <header className="flex justify-between items-center p-6">
         <div className="flex items-center gap-3">
@@ -30,84 +31,103 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-16 text-center">
-        <div className="glass rounded-3xl p-12 max-w-4xl mx-auto">
-          <h2 className="text-6xl font-bold mb-6 text-earth-800">
-            {language === 'es'
-              ? 'Aprende Jugando, Explora Aprendiendo'
-              : 'Learn by Playing, Explore by Learning'}
-          </h2>
-          <p className="text-xl text-earth-600 mb-12 max-w-2xl mx-auto">
-            {language === 'es'
-              ? 'Plataforma educativa con tutor IA, juegos interactivos y rally de exploración en la Zona Colonial'
-              : 'Educational platform with AI tutor, interactive games, and Colonial Zone exploration rally'}
-          </p>
+      <section className="container mx-auto px-6 py-16">
+        <div className="glass rounded-3xl p-12 max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Text Content */}
+            <div className="flex-1 text-center lg:text-left">
+              <h2 className="text-6xl font-bold mb-6 text-earth-800">
+                {language === 'es'
+                  ? 'Aprende Jugando, Explora Aprendiendo'
+                  : 'Learn by Playing, Explore by Learning'}
+              </h2>
+              <p className="text-xl text-earth-600 mb-12 max-w-2xl mx-auto lg:mx-0">
+                {language === 'es'
+                  ? 'Plataforma educativa con tutor IA, juegos interactivos y rally de exploración en la Zona Colonial'
+                  : 'Educational platform with AI tutor, interactive games, and Colonial Zone exploration rally'}
+              </p>
+            </div>
 
-          {/* Role Selection */}
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="card-minimal group">
-              <Link href="/student">
-                <div className="space-y-6">
-                  <div className="w-20 h-20 bg-earth-500/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-500/30 transition-colors">
-                    <BookOpen className="w-10 h-10 text-earth-700" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-earth-800">
-                    {language === 'es' ? 'Soy Estudiante' : "I'm a Student"}
-                  </h3>
-                  <p className="text-earth-600">
-                    {language === 'es'
-                      ? 'Accede a tu tutor IA y juegos educativos'
-                      : 'Access your AI tutor and educational games'}
-                  </p>
-                  <Button className="btn-earth w-full">
-                    {language === 'es' ? 'Entrar' : 'Enter'}
-                  </Button>
-                </div>
-              </Link>
-            </Card>
-
-            <Card className="card-minimal group">
-              <Link href="/teacher">
-                <div className="space-y-6">
-                  <div className="w-20 h-20 bg-earth-600/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-600/30 transition-colors">
-                    <Users className="w-10 h-10 text-earth-700" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-earth-800">
-                    {language === 'es' ? 'Soy Profesor' : "I'm a Teacher"}
-                  </h3>
-                  <p className="text-earth-600">
-                    {language === 'es'
-                      ? 'Gestiona clases y crea contenido educativo'
-                      : 'Manage classes and create educational content'}
-                  </p>
-                  <Button className="btn-earth w-full">
-                    {language === 'es' ? 'Entrar' : 'Enter'}
-                  </Button>
-                </div>
-              </Link>
-            </Card>
-
-            <Card className="card-minimal group">
-              <Link href="/colonial-rally">
-                <div className="space-y-6">
-                  <div className="w-20 h-20 bg-earth-700/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-700/30 transition-colors">
-                    <Map className="w-10 h-10 text-earth-700" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-earth-800">
-                    {language === 'es' ? 'Rally Colonial' : 'Colonial Rally'}
-                  </h3>
-                  <p className="text-earth-600">
-                    {language === 'es'
-                      ? 'Explora la Zona Colonial con AR'
-                      : 'Explore the Colonial Zone with AR'}
-                  </p>
-                  <Button className="btn-earth w-full">
-                    {language === 'es' ? 'Explorar' : 'Explore'}
-                  </Button>
-                </div>
-              </Link>
-            </Card>
+            {/* Fuzzy Character */}
+            <div className="flex-shrink-0">
+              <div className="relative w-64 h-64 md:w-80 md:h-80">
+                <Image
+                  src="/fuzzy.png"
+                  alt="Fuzzy - Happy Character"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 768px) 256px, 320px"
+                />
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Role Selection */}
+        <div className="grid md:grid-cols-3 gap-8 mt-16">
+          <Card className="card-minimal group">
+            <Link href="/student">
+              <div className="space-y-6">
+                <div className="w-20 h-20 bg-earth-500/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-500/30 transition-colors">
+                  <BookOpen className="w-10 h-10 text-earth-700" />
+                </div>
+                <h3 className="text-2xl font-semibold text-earth-800">
+                  {language === 'es' ? 'Soy Estudiante' : "I'm a Student"}
+                </h3>
+                <p className="text-earth-600">
+                  {language === 'es'
+                    ? 'Accede a tu tutor IA y juegos educativos'
+                    : 'Access your AI tutor and educational games'}
+                </p>
+                <Button className="btn-earth w-full">
+                  {language === 'es' ? 'Entrar' : 'Enter'}
+                </Button>
+              </div>
+            </Link>
+          </Card>
+
+          <Card className="card-minimal group">
+            <Link href="/teacher">
+              <div className="space-y-6">
+                <div className="w-20 h-20 bg-earth-600/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-600/30 transition-colors">
+                  <Users className="w-10 h-10 text-earth-700" />
+                </div>
+                <h3 className="text-2xl font-semibold text-earth-800">
+                  {language === 'es' ? 'Soy Profesor' : "I'm a Teacher"}
+                </h3>
+                <p className="text-earth-600">
+                  {language === 'es'
+                    ? 'Gestiona clases y crea contenido educativo'
+                    : 'Manage classes and create educational content'}
+                </p>
+                <Button className="btn-earth w-full">
+                  {language === 'es' ? 'Entrar' : 'Enter'}
+                </Button>
+              </div>
+            </Link>
+          </Card>
+
+          <Card className="card-minimal group">
+            <Link href="/colonial-rally">
+              <div className="space-y-6">
+                <div className="w-20 h-20 bg-earth-700/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-earth-700/30 transition-colors">
+                  <Map className="w-10 h-10 text-earth-700" />
+                </div>
+                <h3 className="text-2xl font-semibold text-earth-800">
+                  {language === 'es' ? 'Rally Colonial' : 'Colonial Rally'}
+                </h3>
+                <p className="text-earth-600">
+                  {language === 'es'
+                    ? 'Explora la Zona Colonial con AR'
+                    : 'Explore the Colonial Zone with AR'}
+                </p>
+                <Button className="btn-earth w-full">
+                  {language === 'es' ? 'Explorar' : 'Explore'}
+                </Button>
+              </div>
+            </Link>
+          </Card>
         </div>
       </section>
 

@@ -286,6 +286,8 @@ export class DeepSeekClient {
       - Evita términos técnicos complejos
       - Mantén las explicaciones muy cortas (50-100 palabras máximo)
       - Usa emojis y lenguaje motivador
+      - PROTECCIÓN PARENTAL: Solo habla de temas educativos básicos, evita temas complejos o inapropiados
+      - Usa espaciado generoso entre párrafos y listas para mejor legibilidad
       `
       : isElementary
         ? `
@@ -294,12 +296,16 @@ export class DeepSeekClient {
       - Usa ejemplos simples y analogías familiares
       - Explica conceptos paso a paso de manera clara
       - Mantén respuestas entre 100-150 palabras
+      - PROTECCIÓN PARENTAL: Mantén contenido educativo apropiado para la edad
+      - Usa espaciado generoso entre párrafos y listas para mejor legibilidad
       `
         : `
       ADAPTACIÓN PARA ADOLESCENTES (${age} años):
       - Puedes usar conceptos más avanzados apropiados para la edad
       - Incluye ejemplos relevantes y aplicaciones prácticas
       - Mantén respuestas entre 150-200 palabras
+      - PROTECCIÓN PARENTAL: Mantén contenido educativo y apropiado
+      - Usa espaciado generoso entre párrafos y listas para mejor legibilidad
       `;
 
     const basePrompt =
@@ -335,6 +341,10 @@ export class DeepSeekClient {
       - Si sugiere práctica, que sea específica y alcanzable
       - Celebra el progreso y mantén motivación alta
       - NUNCA uses fórmulas químicas complejas para niños menores de 9 años
+      - FORMATO: Usa espaciado generoso entre párrafos y listas (doble salto de línea)
+      - PROTECCIÓN PARENTAL: Solo habla de temas educativos apropiados para la edad del niño
+      - NO uses asteriscos para negritas, escribe el texto normalmente
+      - Si haces listas, deja una línea en blanco entre cada elemento para mejor legibilidad
     `
         : `
       You are Fuzzy, a friendly and patient AI tutor specialized in Dominican education. Your goal is to help ${age}-year-old students (grade ${context.grade}) understand ${context.subject}.
@@ -367,43 +377,119 @@ export class DeepSeekClient {
       - If suggesting practice, make it specific and achievable
       - Celebrate progress and maintain high motivation
       - NEVER use complex chemical formulas for children under 9 years old
+      - FORMAT: Use generous spacing between paragraphs and lists (double line breaks)
+      - PARENTAL PROTECTION: Only discuss educational topics appropriate for the child's age
+      - DO NOT use asterisks for bold text, write text normally
+      - If making lists, leave a blank line between each item for better readability
     `;
 
     return basePrompt;
   }
 
   private parseResponse(content: string, context: any): TutorResponse {
+    // Procesar el contenido para mejorar la presentación
+    let processedContent = this.processContentForDisplay(content, context);
+
     // Simple parsing - in production this would be more sophisticated
     let type: TutorResponse['type'] = 'explanation';
 
-    if (content.includes('?')) {
+    if (processedContent.includes('?')) {
       type = 'socratic_question';
     } else if (
-      content.toLowerCase().includes('ejemplo') ||
-      content.toLowerCase().includes('example')
+      processedContent.toLowerCase().includes('ejemplo') ||
+      processedContent.toLowerCase().includes('example')
     ) {
       type = 'example';
     } else if (
-      content.toLowerCase().includes('paso') ||
-      content.toLowerCase().includes('step')
+      processedContent.toLowerCase().includes('paso') ||
+      processedContent.toLowerCase().includes('step')
     ) {
       type = 'step_by_step';
     } else if (
-      content.toLowerCase().includes('práctica') ||
-      content.toLowerCase().includes('practice')
+      processedContent.toLowerCase().includes('práctica') ||
+      processedContent.toLowerCase().includes('practice')
     ) {
       type = 'practice_suggestion';
     }
 
     return {
-      content: content.trim(),
+      content: processedContent.trim(),
       type,
       confidence: 0.8, // Would be calculated based on various factors
       followUpSuggestions: this.extractFollowUpSuggestions(
-        content,
+        processedContent,
         context.language,
       ),
     };
+  }
+
+  private processContentForDisplay(content: string, context: any): string {
+    let processed = content;
+
+    // 1. Validar contenido apropiado para la edad
+    processed = this.validateAgeAppropriateContent(processed, context);
+
+    // 2. Transparentar asteriscos de DeepSeek (convertir **texto** a texto normal)
+    processed = processed.replace(/\*\*(.*?)\*\*/g, '$1');
+    processed = processed.replace(/\*(.*?)\*/g, '$1');
+
+    // 3. Mejorar espaciado en listas con bullets
+    // Agregar línea extra después de cada bullet point
+    processed = processed.replace(/(\n\s*[•\-\*]\s)/g, '\n\n$1');
+
+    // Agregar línea extra después de cada número en listas numeradas
+    processed = processed.replace(/(\n\s*\d+\.\s)/g, '\n\n$1');
+
+    // 4. Mejorar espaciado en párrafos principales
+    // Asegurar que haya doble salto de línea entre párrafos principales
+    processed = processed.replace(/\n\n\n+/g, '\n\n');
+
+    // 5. Mejorar espaciado en listas específicas
+    // Asegurar espaciado después de cada elemento de lista
+    processed = processed.replace(
+      /(\n\s*[•\-\*]\s[^\n]+)(\n\s*[•\-\*])/g,
+      '$1\n\n$2',
+    );
+    processed = processed.replace(
+      /(\n\s*\d+\.\s[^\n]+)(\n\s*\d+\.)/g,
+      '$1\n\n$2',
+    );
+
+    // 6. Limpiar espacios excesivos pero mantener espaciado de listas
+    processed = processed.replace(/[ \t]+/g, ' ');
+    processed = processed.replace(/\n[ \t]+/g, '\n');
+
+    // 7. Asegurar que no haya más de 2 saltos de línea consecutivos
+    processed = processed.replace(/\n{3,}/g, '\n\n');
+
+    return processed;
+  }
+
+  private validateAgeAppropriateContent(content: string, context: any): string {
+    const age = context.age || context.grade + 5;
+
+    // Para niños muy pequeños (≤6 años), asegurar contenido muy básico
+    if (age <= 6) {
+      // Remover conceptos complejos que no son apropiados
+      content = content.replace(
+        /fórmula|ecuación|química|física|matemática compleja/gi,
+        'concepto básico',
+      );
+      content = content.replace(/CO₂|H₂O|O₂|C₆H₁₂O₆/gi, 'elementos químicos');
+    }
+
+    // Para niños pequeños (≤8 años), evitar fórmulas y símbolos
+    if (age <= 8) {
+      // Remover fórmulas químicas y símbolos matemáticos complejos
+      content = content.replace(/[A-Z][a-z]?[₀₁₂₃₄₅₆₇₈₉]?/g, 'elemento');
+      content = content.replace(/[+\-=→←]/g, 'se convierte en');
+      content = content.replace(
+        /\d+[A-Z][a-z]?[₀₁₂₃₄₅₆₇₈₉]?/g,
+        'elementos químicos',
+      );
+    }
+
+    return content;
   }
 
   private extractFollowUpSuggestions(

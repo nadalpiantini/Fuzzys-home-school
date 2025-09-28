@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -56,6 +56,14 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
   const [nickname, setNickname] = useState('');
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [hasAnswered, setHasAnswered] = useState(false);
+
+  // Shuffle choices to randomize order
+  const shuffledChoices = useMemo(() => {
+    if (!gameState.currentQuestion?.choices) return [];
+    return [...gameState.currentQuestion.choices].sort(
+      () => Math.random() - 0.5,
+    );
+  }, [gameState.currentQuestion]);
 
   // Mock data for demonstration
   useEffect(() => {
@@ -187,7 +195,7 @@ export const LiveQuiz: React.FC<LiveQuizProps> = ({
             </h3>
 
             <div className="grid grid-cols-2 gap-4">
-              {gameState.currentQuestion?.choices.map((choice) => (
+              {shuffledChoices.map((choice) => (
                 <div
                   key={choice.id}
                   className={`p-6 rounded-lg text-white font-medium ${getAnswerButtonColor(choice.id)}`}

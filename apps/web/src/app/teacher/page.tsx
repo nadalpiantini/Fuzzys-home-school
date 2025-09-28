@@ -119,7 +119,7 @@ export default function TeacherDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-6 py-4">
