@@ -13,7 +13,7 @@ import {
   Check,
   Loader2,
   RefreshCw,
-  AutoDetect,
+  Search, // Replaced AutoDetect with Search
 } from 'lucide-react';
 
 interface CulturalContextSelectorProps {
@@ -167,7 +167,7 @@ export const CulturalContextSelector: React.FC<
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AutoDetect className="w-5 h-5" />
+              <Search className="w-5 h-5" />
               Auto-detección
             </CardTitle>
           </CardHeader>
@@ -185,7 +185,7 @@ export const CulturalContextSelector: React.FC<
               {isChanging ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
-                <AutoDetect className="w-4 h-4 mr-2" />
+                <Search className="w-4 h-4 mr-2" />
               )}
               {userPreferences?.auto_detect
                 ? 'Auto-detección Activa'

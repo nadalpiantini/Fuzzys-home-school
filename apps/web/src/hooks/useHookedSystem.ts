@@ -137,7 +137,7 @@ export function useHookedSystem() {
       setTodayQuest(quest);
       setMessages(messagesData || []);
       setStreak(streakData);
-      setBadges(badgesData?.map((ub) => ub.badges).filter(Boolean) || []);
+      setBadges(badgesData?.flatMap((ub) => ub.badges).filter(Boolean) || []);
     } catch (err) {
       console.error('Error loading hooked data:', err);
       setError('Error al cargar los datos');

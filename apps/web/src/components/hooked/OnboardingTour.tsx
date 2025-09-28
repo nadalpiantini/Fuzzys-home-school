@@ -37,7 +37,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
       disableBeacon: true,
     },
     {
@@ -51,7 +51,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '#profile-button',
@@ -64,7 +64,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'bottom',
+      placement: 'bottom' as const,
     },
     {
       target: '#tutor-card',
@@ -77,7 +77,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'top',
+      placement: 'top' as const,
     },
     {
       target: '#games-card',
@@ -89,7 +89,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'top',
+      placement: 'top' as const,
     },
     {
       target: '#library-card',
@@ -102,7 +102,7 @@ export default function OnboardingTour({
           </p>
         </div>
       ),
-      placement: 'top',
+      placement: 'top' as const,
     },
   ];
 
@@ -168,10 +168,6 @@ export default function OnboardingTour({
         },
         buttonSkip: {
           color: '#6B7280',
-        },
-        beacon: {
-          inner: '#8B5CF6',
-          outer: '#8B5CF6',
         },
       }}
       locale={{
