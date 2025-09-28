@@ -1,0 +1,20 @@
+// tsup.config.ts
+import { defineConfig } from "tsup";
+var tsup_config_default = defineConfig({
+  entry: ["src/index.ts"],
+  format: ["cjs", "esm"],
+  dts: true,
+  splitting: false,
+  sourcemap: true,
+  clean: true,
+  external: ["react", "react-dom", "@fuzzy/external-games", "aframe", "ar.js"],
+  esbuildOptions(options) {
+    options.banner = {
+      js: '"use client"'
+    };
+  }
+});
+export {
+  tsup_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidHN1cC5jb25maWcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9faW5qZWN0ZWRfZmlsZW5hbWVfXyA9IFwiL1VzZXJzL2FucC9kZXYvZnV6enlzX2hvbWVfc2Nob29sL3BhY2thZ2VzL3ZyLWFyLWFkYXB0ZXIvdHN1cC5jb25maWcudHNcIjtjb25zdCBfX2luamVjdGVkX2Rpcm5hbWVfXyA9IFwiL1VzZXJzL2FucC9kZXYvZnV6enlzX2hvbWVfc2Nob29sL3BhY2thZ2VzL3ZyLWFyLWFkYXB0ZXJcIjtjb25zdCBfX2luamVjdGVkX2ltcG9ydF9tZXRhX3VybF9fID0gXCJmaWxlOi8vL1VzZXJzL2FucC9kZXYvZnV6enlzX2hvbWVfc2Nob29sL3BhY2thZ2VzL3ZyLWFyLWFkYXB0ZXIvdHN1cC5jb25maWcudHNcIjtpbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tICd0c3VwJ1xuXG5leHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoe1xuICBlbnRyeTogWydzcmMvaW5kZXgudHMnXSxcbiAgZm9ybWF0OiBbJ2NqcycsICdlc20nXSxcbiAgZHRzOiB0cnVlLFxuICBzcGxpdHRpbmc6IGZhbHNlLFxuICBzb3VyY2VtYXA6IHRydWUsXG4gIGNsZWFuOiB0cnVlLFxuICBleHRlcm5hbDogWydyZWFjdCcsICdyZWFjdC1kb20nLCAnQGZ1enp5L2V4dGVybmFsLWdhbWVzJywgJ2FmcmFtZScsICdhci5qcyddLFxuICBlc2J1aWxkT3B0aW9ucyhvcHRpb25zKSB7XG4gICAgb3B0aW9ucy5iYW5uZXIgPSB7XG4gICAgICBqczogJ1widXNlIGNsaWVudFwiJyxcbiAgICB9XG4gIH0sXG59KSJdLAogICJtYXBwaW5ncyI6ICI7QUFBc1QsU0FBUyxvQkFBb0I7QUFFblYsSUFBTyxzQkFBUSxhQUFhO0FBQUEsRUFDMUIsT0FBTyxDQUFDLGNBQWM7QUFBQSxFQUN0QixRQUFRLENBQUMsT0FBTyxLQUFLO0FBQUEsRUFDckIsS0FBSztBQUFBLEVBQ0wsV0FBVztBQUFBLEVBQ1gsV0FBVztBQUFBLEVBQ1gsT0FBTztBQUFBLEVBQ1AsVUFBVSxDQUFDLFNBQVMsYUFBYSx5QkFBeUIsVUFBVSxPQUFPO0FBQUEsRUFDM0UsZUFBZSxTQUFTO0FBQ3RCLFlBQVEsU0FBUztBQUFBLE1BQ2YsSUFBSTtBQUFBLElBQ047QUFBQSxFQUNGO0FBQ0YsQ0FBQzsiLAogICJuYW1lcyI6IFtdCn0K

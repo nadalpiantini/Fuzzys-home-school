@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,6 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation'
 
 export default function StudentDashboard() {
   const { t, language } = useTranslation()
+  const router = useRouter()
   const [streak, setStreak] = useState(7)
   const [points, setPoints] = useState(1250)
 
@@ -92,7 +94,10 @@ export default function StudentDashboard() {
                   ? 'Juega y aprende con retos divertidos'
                   : 'Play and learn with fun challenges'}
               </p>
-              <Button className="mt-4 bg-white text-green-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-green-600 hover:bg-gray-100"
+                onClick={() => router.push('/games')}
+              >
                 {language === 'es' ? 'Jugar' : 'Play'}
               </Button>
             </CardContent>

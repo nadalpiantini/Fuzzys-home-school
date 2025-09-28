@@ -18,7 +18,9 @@ import {
   Flashcards,
   BranchingScenario,
   Timeline,
-  Match
+  Match,
+  MathSolver,
+  CodeChallenge
 } from '@/components/games';
 import { GameType } from '@fuzzy/game-engine';
 import {
@@ -206,6 +208,81 @@ const sampleGames = {
       { left: 'Tree', right: 'Árbol' }
     ],
     shuffle: true
+  },
+  [GameType.MathSolver]: {
+    type: GameType.MathSolver,
+    problem: 'Resuelve: 2x + 5 = 13',
+    steps: [
+      { step: 1, description: 'Restar 5 de ambos lados', equation: '2x = 13 - 5' },
+      { step: 2, description: 'Simplificar', equation: '2x = 8' },
+      { step: 3, description: 'Dividir por 2', equation: 'x = 8/2' },
+      { step: 4, description: 'Resultado final', equation: 'x = 4' }
+    ],
+    answer: 4
+  },
+  [GameType.CodeChallenge]: {
+    type: GameType.CodeChallenge,
+    title: 'Función Suma',
+    description: 'Crea una función que sume dos números',
+    language: 'javascript',
+    starterCode: 'function suma(a, b) {\n  // Tu código aquí\n}',
+    testCases: [
+      { input: 'suma(2, 3)', expected: 5 },
+      { input: 'suma(-1, 1)', expected: 0 },
+      { input: 'suma(0, 0)', expected: 0 }
+    ],
+    solution: 'function suma(a, b) {\n  return a + b;\n}'
+  },
+  [GameType.MindMap]: {
+    type: GameType.MindMap,
+    title: 'Mapa Mental - Ecosistema',
+    description: 'Crea un mapa mental sobre el ecosistema',
+    centralTopic: 'Ecosistema',
+    nodes: [
+      { id: '1', text: 'Plantas', x: 100, y: 50 },
+      { id: '2', text: 'Animales', x: 200, y: 50 },
+      { id: '3', text: 'Clima', x: 150, y: 150 }
+    ],
+    connections: [
+      { from: 'central', to: '1' },
+      { from: 'central', to: '2' },
+      { from: 'central', to: '3' }
+    ]
+  },
+  [GameType.TeamChallenge]: {
+    type: GameType.TeamChallenge,
+    title: 'Desafío de Equipo',
+    description: 'Trabaja en equipo para resolver el problema',
+    challenge: 'Diseña una solución sostenible para el reciclaje',
+    timeLimit: 300,
+    maxParticipants: 4
+  },
+  [GameType.ColonialRally]: {
+    type: GameType.ColonialRally,
+    title: 'Rally Colonial',
+    description: 'Explora la historia colonial de República Dominicana',
+    checkpoints: [
+      { id: '1', name: 'Llegada de Colón', location: 'Santo Domingo', completed: false },
+      { id: '2', name: 'Primera Catedral', location: 'Zona Colonial', completed: false },
+      { id: '3', name: 'Independencia', location: 'Puerta del Conde', completed: false }
+    ],
+    totalTime: 1800
+  },
+  [GameType.LiveQuiz]: {
+    type: GameType.LiveQuiz,
+    title: 'Quiz en Vivo',
+    description: 'Participa en un quiz en tiempo real',
+    questions: [
+      {
+        id: '1',
+        question: '¿Cuál es la capital de República Dominicana?',
+        options: ['Santiago', 'Santo Domingo', 'Puerto Plata', 'La Romana'],
+        correctAnswer: 1,
+        timeLimit: 30
+      }
+    ],
+    participants: 0,
+    maxParticipants: 50
   }
 };
 
@@ -224,7 +301,12 @@ const gameInfo = [
   { type: GameType.Flashcards, name: 'Tarjetas de Estudio', icon: BookOpen, color: 'bg-amber-500' },
   { type: GameType.BranchingScenario, name: 'Escenario Ramificado', icon: GitBranch, color: 'bg-emerald-500' },
   { type: GameType.Timeline, name: 'Línea de Tiempo', icon: Clock, color: 'bg-rose-500' },
-  { type: GameType.Match, name: 'Emparejar', icon: Link2, color: 'bg-lime-500' }
+  { type: GameType.Match, name: 'Emparejar', icon: Link2, color: 'bg-lime-500' },
+  { type: GameType.MathSolver, name: 'Resolvedor Matemático', icon: Calculator, color: 'bg-slate-500' },
+  { type: GameType.CodeChallenge, name: 'Desafío de Código', icon: Code, color: 'bg-gray-500' },
+  { type: GameType.MindMap, name: 'Mapa Mental', icon: Brain, color: 'bg-pink-500' },
+  { type: GameType.TeamChallenge, name: 'Desafío de Equipo', icon: Users, color: 'bg-orange-500' },
+  { type: GameType.ColonialRally, name: 'Rally Colonial', icon: Map, color: 'bg-yellow-500' }
 ];
 
 export default function GameDemoPage() {
@@ -258,33 +340,67 @@ export default function GameDemoPage() {
 
     switch (selectedGame) {
       case GameType.MCQ:
-        return <MCQ {...commonProps} />;
+        return <MCQ {...commonProps as any} />;
       case GameType.TrueFalse:
-        return <TrueFalse {...commonProps} />;
+        return <TrueFalse {...commonProps as any} />;
       case GameType.ShortAnswer:
-        return <ShortAnswer {...commonProps} />;
+        return <ShortAnswer {...commonProps as any} />;
       case GameType.DragDrop:
-        return <DragDrop {...commonProps} />;
+        return <DragDrop {...commonProps as any} />;
       case GameType.Hotspot:
-        return <Hotspot {...commonProps} />;
+        return <Hotspot {...commonProps as any} />;
       case GameType.GapFill:
-        return <GapFill {...commonProps} />;
+        return <GapFill {...commonProps as any} />;
       case GameType.ImageSequence:
-        return <ImageSequence {...commonProps} />;
+        return <ImageSequence {...commonProps as any} />;
       case GameType.Crossword:
-        return <Crossword {...commonProps} />;
+        return <Crossword {...commonProps as any} />;
       case GameType.WordSearch:
-        return <WordSearch {...commonProps} />;
+        return <WordSearch {...commonProps as any} />;
       case GameType.MemoryCards:
-        return <MemoryCards {...commonProps} />;
+        return <MemoryCards {...commonProps as any} />;
       case GameType.Flashcards:
-        return <Flashcards {...commonProps} />;
+        return <Flashcards {...commonProps as any} />;
       case GameType.BranchingScenario:
-        return <BranchingScenario {...commonProps} />;
+        return <BranchingScenario {...commonProps as any} />;
       case GameType.Timeline:
-        return <Timeline {...commonProps} />;
+        return <Timeline {...commonProps as any} />;
       case GameType.Match:
-        return <Match {...commonProps} />;
+        return <Match {...commonProps as any} />;
+      case GameType.MathSolver:
+        return <MathSolver {...commonProps as any} />;
+      case GameType.CodeChallenge:
+        return <CodeChallenge {...commonProps as any} />;
+      case GameType.MindMap:
+        return (
+          <div className="p-8 text-center">
+            <h3 className="text-xl font-semibold mb-4">Mapa Mental</h3>
+            <p className="text-gray-600 mb-4">Este juego estará disponible próximamente</p>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <p className="text-sm text-gray-500">Funcionalidad en desarrollo...</p>
+            </div>
+          </div>
+        );
+      case GameType.TeamChallenge:
+        return (
+          <div className="p-8 text-center">
+            <h3 className="text-xl font-semibold mb-4">Desafío de Equipo</h3>
+            <p className="text-gray-600 mb-4">Este juego estará disponible próximamente</p>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <p className="text-sm text-gray-500">Funcionalidad en desarrollo...</p>
+            </div>
+          </div>
+        );
+      case GameType.ColonialRally:
+        return (
+          <div className="p-8 text-center">
+            <h3 className="text-xl font-semibold mb-4">Rally Colonial</h3>
+            <p className="text-gray-600 mb-4">Este juego estará disponible próximamente</p>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <p className="text-sm text-gray-500">Funcionalidad en desarrollo...</p>
+            </div>
+          </div>
+        );
       default:
         return null;
     }

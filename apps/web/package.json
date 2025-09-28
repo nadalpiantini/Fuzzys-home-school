@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
@@ -14,6 +15,9 @@
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/react": "^6.1.10",
     "@fuzzy/game-engine": "file:../../packages/game-engine",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-slider": "^1.3.6",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
@@ -25,7 +29,7 @@
     "@trpc/server": "^10.44.1",
     "ar.js": "^2.2.2",
     "chart.js": "^4.4.1",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.0.0",
     "dotenv": "^17.2.2",
     "framer-motion": "^10.16.16",

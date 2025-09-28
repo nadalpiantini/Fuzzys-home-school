@@ -12,13 +12,18 @@
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "clean": "turbo run clean",
     "deploy": "npm run build && npm run start",
     "deploy:vercel": "vercel --prod",
-    "deploy:netlify": "netlify deploy --prod"
+    "deploy:netlify": "netlify deploy --prod",
+    "seed": "npx tsx scripts/seed-games.ts"
   },
   "devDependencies": {
-    "turbo": "^1.10.12"
+    "@types/node": "^20.10.0",
+    "tsx": "^4.6.2",
+    "turbo": "^1.10.12",
+    "typescript": "^5.2.2"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -40,6 +45,14 @@
   "license": "MIT",
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.58.0"
+    "@supabase/supabase-js": "^2.58.0",
+    "codemirror": "^6.0.2",
+    "h5p-standalone": "^3.8.0",
+    "jszip": "^3.10.1",
+    "markdown-it": "^14.1.0",
+    "prismjs": "^1.30.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "xml2js": "^0.6.2"
   }
 }

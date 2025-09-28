@@ -1,0 +1,31 @@
+{
+  "name": "@fuzzy/vr-ar-adapter",
+  "version": "0.1.0",
+  "description": "VR/AR integration with A-Frame and AR.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "aframe": "^1.4.0",
+    "ar.js": "^2.2.2",
+    "@fuzzy/external-games": "file:../external-games"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/aframe": "^1.2.0",
+    "typescript": "^5.0.0",
+    "tsup": "^7.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  }
+}
