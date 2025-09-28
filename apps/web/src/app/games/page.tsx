@@ -63,22 +63,22 @@ interface DifficultyLevel {
   games: GameButton[];
 }
 
-const difficultyLevels: DifficultyLevel[] = [
+const gradeLevels: DifficultyLevel[] = [
   {
-    id: 'beginner',
-    title: '🌱 Principiante',
-    description: 'Perfecto para empezar tu aventura de aprendizaje',
+    id: 'prek-2',
+    title: '🌱 Pre-K a 2do Grado',
+    description: 'Aprendizaje básico con juegos divertidos',
     icon: <Heart className="w-8 h-8" />,
-    color: 'from-green-400 to-emerald-400',
-    glassColor: 'bg-green-100/20',
+    color: 'from-amber-300 to-orange-300',
+    glassColor: 'bg-amber-50/30',
     games: [
       {
         id: 'blockly-programming',
         title: 'Blockly Games',
-        description: 'Aprende programación con bloques visuales',
+        description: 'Programación visual para niños pequeños',
         difficulty: 'beginner',
-        ageRange: '6-16',
-        duration: '10-30 min',
+        ageRange: '4-8',
+        duration: '10-20 min',
         players: '1',
         type: 'programming',
         url: '/games/external?type=blockly',
@@ -86,82 +86,81 @@ const difficultyLevels: DifficultyLevel[] = [
         rating: 4.8,
         plays: 23150,
         icon: <Blocks className="w-6 h-6" />,
-        glassColor: 'bg-green-100/30',
-        gradientColor: 'from-green-400 to-emerald-400',
+        glassColor: 'bg-amber-50/40',
+        gradientColor: 'from-amber-300 to-orange-300',
         emoji: '🧩',
       },
       {
-        id: 'forces-motion',
-        title: 'Fuerzas y Movimiento',
-        description: 'Conceptos de física para 3er grado',
-        difficulty: 'beginner',
-        ageRange: '8-10',
-        duration: '20-30 min',
-        players: '1',
-        type: 'simulation',
-        url: '/games/external?type=phet&sim=forces-and-motion-basics',
-        tags: ['Física', 'Ciencias Naturales', '3ro'],
-        rating: 4.8,
-        plays: 6789,
-        icon: <Target className="w-6 h-6" />,
-        glassColor: 'bg-pink-100/30',
-        gradientColor: 'from-pink-400 to-rose-400',
-        emoji: '⚡',
-      },
-      {
         id: 'fractions-intro',
-        title: 'Introducción a Fracciones',
-        description: 'Aprende fracciones visualmente',
+        title: 'Fracciones Básicas',
+        description: 'Aprende fracciones con visuales',
         difficulty: 'beginner',
-        ageRange: '8-12',
-        duration: '15-25 min',
+        ageRange: '6-8',
+        duration: '15-20 min',
         players: '1',
         type: 'simulation',
         url: '/games/external?type=phet&sim=fractions-intro',
-        tags: ['Matemáticas', 'Fracciones', '3ro-5to'],
+        tags: ['Matemáticas', 'Fracciones', 'Básico'],
         rating: 4.7,
         plays: 9876,
         icon: <Brain className="w-6 h-6" />,
-        glassColor: 'bg-indigo-100/30',
-        gradientColor: 'from-indigo-400 to-blue-400',
+        glassColor: 'bg-orange-50/40',
+        gradientColor: 'from-orange-300 to-red-300',
         emoji: '🔢',
       },
     ],
   },
   {
-    id: 'intermediate',
-    title: '🚀 Intermedio',
-    description: 'Desafíos perfectos para seguir creciendo',
+    id: 'grades-3-5',
+    title: '🌿 3ro a 5to Grado',
+    description: 'Conceptos fundamentales de ciencias y matemáticas',
     icon: <Zap className="w-8 h-8" />,
-    color: 'from-yellow-400 to-orange-400',
-    glassColor: 'bg-yellow-100/20',
+    color: 'from-green-400 to-teal-400',
+    glassColor: 'bg-green-50/30',
     games: [
+      {
+        id: 'forces-motion',
+        title: 'Fuerzas y Movimiento',
+        description: 'Conceptos básicos de física',
+        difficulty: 'beginner',
+        ageRange: '8-11',
+        duration: '20-30 min',
+        players: '1',
+        type: 'simulation',
+        url: '/games/external?type=phet&sim=forces-and-motion-basics',
+        tags: ['Física', 'Ciencias', '3ro-5to'],
+        rating: 4.8,
+        plays: 6789,
+        icon: <Target className="w-6 h-6" />,
+        glassColor: 'bg-green-50/40',
+        gradientColor: 'from-green-400 to-teal-400',
+        emoji: '⚡',
+      },
       {
         id: 'phet-simulations',
         title: 'PhET Simulations',
-        description:
-          'Simulaciones interactivas de física, química y matemáticas',
+        description: 'Simulaciones científicas interactivas',
         difficulty: 'intermediate',
-        ageRange: '8-18',
-        duration: '15-45 min',
+        ageRange: '8-12',
+        duration: '15-30 min',
         players: '1',
         type: 'simulation',
         url: '/games/external?type=phet',
-        tags: ['STEM', 'Simulación', 'Experimentos'],
+        tags: ['STEM', 'Simulación', 'Ciencias'],
         rating: 4.9,
         plays: 15420,
         icon: <Beaker className="w-6 h-6" />,
-        glassColor: 'bg-blue-100/30',
-        gradientColor: 'from-blue-400 to-cyan-400',
+        glassColor: 'bg-teal-50/40',
+        gradientColor: 'from-teal-400 to-cyan-400',
         emoji: '🧪',
       },
       {
         id: 'music-blocks',
         title: 'Music Blocks',
-        description: 'Crea música mientras aprendes matemáticas',
+        description: 'Música y matemáticas juntas',
         difficulty: 'intermediate',
-        ageRange: '8-16',
-        duration: '20-60 min',
+        ageRange: '8-12',
+        duration: '20-40 min',
         players: '1',
         type: 'music',
         url: '/games/external?type=music',
@@ -169,17 +168,45 @@ const difficultyLevels: DifficultyLevel[] = [
         rating: 4.7,
         plays: 8934,
         icon: <Music className="w-6 h-6" />,
-        glassColor: 'bg-purple-100/30',
-        gradientColor: 'from-purple-400 to-pink-400',
+        glassColor: 'bg-cyan-50/40',
+        gradientColor: 'from-cyan-400 to-blue-400',
         emoji: '🎵',
+      },
+    ],
+  },
+  {
+    id: 'grades-6-8',
+    title: '🌳 6to a 8vo Grado',
+    description: 'Desafíos intermedios para estudiantes',
+    icon: <Trophy className="w-8 h-8" />,
+    color: 'from-blue-400 to-indigo-400',
+    glassColor: 'bg-blue-50/30',
+    games: [
+      {
+        id: 'math-solver',
+        title: 'Solucionador de Matemáticas',
+        description: 'Álgebra y geometría paso a paso',
+        difficulty: 'intermediate',
+        ageRange: '11-14',
+        duration: '15-25 min',
+        players: '1',
+        type: 'traditional',
+        url: '/games/demo?game=math-solver',
+        tags: ['Matemáticas', 'Álgebra', 'Geometría'],
+        rating: 4.6,
+        plays: 12340,
+        icon: <Trophy className="w-6 h-6" />,
+        glassColor: 'bg-blue-50/40',
+        gradientColor: 'from-blue-400 to-indigo-400',
+        emoji: '🧮',
       },
       {
         id: 'colonial-zone-ar',
         title: 'AR Zona Colonial',
-        description: 'Explora la historia dominicana en realidad aumentada',
+        description: 'Historia dominicana en realidad aumentada',
         difficulty: 'intermediate',
-        ageRange: '10-18',
-        duration: '30-60 min',
+        ageRange: '12-15',
+        duration: '30-45 min',
         players: '1-4',
         type: 'ar',
         url: '/games/external?type=ar',
@@ -187,45 +214,27 @@ const difficultyLevels: DifficultyLevel[] = [
         rating: 4.9,
         plays: 5678,
         icon: <Camera className="w-6 h-6" />,
-        glassColor: 'bg-amber-100/30',
-        gradientColor: 'from-amber-400 to-orange-400',
+        glassColor: 'bg-indigo-50/40',
+        gradientColor: 'from-indigo-400 to-purple-400',
         emoji: '📱',
-      },
-      {
-        id: 'math-solver',
-        title: 'Solucionador de Matemáticas',
-        description: 'Resuelve problemas matemáticos paso a paso',
-        difficulty: 'intermediate',
-        ageRange: '10-16',
-        duration: '10-20 min',
-        players: '1',
-        type: 'traditional',
-        url: '/games/demo?game=math-solver',
-        tags: ['Matemáticas', 'Álgebra', 'Paso a paso'],
-        rating: 4.6,
-        plays: 12340,
-        icon: <Trophy className="w-6 h-6" />,
-        glassColor: 'bg-yellow-100/30',
-        gradientColor: 'from-yellow-400 to-amber-400',
-        emoji: '🧮',
       },
     ],
   },
   {
-    id: 'advanced',
-    title: '🏆 Avanzado',
-    description: 'Para los más valientes y experimentados',
+    id: 'grades-9-12',
+    title: '🏔️ 9no a 12mo Grado',
+    description: 'Desafíos avanzados para preparación universitaria',
     icon: <Shield className="w-8 h-8" />,
-    color: 'from-red-400 to-pink-400',
-    glassColor: 'bg-red-100/20',
+    color: 'from-purple-400 to-pink-400',
+    glassColor: 'bg-purple-50/30',
     games: [
       {
         id: 'code-challenge',
         title: 'Desafío de Código',
-        description: 'Resuelve problemas de programación',
+        description: 'Programación avanzada y algoritmos',
         difficulty: 'advanced',
-        ageRange: '12-18',
-        duration: '15-45 min',
+        ageRange: '14-18',
+        duration: '20-45 min',
         players: '1',
         type: 'traditional',
         url: '/games/demo?game=code-challenge',
@@ -233,8 +242,8 @@ const difficultyLevels: DifficultyLevel[] = [
         rating: 4.5,
         plays: 8765,
         icon: <Gamepad2 className="w-6 h-6" />,
-        glassColor: 'bg-teal-100/30',
-        gradientColor: 'from-teal-400 to-cyan-400',
+        glassColor: 'bg-purple-50/40',
+        gradientColor: 'from-purple-400 to-pink-400',
         emoji: '💻',
       },
     ],
@@ -245,12 +254,12 @@ export default function GamesPage() {
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
 
-  const allGames = difficultyLevels.flatMap((level) => level.games);
+  const allGames = gradeLevels.flatMap((level) => level.games);
 
   const filteredLevels =
     selectedLevel === 'all'
-      ? difficultyLevels
-      : difficultyLevels.filter((level) => level.id === selectedLevel);
+      ? gradeLevels
+      : gradeLevels.filter((level) => level.id === selectedLevel);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -313,32 +322,32 @@ export default function GamesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Header */}
       <header className="bg-white/70 backdrop-blur-md shadow-sm border-b border-white/20 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Sparkles className="w-8 h-8 text-purple-500" />
-                Centro de Juegos Educativos
+                <Sparkles className="w-8 h-8 text-amber-500" />
+                Juegos por Grados
               </h1>
               <p className="text-gray-600 mt-2">
-                Más de 100 actividades educativas para aprender jugando
+                Actividades organizadas por nivel educativo
               </p>
             </div>
 
             <div className="flex items-center gap-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">100+</div>
-                <div className="text-sm text-gray-600">Actividades</div>
+                <div className="text-2xl font-bold text-amber-600">4</div>
+                <div className="text-sm text-gray-600">Niveles</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">50K+</div>
-                <div className="text-sm text-gray-600">Jugadas</div>
+                <div className="text-2xl font-bold text-orange-600">8</div>
+                <div className="text-sm text-gray-600">Juegos</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">4.8★</div>
+                <div className="text-2xl font-bold text-yellow-600">4.8★</div>
                 <div className="text-sm text-gray-600">Calificación</div>
               </div>
             </div>
@@ -360,9 +369,9 @@ export default function GamesPage() {
               }`}
             >
               <Sparkles className="w-4 h-4 mr-2" />
-              Todos los Niveles
+              Todos los Grados
             </Button>
-            {difficultyLevels.map((level) => (
+            {gradeLevels.map((level) => (
               <Button
                 key={level.id}
                 variant={selectedLevel === level.id ? 'default' : 'outline'}
@@ -493,24 +502,23 @@ export default function GamesPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-r from-purple-500/80 to-pink-500/80 backdrop-blur-sm text-white py-12">
+      <section className="bg-gradient-to-r from-amber-500/80 to-orange-500/80 backdrop-blur-sm text-white py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">
             ¿Listo para comenzar tu aventura de aprendizaje?
           </h2>
-          <p className="text-purple-100 mb-8 max-w-2xl mx-auto">
-            Con más de 100 actividades educativas, desde simulaciones
-            científicas hasta experiencias de realidad aumentada, nunca ha sido
-            tan divertido aprender.
+          <p className="text-amber-100 mb-8 max-w-2xl mx-auto">
+            Actividades organizadas por grados escolares, desde Pre-K hasta 12mo
+            grado. Aprende jugando con contenido adaptado a tu nivel educativo.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-white/90 text-purple-600 hover:bg-white hover:scale-105 transition-all duration-300"
+              className="bg-white/90 text-amber-600 hover:bg-white hover:scale-105 transition-all duration-300"
               onClick={() => router.push('/games/external')}
             >
               <Sparkles className="w-5 h-5 mr-2" />
-              Explorar Recursos Open Source
+              Explorar Todos los Juegos
             </Button>
             <Button
               size="lg"
