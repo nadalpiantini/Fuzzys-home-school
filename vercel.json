@@ -3,7 +3,7 @@
   "buildCommand": "turbo run build",
   "outputDirectory": "apps/web/.next",
   "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "installCommand": "npm ci",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet .",
   "git": {
     "deploymentEnabled": {

@@ -92,15 +92,15 @@ export const MCQ: React.FC<MCQProps> = ({
         )}
 
         <div className="space-y-3">
-          {game.choices.map((choice) => (
+          {game.choices?.filter(choice => choice?.id).map((choice) => (
             <button
               key={choice.id}
-              onClick={() => handleSelect(choice.id)}
+              onClick={() => handleSelect(choice.id!)}
               disabled={showFeedback}
-              className={`w-full text-left p-4 rounded-lg border-2 transition-all flex items-center justify-between ${getChoiceStyle(choice.id)}`}
+              className={`w-full text-left p-4 rounded-lg border-2 transition-all flex items-center justify-between ${getChoiceStyle(choice.id!)}`}
             >
               <span>{choice.text}</span>
-              {getChoiceIcon(choice.id)}
+              {getChoiceIcon(choice.id!)}
             </button>
           ))}
         </div>

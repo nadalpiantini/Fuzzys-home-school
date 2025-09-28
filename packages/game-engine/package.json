@@ -1,17 +1,13 @@
 {
   "name": "@fuzzy/game-engine",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
     "clean": "rimraf dist"

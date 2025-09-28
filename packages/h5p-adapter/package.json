@@ -1,11 +1,11 @@
 {
   "name": "@fuzzy/h5p-adapter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "H5P React adapter for Fuzzy's Home School",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
     "typecheck": "tsc --noEmit",
     "dev": "tsc --watch",
     "clean": "rm -rf dist"
@@ -18,10 +18,16 @@
   "devDependencies": {
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "tsup": "^8.0.1"
   },
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
-  }
+  },
+  "private": false,
+  "type": "module",
+  "files": [
+    "dist"
+  ]
 }

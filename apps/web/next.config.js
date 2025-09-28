@@ -4,12 +4,13 @@ const nextConfig = {
   swcMinify: true,
   transpilePackages: [
     '@fuzzy/adaptive-engine',
-    '@fuzzy/creative-tools', 
+    '@fuzzy/creative-tools',
     '@fuzzy/external-games',
     '@fuzzy/game-engine',
     '@fuzzy/h5p-adapter',
     '@fuzzy/quiz-generator',
     '@fuzzy/sandbox-connector',
+    '@fuzzy/schemas',
     '@fuzzy/simulation-engine',
     '@fuzzy/vr-ar-adapter'
   ],

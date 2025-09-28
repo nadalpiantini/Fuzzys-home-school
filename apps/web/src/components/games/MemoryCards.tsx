@@ -33,6 +33,8 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   showFeedback = false,
   feedback
 }) => {
+  const safePairs = game.pairs ?? [];
+  const safeGridSize = game.gridSize ?? { cols: 4, rows: 4 };
   const [cards, setCards] = useState<CardItem[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
@@ -44,20 +46,20 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   useEffect(() => {
     // Initialize and shuffle cards
     const cardPairs: CardItem[] = [];
-    game.pairs.forEach(pair => {
+    safePairs.forEach(pair => {
       // Add front card
       cardPairs.push({
-        id: pair.id + '-front',
-        content: pair.front,
-        image: pair.image,
+        id: (pair?.id || '') + '-front',
+        content: pair?.front || '',
+        image: pair?.image,
         isFlipped: false,
         isMatched: false
       });
       // Add back card (matching pair)
       cardPairs.push({
-        id: pair.id + '-back',
-        content: pair.back,
-        image: pair.image,
+        id: (pair?.id || '') + '-back',
+        content: pair?.back || '',
+        image: pair?.image,
         isFlipped: false,
         isMatched: false
       });
@@ -70,20 +72,20 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   }, [game.pairs]);
 
   useEffect(() => {
-    if (!isComplete && matchedPairs < game.pairs.length) {
+    if (!isComplete && matchedPairs < safePairs.length) {
       const timer = setInterval(() => {
         setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [startTime, isComplete, matchedPairs, game.pairs.length]);
+  }, [startTime, isComplete, matchedPairs, safePairs.length]);
 
   useEffect(() => {
-    if (matchedPairs === game.pairs.length && matchedPairs > 0) {
+    if (matchedPairs === safePairs.length && matchedPairs > 0) {
       setIsComplete(true);
       onAnswer(moves, elapsedTime);
     }
-  }, [matchedPairs, game.pairs.length, moves, elapsedTime, onAnswer]);
+  }, [matchedPairs, safePairs.length, moves, elapsedTime, onAnswer]);
 
   const handleCardClick = (index: number) => {
     if (showFeedback || isComplete) return;
@@ -192,7 +194,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
               Movimientos: <span className="font-bold">{moves}</span>
             </div>
             <div className="text-sm">
-              Pares: <span className="font-bold">{matchedPairs}/{game.pairs.length}</span>
+              Pares: <span className="font-bold">{matchedPairs}/{safePairs.length}</span>
             </div>
             {!showFeedback && !isComplete && (
               <Button
@@ -211,8 +213,8 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
         <div
           className="grid gap-4"
           style={{
-            gridTemplateColumns: `repeat(${game.gridSize.cols}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${game.gridSize.rows}, minmax(0, 1fr))`
+            gridTemplateColumns: `repeat(${safeGridSize.cols}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${safeGridSize.rows}, minmax(0, 1fr))`
           }}
         >
           {cards.map((card, index) => (

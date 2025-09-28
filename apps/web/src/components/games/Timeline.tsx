@@ -25,7 +25,8 @@ export const Timeline: React.FC<TimelineProps> = ({
   showFeedback = false,
   feedback
 }) => {
-  const [events, setEvents] = useState(game.events);
+  const safeEvents = game.events ?? [];
+  const [events, setEvents] = useState(safeEvents);
   const [draggedEvent, setDraggedEvent] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [showDates, setShowDates] = useState(game.displayDates || false);
@@ -33,7 +34,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   useEffect(() => {
     // Shuffle events on mount
     if (!showFeedback) {
-      const shuffled = [...game.events].sort(() => Math.random() - 0.5);
+      const shuffled = [...safeEvents].sort(() => Math.random() - 0.5);
       setEvents(shuffled);
     }
   }, [game.events, showFeedback]);
@@ -74,7 +75,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   };
 
   const handleSubmit = () => {
-    const currentOrder = events.map(event => event.id);
+    const currentOrder = (events ?? []).map(event => event?.id).filter((id): id is string => Boolean(id));
     onAnswer(currentOrder);
   };
 
@@ -90,9 +91,9 @@ export const Timeline: React.FC<TimelineProps> = ({
       return 'hover:border-gray-400';
     }
 
-    const eventId = events[index].id;
-    const correctOrder = [...game.events].sort((a, b) =>
-      new Date(a.date).getTime() - new Date(b.date).getTime()
+    const eventId = events[index]?.id;
+    const correctOrder = [...safeEvents].sort((a, b) =>
+      new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime()
     );
     const correctIndex = correctOrder.findIndex(event => event.id === eventId);
 
@@ -106,9 +107,9 @@ export const Timeline: React.FC<TimelineProps> = ({
   const getEventIcon = (index: number) => {
     if (!showFeedback) return null;
 
-    const eventId = events[index].id;
-    const correctOrder = [...game.events].sort((a, b) =>
-      new Date(a.date).getTime() - new Date(b.date).getTime()
+    const eventId = events[index]?.id;
+    const correctOrder = [...safeEvents].sort((a, b) =>
+      new Date(a?.date || 0).getTime() - new Date(b?.date || 0).getTime()
     );
     const correctIndex = correctOrder.findIndex(event => event.id === eventId);
 
@@ -164,11 +165,11 @@ export const Timeline: React.FC<TimelineProps> = ({
 
           {/* Events */}
           <div className="space-y-4">
-            {events.map((event, index) => (
+            {events?.map((event, index) => (
               <div
-                key={event.id}
+                key={event?.id || index}
                 draggable={!showFeedback}
-                onDragStart={(e) => handleDragStart(e, event.id)}
+                onDragStart={(e) => handleDragStart(e, event?.id || '')}
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, index)}
@@ -204,7 +205,7 @@ export const Timeline: React.FC<TimelineProps> = ({
                           {(showDates || showFeedback) && (
                             <div className="flex items-center gap-1 text-sm text-gray-500">
                               <Calendar className="w-4 h-4" />
-                              <span>{formatDate(event.date)}</span>
+                              <span>{formatDate(event.date || '')}</span>
                             </div>
                           )}
                         </div>

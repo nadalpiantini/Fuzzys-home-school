@@ -1,11 +1,11 @@
 {
   "name": "@fuzzy/sandbox-connector",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Minetest and voxel world integration",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
@@ -26,5 +26,10 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
-  }
+  },
+  "private": false,
+  "type": "module",
+  "files": [
+    "dist"
+  ]
 }

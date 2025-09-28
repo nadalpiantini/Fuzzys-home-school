@@ -25,6 +25,10 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   showFeedback = false,
   feedback
 }) => {
+  // defaults seguros (no cambian el tipo, solo evitan undefined en build)
+  const safeItems = game.items ?? [];
+  const safeOrder = game.correctOrder ?? [];
+  const getId = (i: number) => safeItems[i]?.id;
   const [items, setItems] = useState(game.items);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -32,7 +36,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   useEffect(() => {
     // Shuffle items on mount
     if (!showFeedback) {
-      const shuffled = [...game.items].sort(() => Math.random() - 0.5);
+      const shuffled = [...safeItems].sort(() => Math.random() - 0.5);
       setItems(shuffled);
     }
   }, [game.items, showFeedback]);
@@ -54,9 +58,9 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
 
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault();
-    if (!draggedItem || showFeedback) return;
+    if (!draggedItem || showFeedback || !items) return;
 
-    const draggedIndex = items.findIndex(item => item.id === draggedItem);
+    const draggedIndex = items.findIndex(it => it?.id === draggedItem);
     if (draggedIndex === dropIndex) {
       setDraggedItem(null);
       setDragOverIndex(null);
@@ -73,14 +77,14 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   };
 
   const handleSubmit = () => {
-    const currentOrder = items.map(item =>
-      game.items.findIndex(original => original.id === item.id)
+    const currentOrder = (items ?? []).map(it =>
+      (game.items ?? []).findIndex(o => o?.id === it?.id)
     );
     onAnswer(currentOrder);
   };
 
   const handleReset = () => {
-    const shuffled = [...game.items].sort(() => Math.random() - 0.5);
+    const shuffled = [...safeItems].sort(() => Math.random() - 0.5);
     setItems(shuffled);
   };
 
@@ -92,9 +96,9 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
       return 'hover:border-gray-400';
     }
 
-    const itemId = items[index].id;
-    const originalIndex = game.items.findIndex(item => item.id === itemId);
-    const isCorrectPosition = game.correctOrder[index] === originalIndex;
+    const itemId = getId(index);
+    const originalIndex = (game.items ?? []).findIndex(it => it?.id === itemId);
+    const isCorrectPosition = safeOrder[index] === originalIndex;
 
     if (isCorrectPosition) {
       return 'border-green-500 bg-green-50';
@@ -106,9 +110,9 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   const getItemIcon = (index: number) => {
     if (!showFeedback) return null;
 
-    const itemId = items[index].id;
-    const originalIndex = game.items.findIndex(item => item.id === itemId);
-    const isCorrectPosition = game.correctOrder[index] === originalIndex;
+    const itemId = getId(index);
+    const originalIndex = (game.items ?? []).findIndex(it => it?.id === itemId);
+    const isCorrectPosition = safeOrder[index] === originalIndex;
 
     if (isCorrectPosition) {
       return <Check className="w-5 h-5 text-green-600" />;
@@ -138,11 +142,11 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <div
               key={item.id}
               draggable={!showFeedback}
-              onDragStart={(e) => handleDragStart(e, item.id)}
+              onDragStart={(e) => item.id && handleDragStart(e, item.id)}
               onDragOver={(e) => handleDragOver(e, index)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, index)}

@@ -30,16 +30,20 @@ export const DragDrop: React.FC<DragDropProps> = ({
   showFeedback = false,
   feedback
 }) => {
+  const safeItems = game.items ?? [];
+  const safeZones = game.zones ?? [];
   const [zones, setZones] = useState<Record<string, string[]>>(() => {
     const initial: Record<string, string[]> = {};
-    game.zones.forEach(zone => {
-      initial[zone.id] = [];
+    safeZones.forEach(zone => {
+      if (zone?.id) {
+        initial[zone.id] = [];
+      }
     });
     return initial;
   });
 
-  const [unplacedItems, setUnplacedItems] = useState<string[]>(() =>
-    game.items.map(item => item.id)
+  const [unplacedItems, setUnplacedItems] = useState<string[]>(
+    () => safeItems.map(it => it?.id).filter((id): id is string => Boolean(id))
   );
 
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
@@ -98,7 +102,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
   const getItemStyle = (itemId: string) => {
     if (!showFeedback) return '';
 
-    const item = game.items.find(i => i.id === itemId);
+    const item = safeItems.find(i => i?.id === itemId);
     if (!item) return '';
 
     const placedZone = Object.keys(zones).find(zone =>
@@ -114,7 +118,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
   };
 
   const getItemContent = (itemId: string) => {
-    const item = game.items.find(i => i.id === itemId);
+    const item = safeItems.find(i => i?.id === itemId);
     return item?.content || '';
   };
 
@@ -148,16 +152,16 @@ export const DragDrop: React.FC<DragDropProps> = ({
 
         {/* Drop Zones */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {game.zones.map(zone => (
+          {safeZones.map(zone => (
             <div
               key={zone.id}
               className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200"
               onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, zone.id)}
+              onDrop={(e) => zone?.id && handleDrop(e, zone.id)}
             >
-              <h3 className="font-medium text-blue-900 mb-3">{zone.label}</h3>
+              <h3 className="font-medium text-blue-900 mb-3">{zone?.label}</h3>
               <div className="min-h-[80px] space-y-2">
-                {zones[zone.id].map(itemId => (
+                {zone?.id && zones[zone.id]?.map(itemId => (
                   <div
                     key={itemId}
                     draggable={!showFeedback}
@@ -167,7 +171,7 @@ export const DragDrop: React.FC<DragDropProps> = ({
                     {getItemContent(itemId)}
                   </div>
                 ))}
-                {zones[zone.id].length === 0 && (
+                {zone?.id && (zones[zone.id]?.length ?? 0) === 0 && (
                   <p className="text-sm text-blue-600 italic">Arrastra elementos aquí</p>
                 )}
               </div>

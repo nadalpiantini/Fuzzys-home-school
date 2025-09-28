@@ -26,6 +26,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
   showFeedback = false,
   feedback
 }) => {
+  const safeTargets = game.targets ?? [];
   const [clicks, setClicks] = useState<{ x: number; y: number }[]>([]);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -50,13 +51,16 @@ export const Hotspot: React.FC<HotspotProps> = ({
   const isClickCorrect = (click: { x: number; y: number }) => {
     if (!showFeedback) return false;
 
-    return game.targets.some(target => {
-      if (!target.correct) return false;
-      const distance = Math.sqrt(
-        Math.pow(click.x - target.x, 2) +
-        Math.pow(click.y - target.y, 2)
-      );
-      return distance <= target.radius;
+    return safeTargets.some(t => {
+      if (
+        !t?.correct ||
+        typeof t.x !== 'number' ||
+        typeof t.y !== 'number' ||
+        typeof t.radius !== 'number'
+      ) return false;
+
+      const distance = Math.hypot(click.x - t.x, click.y - t.y);
+      return distance <= t.radius;
     });
   };
 
@@ -68,7 +72,7 @@ export const Hotspot: React.FC<HotspotProps> = ({
         </div>
 
         <p className="text-sm text-gray-600">
-          Necesitas encontrar {game.targets.filter(t => t.correct).length} área(s) correcta(s)
+          Necesitas encontrar {(safeTargets.filter(t => t?.correct).length) ?? 0} área(s) correcta(s)
         </p>
 
         <div
@@ -102,17 +106,22 @@ export const Hotspot: React.FC<HotspotProps> = ({
 
           {/* Show correct areas when feedback is shown */}
           {showFeedback &&
-            game.targets
-              .filter(target => target.correct)
+            safeTargets
+              .filter(target =>
+                target?.correct &&
+                typeof target.x === 'number' &&
+                typeof target.y === 'number' &&
+                typeof target.radius === 'number'
+              )
               .map((target, index) => (
                 <div
                   key={`target-${index}`}
                   className="absolute border-2 border-green-500 bg-green-500 bg-opacity-20 rounded-full"
                   style={{
-                    left: `${target.x - target.radius}%`,
-                    top: `${target.y - target.radius}%`,
-                    width: `${target.radius * 2}%`,
-                    height: `${target.radius * 2}%`
+                    left: `${target.x! - target.radius!}%`,
+                    top: `${target.y! - target.radius!}%`,
+                    width: `${target.radius! * 2}%`,
+                    height: `${target.radius! * 2}%`
                   }}
                 >
                   <div className="absolute inset-0 flex items-center justify-center">

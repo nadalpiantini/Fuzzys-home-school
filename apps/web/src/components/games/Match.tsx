@@ -6,6 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Link2, Check, X, RotateCcw } from 'lucide-react';
 import type { MatchGame } from '@fuzzy/game-engine';
 
+// Safe defaults para evitar undefined en build/runtime
+const toStr = (v: unknown): string | null => (typeof v === 'string' ? v : null);
+
 interface MatchProps {
   game: MatchGame;
   onAnswer: (matches: { left: string; right: string }[]) => void;
@@ -31,19 +34,28 @@ export const Match: React.FC<MatchProps> = ({
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
   const [selectedRight, setSelectedRight] = useState<string | null>(null);
 
+  // Normaliza pares y filtra undefined/null
+  const safePairs = (game.pairs ?? [])
+    .map(p => ({ left: toStr(p?.left), right: toStr(p?.right) }))
+    .filter(p => p.left && p.right) as { left: string; right: string }[];
+
+  // Columnas base
+  const baseLeftItems  = safePairs.map(p => p.left);
+  const baseRightItems = safePairs.map(p => p.right);
+
   useEffect(() => {
-    // Initialize and shuffle columns
-    const leftItems = game.pairs.map(pair => pair.left);
-    const rightItems = game.pairs.map(pair => pair.right);
+    // Clona para no mutar base y aplica shuffle solo si corresponde
+    const left  = [...baseLeftItems];
+    const right = [...baseRightItems];
 
     if (game.shuffle !== false && !showFeedback) {
-      setLeftColumn(leftItems);
-      setRightColumn(rightItems.sort(() => Math.random() - 0.5));
-    } else {
-      setLeftColumn(leftItems);
-      setRightColumn(rightItems);
+      left.sort(() => Math.random() - 0.5);
+      right.sort(() => Math.random() - 0.5);
     }
-  }, [game.pairs, game.shuffle, showFeedback]);
+
+    setLeftColumn(left);
+    setRightColumn(right);
+  }, [game.shuffle, showFeedback, game.pairs]);
 
   useEffect(() => {
     // Check if a match should be made
@@ -100,10 +112,8 @@ export const Match: React.FC<MatchProps> = ({
   };
 
   const isCorrectConnection = (left: string, right: string) => {
-    if (!showFeedback) return null;
-
-    const correctPair = game.pairs.find(pair => pair.left === left);
-    return correctPair?.right === right;
+    if (!showFeedback || !left || !right) return null;
+    return safePairs.some(p => p.left === left && p.right === right);
   };
 
   const getItemStyle = (item: string, side: 'left' | 'right', isConnected: boolean) => {
@@ -172,7 +182,7 @@ export const Match: React.FC<MatchProps> = ({
           </h3>
           <div className="flex items-center gap-4">
             <div className="text-sm text-gray-600">
-              Conexiones: {connections.length}/{game.pairs.length}
+              Conexiones: {connections.length}/{safePairs.length}
             </div>
             {!showFeedback && (
               <Button
@@ -209,7 +219,7 @@ export const Match: React.FC<MatchProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item}</span>
-                      {showFeedback && isConnected && (
+                      {showFeedback && isConnected && connection && (
                         isCorrectConnection(connection.left, connection.right) ? (
                           <Check className="w-5 h-5 text-green-600" />
                         ) : (
@@ -241,7 +251,7 @@ export const Match: React.FC<MatchProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{item}</span>
-                      {showFeedback && isConnected && (
+                      {showFeedback && isConnected && connection && (
                         isCorrectConnection(connection.left, connection.right) ? (
                           <Check className="w-5 h-5 text-green-600" />
                         ) : (
@@ -268,7 +278,7 @@ export const Match: React.FC<MatchProps> = ({
             <p className="font-medium">
               {feedback.correct
                 ? '¡Perfecto! Todas las conexiones son correctas.'
-                : `${connections.filter(conn => isCorrectConnection(conn.left, conn.right)).length} de ${game.pairs.length} conexiones correctas.`}
+                : `${connections.filter(conn => isCorrectConnection(conn.left, conn.right)).length} de ${safePairs.length} conexiones correctas.`}
             </p>
             {feedback.explanation && (
               <p className="mt-1 text-sm">{feedback.explanation}</p>

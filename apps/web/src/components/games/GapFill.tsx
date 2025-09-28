@@ -28,7 +28,7 @@ export const GapFill: React.FC<GapFillProps> = ({
   feedback
 }) => {
   // Split text by gaps and create input state
-  const textParts = game.text.split('_____');
+  const textParts = game.text?.split('_____') || [''];
   const [answers, setAnswers] = useState<string[]>(
     new Array(textParts.length - 1).fill('')
   );
