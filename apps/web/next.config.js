@@ -38,6 +38,20 @@ const nextConfig = {
       stream: false,
     };
 
+    // Add module resolution for workspace packages
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@fuzzy/adaptive-engine': require.resolve('@fuzzy/adaptive-engine'),
+      '@fuzzy/creative-tools': require.resolve('@fuzzy/creative-tools'),
+      '@fuzzy/external-games': require.resolve('@fuzzy/external-games'),
+      '@fuzzy/game-engine': require.resolve('@fuzzy/game-engine'),
+      '@fuzzy/h5p-adapter': require.resolve('@fuzzy/h5p-adapter'),
+      '@fuzzy/quiz-generator': require.resolve('@fuzzy/quiz-generator'),
+      '@fuzzy/sandbox-connector': require.resolve('@fuzzy/sandbox-connector'),
+      '@fuzzy/simulation-engine': require.resolve('@fuzzy/simulation-engine'),
+      '@fuzzy/vr-ar-adapter': require.resolve('@fuzzy/vr-ar-adapter'),
+    };
+
     // Optimize for Cloudflare Pages
     if (!isServer) {
       config.resolve.alias = {
