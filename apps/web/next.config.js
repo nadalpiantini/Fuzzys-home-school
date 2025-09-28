@@ -38,20 +38,7 @@ const nextConfig = {
       stream: false,
     };
 
-    // Add module resolution for workspace packages
-    const path = require('path');
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@fuzzy/adaptive-engine': path.resolve(__dirname, '../../packages/adaptive-engine/dist'),
-      '@fuzzy/creative-tools': path.resolve(__dirname, '../../packages/creative-tools/dist'),
-      '@fuzzy/external-games': path.resolve(__dirname, '../../packages/external-games/dist'),
-      '@fuzzy/game-engine': path.resolve(__dirname, '../../packages/game-engine/dist'),
-      '@fuzzy/h5p-adapter': path.resolve(__dirname, '../../packages/h5p-adapter/dist'),
-      '@fuzzy/quiz-generator': path.resolve(__dirname, '../../packages/quiz-generator/dist'),
-      '@fuzzy/sandbox-connector': path.resolve(__dirname, '../../packages/sandbox-connector/dist'),
-      '@fuzzy/simulation-engine': path.resolve(__dirname, '../../packages/simulation-engine/dist'),
-      '@fuzzy/vr-ar-adapter': path.resolve(__dirname, '../../packages/vr-ar-adapter/dist'),
-    };
+    // Package resolution is handled by transpilePackages above
 
     // Optimize for Cloudflare Pages
     if (!isServer) {

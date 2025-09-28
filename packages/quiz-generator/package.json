@@ -2,8 +2,16 @@
   "name": "@fuzzy/quiz-generator",
   "version": "0.1.0",
   "description": "Automatic quiz and educational content generator",
+  "type": "module",
+  "files": ["dist"],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
