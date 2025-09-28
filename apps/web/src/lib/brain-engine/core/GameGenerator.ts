@@ -14,14 +14,14 @@ export class GameGenerator {
     const withCurr = curriculumAdjust(p);
     const withDiff = difficultyAdjust(withCurr);
 
-    // Log request
-    try { await s.from('brain_logs').insert({ kind:'request', payload: JSON.stringify(withDiff).slice(0,8000) }); } catch {}
+    // Log request (temporarily disabled for build)
+    // try { await s.from('brain_logs').insert({ kind:'request', payload: JSON.stringify(withDiff).slice(0,8000) }); } catch {}
 
     const messages = genPrompt(withDiff);
     const raw = await llmChat(messages);
 
-    // Log response
-    try { await s.from('brain_logs').insert({ kind:'response', payload: String(raw).slice(0,8000) }); } catch {}
+    // Log response (temporarily disabled for build)
+    // try { await s.from('brain_logs').insert({ kind:'response', payload: String(raw).slice(0,8000) }); } catch {}
 
     const out = safeParseGames(raw);
     const validator = new QualityValidator();

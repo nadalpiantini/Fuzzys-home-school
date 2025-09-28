@@ -6,7 +6,6 @@
   "installCommand": "npm install",
   "crons": [{ "path": "/api/cron/health", "schedule": "*/5 * * * *" }],
   "functions": {
-    "app/api/brain/generate/route.ts": { "maxDuration": 60 },
-    "app/api/cron/health/route.ts": { "runtime": "edge" }
+    "app/api/brain/generate/route.ts": { "maxDuration": 60 }
   }
 }
