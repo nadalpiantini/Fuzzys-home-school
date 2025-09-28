@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { quizService } from '@/services/quiz/QuizService';
-import { GeneratedQuestion } from '@fuzzy/quiz-generator';
+import { GeneratedQuestion } from '@/types/workspace';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
