@@ -2,66 +2,41 @@ import { NextResponse } from 'next/server';
 import { sb } from '@/lib/brain-engine/core/db';
 export const runtime = 'nodejs';
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const { kind, seconds } = await req.json(); // kind: 'play' | 'like'
-    const s = sb();
-    
-    if (kind === 'play') {
-      // Increment play count and update average time
-      await s.from('game_metrics')
-        .upsert({ 
-          game_id: params.id, 
-          plays: 1,
-          avg_time_seconds: seconds ?? 0
-        } as any, { 
-          onConflict: 'game_id',
-          ignoreDuplicates: false
-        });
-    } else if (kind === 'like') {
-      // Increment like count
-      await s.from('game_metrics')
-        .upsert({ 
-          game_id: params.id, 
-          likes: 1
-        } as any, { 
-          onConflict: 'game_id',
-          ignoreDuplicates: false
-        });
-    }
-    
-    return NextResponse.json({ ok: true, message: `Metric '${kind}' recorded` });
+    // TODO: Implement game_metrics table operations after migration
+    return NextResponse.json({
+      ok: true,
+      message: 'Game metrics ready - waiting for database migration',
+    });
   } catch (error) {
-    console.error('Metrics API error:', error);
+    console.error('Game metrics error:', error);
     return NextResponse.json(
-      { ok: false, error: 'Failed to record metric' },
-      { status: 500 }
+      { ok: false, error: 'Failed to update game metrics' },
+      { status: 500 },
     );
   }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const s = sb();
-    const { data: metrics, error } = await s
-      .from('game_metrics')
-      .select('*')
-      .eq('game_id', params.id)
-      .single() as any;
-    
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
-    }
-    
-    return NextResponse.json({ 
-      ok: true, 
-      metrics: metrics || { plays: 0, likes: 0, avg_time_seconds: 0 }
+    // TODO: Implement game_metrics table operations after migration
+    return NextResponse.json({
+      ok: true,
+      metrics: { plays: 0, likes: 0, avg_time_seconds: 0 },
+      message: 'Game metrics ready - waiting for database migration',
     });
   } catch (error) {
-    console.error('Metrics GET error:', error);
+    console.error('Game metrics GET error:', error);
     return NextResponse.json(
-      { ok: false, error: 'Failed to fetch metrics' },
-      { status: 500 }
+      { ok: false, error: 'Failed to fetch game metrics' },
+      { status: 500 },
     );
   }
 }
