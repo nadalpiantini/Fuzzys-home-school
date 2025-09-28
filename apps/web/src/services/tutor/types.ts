@@ -21,6 +21,7 @@ export const TutorSessionSchema = z.object({
   studentProfile: z
     .object({
       grade: z.number().int().min(1).max(12),
+      age: z.number().int().min(3).max(18).optional(),
       learningStyle: z.enum([
         'visual',
         'auditory',

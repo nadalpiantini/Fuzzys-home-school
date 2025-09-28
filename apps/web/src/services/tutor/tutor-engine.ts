@@ -95,6 +95,7 @@ export class TutorEngine {
       {
         subject: session.subject,
         grade: session.studentProfile?.grade || 8,
+        age: session.studentProfile?.age,
         queryType,
         understandingLevel,
         language: session.language,

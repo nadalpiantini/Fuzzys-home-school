@@ -40,6 +40,7 @@ interface TutorChatProps {
   subject: string;
   studentProfile?: {
     grade: number;
+    age?: number;
     learningStyle: 'visual' | 'auditory' | 'kinesthetic' | 'reading_writing';
     currentLevel: 'beginner' | 'intermediate' | 'advanced';
     strongAreas: string[];

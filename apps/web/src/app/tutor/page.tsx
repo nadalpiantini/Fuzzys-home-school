@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, Send, Brain, ArrowLeft } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useChildProfile } from '@/hooks/useChildProfile';
 
 interface Message {
   id: string;
@@ -17,13 +18,71 @@ interface Message {
 
 export default function TutorPage() {
   const { t, language } = useTranslation();
+  const { childData } = useChildProfile();
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
+  // Inicializar sesión del tutor
+  const initializeSession = async () => {
+    if (sessionId) return; // Ya hay una sesión activa
+
+    try {
+      const studentProfile = childData
+        ? {
+            grade:
+              childData.age <= 5
+                ? 1
+                : childData.age <= 8
+                  ? 3
+                  : childData.age <= 12
+                    ? 6
+                    : 9,
+            age: childData.age,
+            learningStyle: 'visual' as const,
+            currentLevel: 'beginner' as const,
+            strongAreas: childData.interests,
+            challengeAreas: [],
+          }
+        : undefined;
+
+      const response = await fetch('/api/tutor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'start_session',
+          userId: 'current_user',
+          subject: 'Ciencias Naturales', // Materia por defecto
+          studentProfile,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSessionId(data.data.sessionId);
+        // Agregar mensaje de bienvenida
+        const welcomeMessage: Message = {
+          id: 'welcome',
+          text: data.data.welcomeMessage,
+          isUser: false,
+          timestamp: new Date(),
+        };
+        setMessages([welcomeMessage]);
+      }
+    } catch (error) {
+      console.error('Error initializing session:', error);
+    }
+  };
+
+  // Inicializar sesión al cargar la página
+  React.useEffect(() => {
+    initializeSession();
+  }, []);
 
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim() || isLoading || !sessionId) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -37,27 +96,33 @@ export default function TutorPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/deepseek', {
+      const response = await fetch('/api/tutor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: inputMessage,
-          language: language,
+          action: 'send_query',
+          sessionId: sessionId,
+          query: inputMessage,
+          metadata: {
+            concept: 'general',
+          },
         }),
       });
 
       const data = await response.json();
 
-      if (data.response) {
+      if (data.success && data.data.response) {
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: data.response,
+          text: data.data.response,
           isUser: false,
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, aiMessage]);
+      } else {
+        throw new Error(data.error || 'Error en la respuesta del tutor');
       }
     } catch (error) {
       console.error('Error sending message:', error);
