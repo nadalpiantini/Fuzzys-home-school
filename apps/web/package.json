@@ -15,6 +15,7 @@
     "clean": "rm -rf .next node_modules",
     "sentry:replay": "echo 'Sentry replay enabled by config'",
     "sourcemaps": "npx @sentry/cli sourcemaps inject ./out",
+    "verify:css": "node scripts/verify-css-production.js",
     "prepare": "husky"
   },
   "lint-staged": {
