@@ -22,6 +22,7 @@
     "@fuzzy/quiz-generator": "file:../../packages/quiz-generator",
     "@fuzzy/simulation-engine": "file:../../packages/simulation-engine",
     "@fuzzy/vr-ar-adapter": "file:../../packages/vr-ar-adapter",
+    "socket.io-client": "^4.8.1",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-select": "^2.2.6",
