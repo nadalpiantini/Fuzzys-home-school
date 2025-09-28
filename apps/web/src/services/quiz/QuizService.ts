@@ -1,6 +1,7 @@
 import { QuizGenerator, QuestionGenerationParams, GeneratedQuestion, ContentSource } from '@fuzzy/quiz-generator';
 import { adaptiveService } from '@/services/adaptive/AdaptiveService';
 import { createClient } from '@/lib/supabase/client';
+import type { GeneratedQuestion as WorkspaceGeneratedQuestion } from '@/types/workspace';
 
 export class QuizService {
   private generator: QuizGenerator;
@@ -13,12 +14,38 @@ export class QuizService {
     this.generator = new QuizGenerator();
   }
 
+  /**
+   * Normaliza las preguntas para garantizar que cumplan con el tipo WorkspaceGeneratedQuestion
+   */
+  private normalizeQuestions(raw: any[]): WorkspaceGeneratedQuestion[] {
+    return (raw ?? [])
+      .filter((q: any) => q && q.question) // descarta entradas inválidas
+      .map((q: any, index: number) => ({
+        id: String(q.id || `normalized-${index}-${Date.now()}`), // fuerza string
+        type: q.type ?? 'multiple_choice',                       // default razonable
+        subject: q.subject ?? '',
+        topic: q.topic ?? '',
+        question: q.question ?? '',
+        options: Array.isArray(q.options) ? q.options : [],      // asegura array
+        correctAnswer: Array.isArray(q.correctAnswer)            // normaliza a string[]
+          ? q.correctAnswer
+          : (typeof q.correctAnswer === 'string' ? [q.correctAnswer] : []),
+        explanation: q.explanation ?? '',
+        difficulty: q.difficulty ?? 'medium',
+        bloomLevel: q.bloomLevel ?? 'apply',
+        timeEstimate: Number.isFinite(q.timeEstimate) ? q.timeEstimate : 60,
+        points: Number.isFinite(q.points) ? q.points : 1,
+        tags: Array.isArray(q.tags) ? q.tags : [],
+        visualElements: Array.isArray(q.visualElements) ? q.visualElements : []
+      }));
+  }
+
   async generateAdaptiveQuiz(
     userId: string,
     subject: string,
     grade: number,
     questionCount: number = 10
-  ): Promise<GeneratedQuestion[]> {
+  ): Promise<WorkspaceGeneratedQuestion[]> {
     // Get user's optimal difficulty
     const difficulty = await adaptiveService.calculateOptimalDifficulty(userId, subject);
 
@@ -51,7 +78,10 @@ export class QuizService {
       }
     };
 
-    const questions = await this.generator.generateQuestions(params, contentSource);
+    const rawQuestions = await this.generator.generateQuestions(params, contentSource);
+
+    // Normalizar las preguntas para garantizar tipos seguros
+    const questions = this.normalizeQuestions(rawQuestions);
 
     // Store generated quiz for tracking
     await this.storeGeneratedQuiz(userId, questions, params);
@@ -65,8 +95,9 @@ export class QuizService {
     unit: string,
     questionCount: number = 10,
     difficulty: number = 0.5
-  ): Promise<GeneratedQuestion[]> {
-    return this.generator.generateDominicanCurriculumQuestions(grade, subject, unit);
+  ): Promise<WorkspaceGeneratedQuestion[]> {
+    const rawQuestions = await this.generator.generateDominicanCurriculumQuestions(grade, subject, unit);
+    return this.normalizeQuestions(rawQuestions);
   }
 
   async generateTopicQuiz(
@@ -74,7 +105,7 @@ export class QuizService {
     difficulty: number,
     questionCount: number = 5,
     questionTypes: string[] = ['multiple_choice']
-  ): Promise<GeneratedQuestion[]> {
+  ): Promise<WorkspaceGeneratedQuestion[]> {
     const params: QuestionGenerationParams = {
       subject: 'general',
       topic: topic,
@@ -97,7 +128,8 @@ export class QuizService {
       }
     };
 
-    return this.generator.generateQuestions(params, contentSource);
+    const rawQuestions = await this.generator.generateQuestions(params, contentSource);
+    return this.normalizeQuestions(rawQuestions);
   }
 
   async generateH5PQuiz(
@@ -114,7 +146,7 @@ export class QuizService {
 
   private async storeGeneratedQuiz(
     userId: string,
-    questions: GeneratedQuestion[],
+    questions: WorkspaceGeneratedQuestion[],
     params: QuestionGenerationParams
   ): Promise<void> {
     const quizData = {
@@ -171,16 +203,16 @@ export class QuizService {
     }
   }
 
-  private convertToH5PFormat(questions: GeneratedQuestion[], contentType: string): any {
+  private convertToH5PFormat(questions: WorkspaceGeneratedQuestion[], contentType: string): any {
     const h5pQuestions = questions.map((q, index) => ({
       params: {
         question: q.question,
         answers: q.type === 'multiple_choice' ? q.options?.map((option, optIndex) => ({
           text: option,
-          correct: optIndex === Number(q.correctAnswer),
+          correct: q.correctAnswer.includes(optIndex.toString()) || q.correctAnswer.includes(option),
           tipsAndFeedback: {
             tip: '',
-            chosenFeedback: optIndex === Number(q.correctAnswer) ? '¡Correcto!' : 'Incorrecto',
+            chosenFeedback: (q.correctAnswer.includes(optIndex.toString()) || q.correctAnswer.includes(option)) ? '¡Correcto!' : 'Incorrecto',
             notChosenFeedback: ''
           }
         })) : [],

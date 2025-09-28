@@ -97,6 +97,24 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
     oscillator.stop(audioContext.currentTime + 0.1);
   }, [soundEnabled]);
 
+  const startTimer = (seconds: number) => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
     const ws = wsManager.current;
 
@@ -182,24 +200,6 @@ export const LiveQuizRoom: React.FC<LiveQuizRoomProps> = ({
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [room?.chat]);
-
-  const startTimer = (seconds: number) => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
 
   const submitAnswer = () => {
     if (!selectedAnswer || !currentQuestion) return;

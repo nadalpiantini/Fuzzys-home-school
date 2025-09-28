@@ -7,7 +7,7 @@ const nextConfig = {
     '@fuzzy/creative-tools',
     '@fuzzy/external-games',
     '@fuzzy/game-engine',
-    '@fuzzy/h5p-adapter',
+    // '@fuzzy/h5p-adapter', // Temporarily disabled due to build issues
     '@fuzzy/quiz-generator',
     '@fuzzy/sandbox-connector',
     '@fuzzy/schemas',

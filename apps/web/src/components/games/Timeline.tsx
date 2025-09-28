@@ -121,6 +121,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   };
 
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
     const date = new Date(dateStr);
     return date.toLocaleDateString('es-ES', {
       year: 'numeric',

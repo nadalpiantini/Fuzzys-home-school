@@ -68,30 +68,57 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
 
       switch (mode) {
         case 'adaptive':
-          generatedQuestions = await quizService.generateAdaptiveQuiz(
+          const adaptiveQuestions = await quizService.generateAdaptiveQuiz(
             userId,
             subject,
             grade,
             questionCount
           );
+          generatedQuestions = adaptiveQuestions.map((q, index) => ({
+            ...q,
+            id: q.id || `adaptive-${index}-${Date.now()}`,
+            type: q.type || 'multiple_choice',
+            subject: q.subject || subject,
+            topic: q.topic || topic || '',
+            question: q.question || `Generated question ${index + 1}`,
+            correctAnswer: q.correctAnswer || ''
+          })) as GeneratedQuestion[];
           break;
 
         case 'curriculum':
-          generatedQuestions = await quizService.generateCurriculumQuiz(
+          const curriculumQuestions = await quizService.generateCurriculumQuiz(
             grade,
             subject,
             unit,
             questionCount,
             difficulty[0]
           );
+          generatedQuestions = curriculumQuestions.map((q, index) => ({
+            ...q,
+            id: q.id || `curriculum-${index}-${Date.now()}`,
+            type: q.type || 'multiple_choice',
+            subject: q.subject || subject,
+            topic: q.topic || topic || '',
+            question: q.question || `Generated question ${index + 1}`,
+            correctAnswer: q.correctAnswer || ''
+          })) as GeneratedQuestion[];
           break;
 
         case 'topic':
-          generatedQuestions = await quizService.generateTopicQuiz(
+          const topicQuestions = await quizService.generateTopicQuiz(
             topic,
             difficulty[0],
             questionCount
           );
+          generatedQuestions = topicQuestions.map((q, index) => ({
+            ...q,
+            id: q.id || `topic-${index}-${Date.now()}`,
+            type: q.type || 'multiple_choice',
+            subject: q.subject || subject,
+            topic: q.topic || topic || '',
+            question: q.question || `Generated question ${index + 1}`,
+            correctAnswer: q.correctAnswer || ''
+          })) as GeneratedQuestion[];
           break;
       }
 
