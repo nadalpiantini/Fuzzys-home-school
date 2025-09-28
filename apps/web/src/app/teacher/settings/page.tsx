@@ -273,7 +273,7 @@ export default function SettingsPage() {
                 <Switch
                   id="email-notifications"
                   checked={settings.notifications.email}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handleNotificationChange('email', value)
                   }
                 />
@@ -294,7 +294,7 @@ export default function SettingsPage() {
                 <Switch
                   id="push-notifications"
                   checked={settings.notifications.push}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handleNotificationChange('push', value)
                   }
                 />
@@ -315,7 +315,7 @@ export default function SettingsPage() {
                 <Switch
                   id="sms-notifications"
                   checked={settings.notifications.sms}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handleNotificationChange('sms', value)
                   }
                 />
@@ -353,7 +353,7 @@ export default function SettingsPage() {
                 <Switch
                   id="profile-visible"
                   checked={settings.privacy.profileVisible}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handlePrivacyChange('profileVisible', value)
                   }
                 />
@@ -374,7 +374,7 @@ export default function SettingsPage() {
                 <Switch
                   id="analytics-enabled"
                   checked={settings.privacy.analyticsEnabled}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handlePrivacyChange('analyticsEnabled', value)
                   }
                 />
@@ -393,7 +393,7 @@ export default function SettingsPage() {
                 <Switch
                   id="data-sharing"
                   checked={settings.privacy.dataSharing}
-                  onCheckedChange={(value) =>
+                  onCheckedChange={(value: boolean) =>
                     handlePrivacyChange('dataSharing', value)
                   }
                 />
