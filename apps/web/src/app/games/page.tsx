@@ -28,19 +28,13 @@ import {
   ChevronRight,
   Star,
   Play,
+  ArrowRight,
+  Heart,
+  Zap,
+  Shield,
 } from 'lucide-react';
 
-interface GameCategory {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  color: string;
-  games: Game[];
-  featured?: boolean;
-}
-
-interface Game {
+interface GameButton {
   id: string;
   title: string;
   description: string;
@@ -53,16 +47,94 @@ interface Game {
   tags: string[];
   rating: number;
   plays: number;
+  icon: React.ReactNode;
+  glassColor: string;
+  gradientColor: string;
+  emoji: string;
 }
 
-const gameCategories: GameCategory[] = [
+interface DifficultyLevel {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  glassColor: string;
+  games: GameButton[];
+}
+
+const difficultyLevels: DifficultyLevel[] = [
   {
-    id: 'external-resources',
-    title: '🌟 Recursos Open Source',
-    description: 'Más de 100 actividades educativas de alta calidad',
-    icon: <Sparkles className="w-6 h-6" />,
-    color: 'from-purple-500 to-pink-500',
-    featured: true,
+    id: 'beginner',
+    title: '🌱 Principiante',
+    description: 'Perfecto para empezar tu aventura de aprendizaje',
+    icon: <Heart className="w-8 h-8" />,
+    color: 'from-green-400 to-emerald-400',
+    glassColor: 'bg-green-100/20',
+    games: [
+      {
+        id: 'blockly-programming',
+        title: 'Blockly Games',
+        description: 'Aprende programación con bloques visuales',
+        difficulty: 'beginner',
+        ageRange: '6-16',
+        duration: '10-30 min',
+        players: '1',
+        type: 'programming',
+        url: '/games/external?type=blockly',
+        tags: ['Programación', 'Lógica', 'Visual'],
+        rating: 4.8,
+        plays: 23150,
+        icon: <Blocks className="w-6 h-6" />,
+        glassColor: 'bg-green-100/30',
+        gradientColor: 'from-green-400 to-emerald-400',
+        emoji: '🧩',
+      },
+      {
+        id: 'forces-motion',
+        title: 'Fuerzas y Movimiento',
+        description: 'Conceptos de física para 3er grado',
+        difficulty: 'beginner',
+        ageRange: '8-10',
+        duration: '20-30 min',
+        players: '1',
+        type: 'simulation',
+        url: '/games/external?type=phet&sim=forces-and-motion-basics',
+        tags: ['Física', 'Ciencias Naturales', '3ro'],
+        rating: 4.8,
+        plays: 6789,
+        icon: <Target className="w-6 h-6" />,
+        glassColor: 'bg-pink-100/30',
+        gradientColor: 'from-pink-400 to-rose-400',
+        emoji: '⚡',
+      },
+      {
+        id: 'fractions-intro',
+        title: 'Introducción a Fracciones',
+        description: 'Aprende fracciones visualmente',
+        difficulty: 'beginner',
+        ageRange: '8-12',
+        duration: '15-25 min',
+        players: '1',
+        type: 'simulation',
+        url: '/games/external?type=phet&sim=fractions-intro',
+        tags: ['Matemáticas', 'Fracciones', '3ro-5to'],
+        rating: 4.7,
+        plays: 9876,
+        icon: <Brain className="w-6 h-6" />,
+        glassColor: 'bg-indigo-100/30',
+        gradientColor: 'from-indigo-400 to-blue-400',
+        emoji: '🔢',
+      },
+    ],
+  },
+  {
+    id: 'intermediate',
+    title: '🚀 Intermedio',
+    description: 'Desafíos perfectos para seguir creciendo',
+    icon: <Zap className="w-8 h-8" />,
+    color: 'from-yellow-400 to-orange-400',
+    glassColor: 'bg-yellow-100/20',
     games: [
       {
         id: 'phet-simulations',
@@ -78,20 +150,10 @@ const gameCategories: GameCategory[] = [
         tags: ['STEM', 'Simulación', 'Experimentos'],
         rating: 4.9,
         plays: 15420,
-      },
-      {
-        id: 'blockly-programming',
-        title: 'Blockly Games',
-        description: 'Aprende programación con bloques visuales',
-        difficulty: 'beginner',
-        ageRange: '6-16',
-        duration: '10-30 min',
-        players: '1',
-        type: 'programming',
-        url: '/games/external?type=blockly',
-        tags: ['Programación', 'Lógica', 'Visual'],
-        rating: 4.8,
-        plays: 23150,
+        icon: <Beaker className="w-6 h-6" />,
+        glassColor: 'bg-blue-100/30',
+        gradientColor: 'from-blue-400 to-cyan-400',
+        emoji: '🧪',
       },
       {
         id: 'music-blocks',
@@ -106,6 +168,10 @@ const gameCategories: GameCategory[] = [
         tags: ['Música', 'Matemáticas', 'Creatividad'],
         rating: 4.7,
         plays: 8934,
+        icon: <Music className="w-6 h-6" />,
+        glassColor: 'bg-purple-100/30',
+        gradientColor: 'from-purple-400 to-pink-400',
+        emoji: '🎵',
       },
       {
         id: 'colonial-zone-ar',
@@ -120,16 +186,11 @@ const gameCategories: GameCategory[] = [
         tags: ['Historia', 'AR', 'Cultura', 'RD'],
         rating: 4.9,
         plays: 5678,
+        icon: <Camera className="w-6 h-6" />,
+        glassColor: 'bg-amber-100/30',
+        gradientColor: 'from-amber-400 to-orange-400',
+        emoji: '📱',
       },
-    ],
-  },
-  {
-    id: 'traditional-games',
-    title: '🎮 Juegos Tradicionales',
-    description: 'Nuestros juegos clásicos de aprendizaje',
-    icon: <Gamepad2 className="w-6 h-6" />,
-    color: 'from-blue-500 to-cyan-500',
-    games: [
       {
         id: 'math-solver',
         title: 'Solucionador de Matemáticas',
@@ -143,7 +204,21 @@ const gameCategories: GameCategory[] = [
         tags: ['Matemáticas', 'Álgebra', 'Paso a paso'],
         rating: 4.6,
         plays: 12340,
+        icon: <Trophy className="w-6 h-6" />,
+        glassColor: 'bg-yellow-100/30',
+        gradientColor: 'from-yellow-400 to-amber-400',
+        emoji: '🧮',
       },
+    ],
+  },
+  {
+    id: 'advanced',
+    title: '🏆 Avanzado',
+    description: 'Para los más valientes y experimentados',
+    icon: <Shield className="w-8 h-8" />,
+    color: 'from-red-400 to-pink-400',
+    glassColor: 'bg-red-100/20',
+    games: [
       {
         id: 'code-challenge',
         title: 'Desafío de Código',
@@ -157,43 +232,10 @@ const gameCategories: GameCategory[] = [
         tags: ['Programación', 'Algoritmos', 'Python'],
         rating: 4.5,
         plays: 8765,
-      },
-    ],
-  },
-  {
-    id: 'curriculum-integrated',
-    title: '📚 Integrado al Currículo',
-    description: 'Actividades alineadas con el currículo dominicano',
-    icon: <BookOpen className="w-6 h-6" />,
-    color: 'from-green-500 to-emerald-500',
-    games: [
-      {
-        id: 'forces-motion',
-        title: 'Fuerzas y Movimiento',
-        description: 'Conceptos de física para 3er grado',
-        difficulty: 'beginner',
-        ageRange: '8-10',
-        duration: '20-30 min',
-        players: '1',
-        type: 'simulation',
-        url: '/games/external?type=phet&sim=forces-and-motion-basics',
-        tags: ['Física', 'Ciencias Naturales', '3ro'],
-        rating: 4.8,
-        plays: 6789,
-      },
-      {
-        id: 'fractions-intro',
-        title: 'Introducción a Fracciones',
-        description: 'Aprende fracciones visualmente',
-        difficulty: 'beginner',
-        ageRange: '8-12',
-        duration: '15-25 min',
-        players: '1',
-        type: 'simulation',
-        url: '/games/external?type=phet&sim=fractions-intro',
-        tags: ['Matemáticas', 'Fracciones', '3ro-5to'],
-        rating: 4.7,
-        plays: 9876,
+        icon: <Gamepad2 className="w-6 h-6" />,
+        glassColor: 'bg-teal-100/30',
+        gradientColor: 'from-teal-400 to-cyan-400',
+        emoji: '💻',
       },
     ],
   },
@@ -201,30 +243,25 @@ const gameCategories: GameCategory[] = [
 
 export default function GamesPage() {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState<string>('all');
 
-  const allGames = gameCategories.flatMap((category) => category.games);
-  const featuredGames = gameCategories
-    .filter((cat) => cat.featured)
-    .flatMap((cat) => cat.games)
-    .slice(0, 4);
+  const allGames = difficultyLevels.flatMap((level) => level.games);
 
-  const filteredCategories =
-    selectedCategory === 'all'
-      ? gameCategories
-      : gameCategories.filter((cat) => cat.id === selectedCategory);
+  const filteredLevels =
+    selectedLevel === 'all'
+      ? difficultyLevels
+      : difficultyLevels.filter((level) => level.id === selectedLevel);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100/30 text-green-700 border-green-200';
       case 'intermediate':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100/30 text-yellow-700 border-yellow-200';
       case 'advanced':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100/30 text-red-700 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100/30 text-gray-700 border-gray-200';
     }
   };
 
@@ -241,15 +278,49 @@ export default function GamesPage() {
     }
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'simulation':
+        return <Beaker className="w-4 h-4" />;
+      case 'programming':
+        return <Blocks className="w-4 h-4" />;
+      case 'music':
+        return <Music className="w-4 h-4" />;
+      case 'ar':
+        return <Camera className="w-4 h-4" />;
+      case 'traditional':
+        return <Gamepad2 className="w-4 h-4" />;
+      default:
+        return <Sparkles className="w-4 h-4" />;
+    }
+  };
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'simulation':
+        return 'Simulación';
+      case 'programming':
+        return 'Programación';
+      case 'music':
+        return 'Música';
+      case 'ar':
+        return 'Realidad Aumentada';
+      case 'traditional':
+        return 'Tradicional';
+      default:
+        return type;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white/70 backdrop-blur-md shadow-sm border-b border-white/20 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Gamepad2 className="w-8 h-8 text-purple-600" />
+                <Sparkles className="w-8 h-8 text-purple-500" />
                 Centro de Juegos Educativos
               </h1>
               <p className="text-gray-600 mt-2">
@@ -257,7 +328,7 @@ export default function GamesPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">100+</div>
                 <div className="text-sm text-gray-600">Actividades</div>
@@ -275,248 +346,154 @@ export default function GamesPage() {
         </div>
       </header>
 
-      {/* Featured Section */}
-      <section className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <Star className="w-6 h-6 text-yellow-500" />✨ Recursos Destacados -
-            Open Source
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Descubre nuestra colección de recursos educativos de alta calidad,
-            incluyendo simulaciones PhET, programación Blockly, música creativa
-            y experiencias AR.
-          </p>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredGames.map((game) => (
-              <Card
-                key={game.id}
-                className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+      {/* Level Selector */}
+      <section className="container mx-auto px-6 py-6">
+        <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="flex flex-wrap gap-4 items-center justify-center">
+            <Button
+              variant={selectedLevel === 'all' ? 'default' : 'outline'}
+              onClick={() => setSelectedLevel('all')}
+              className={`${
+                selectedLevel === 'all'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  : 'bg-white/50 text-gray-700 hover:bg-purple-100'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              Todos los Niveles
+            </Button>
+            {difficultyLevels.map((level) => (
+              <Button
+                key={level.id}
+                variant={selectedLevel === level.id ? 'default' : 'outline'}
+                onClick={() => setSelectedLevel(level.id)}
+                className={`${
+                  selectedLevel === level.id
+                    ? `bg-gradient-to-r ${level.color} text-white`
+                    : 'bg-white/50 text-gray-700 hover:bg-purple-100'
+                }`}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <Badge className={getDifficultyColor(game.difficulty)}>
-                      {getDifficultyLabel(game.difficulty)}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      {game.rating}
-                    </div>
-                  </div>
-                  <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
-                    {game.title}
-                  </CardTitle>
-                  <CardDescription className="text-sm">
-                    {game.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {game.duration}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {game.players}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1">
-                      {game.tags.slice(0, 2).map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <Button
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                      onClick={() => router.push(game.url)}
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Jugar Ahora
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                {level.icon}
+                <span className="ml-2">{level.title}</span>
+              </Button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Quick Access Section */}
-      <section className="container mx-auto px-6 py-8">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Target className="w-6 h-6 text-blue-500" />
-          🚀 Acceso Rápido por Tipo
-        </h2>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-500 to-blue-600 text-white"
-            onClick={() => router.push('/games/external?type=phet')}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Beaker className="w-5 h-5" />
-                PhET Simulations
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-blue-100 text-sm mb-3">
-                20+ simulaciones interactivas de ciencias
-              </p>
-              <Button className="bg-white text-blue-600 hover:bg-gray-100 w-full">
-                Explorar →
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-green-500 to-green-600 text-white"
-            onClick={() => router.push('/games/external?type=blockly')}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Blocks className="w-5 h-5" />
-                Blockly Programming
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-green-100 text-sm mb-3">
-                Programación visual para todas las edades
-              </p>
-              <Button className="bg-white text-green-600 hover:bg-gray-100 w-full">
-                Programar →
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-purple-500 to-purple-600 text-white"
-            onClick={() => router.push('/games/external?type=music')}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Music className="w-5 h-5" />
-                Music Blocks
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-purple-100 text-sm mb-3">
-                Música creativa con matemáticas
-              </p>
-              <Button className="bg-white text-purple-600 hover:bg-gray-100 w-full">
-                Crear →
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card
-            className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-amber-500 to-amber-600 text-white"
-            onClick={() => router.push('/games/external?type=ar')}
-          >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Camera className="w-5 h-5" />
-                AR Zona Colonial
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-amber-100 text-sm mb-3">
-                Historia dominicana en realidad aumentada
-              </p>
-              <Button className="bg-white text-amber-600 hover:bg-gray-100 w-full">
-                Explorar →
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* All Categories */}
-      <section className="container mx-auto px-6 py-8">
-        <h2 className="text-2xl font-bold mb-6">📚 Todas las Categorías</h2>
-
-        {filteredCategories.map((category) => (
-          <div key={category.id} className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold flex items-center gap-2">
-                {category.icon}
-                {category.title}
-              </h3>
-              <Button variant="outline" size="sm">
-                Ver todos <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-
-            <p className="text-gray-600 mb-4">{category.description}</p>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {category.games.map((game) => (
-                <Card
-                  key={game.id}
-                  className="hover:shadow-md transition-all duration-300 cursor-pointer group"
+      {/* Difficulty Levels */}
+      <section className="container mx-auto px-6 pb-12">
+        {filteredLevels.map((level) => (
+          <div key={level.id} className="mb-12">
+            <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 border border-white/20 mb-6">
+              <div className="flex items-center gap-4 mb-4">
+                <div
+                  className={`p-4 rounded-2xl bg-gradient-to-r ${level.color} text-white shadow-lg`}
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <Badge className={getDifficultyColor(game.difficulty)}>
-                        {getDifficultyLabel(game.difficulty)}
-                      </Badge>
-                      <div className="flex items-center gap-1 text-sm text-gray-500">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        {game.rating}
-                      </div>
-                    </div>
-                    <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
-                      {game.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm">
-                      {game.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm text-gray-600">
-                        <span>📅 {game.ageRange} años</span>
-                        <span>⏱️ {game.duration}</span>
-                        <span>👥 {game.players}</span>
-                      </div>
+                  {level.icon}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {level.title}
+                  </h2>
+                  <p className="text-gray-600">{level.description}</p>
+                </div>
+              </div>
 
-                      <div className="flex flex-wrap gap-1">
-                        {game.tags.map((tag) => (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {level.games.map((game) => (
+                  <Card
+                    key={game.id}
+                    className={`group hover:scale-105 transition-all duration-300 cursor-pointer border-0 shadow-lg ${game.glassColor} backdrop-blur-sm`}
+                    onClick={() => {
+                      if (game.url.startsWith('http')) {
+                        window.open(game.url, '_blank');
+                      } else {
+                        router.push(game.url);
+                      }
+                    }}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-3xl">{game.emoji}</div>
+                        <div className="flex items-center gap-1 text-sm">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                          <span className="font-medium">{game.rating}</span>
+                        </div>
+                      </div>
+                      <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
+                        {game.title}
+                      </CardTitle>
+                      <CardDescription className="text-sm text-gray-600">
+                        {game.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
                           <Badge
-                            key={tag}
-                            variant="outline"
-                            className="text-xs"
+                            className={getDifficultyColor(game.difficulty)}
                           >
-                            {tag}
+                            {getDifficultyLabel(game.difficulty)}
                           </Badge>
-                        ))}
-                      </div>
+                          <Badge
+                            variant="outline"
+                            className="bg-white/50 text-gray-700"
+                          >
+                            {getTypeIcon(game.type)}
+                            <span className="ml-1">
+                              {getTypeLabel(game.type)}
+                            </span>
+                          </Badge>
+                        </div>
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">
-                          {game.plays.toLocaleString()} jugadas
-                        </span>
-                        <Button size="sm" onClick={() => router.push(game.url)}>
-                          Jugar
-                        </Button>
+                        <div className="flex items-center justify-between text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {game.duration}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Users className="w-4 h-4" />
+                            {game.players}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1">
+                          {game.tags.slice(0, 2).map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="text-xs bg-white/50"
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">
+                            {game.plays.toLocaleString()} jugadas
+                          </span>
+                          <Button
+                            size="sm"
+                            className={`bg-gradient-to-r ${game.gradientColor} text-white hover:opacity-90`}
+                          >
+                            <Play className="w-4 h-4 mr-1" />
+                            Jugar
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         ))}
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-12">
+      <section className="bg-gradient-to-r from-purple-500/80 to-pink-500/80 backdrop-blur-sm text-white py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">
             ¿Listo para comenzar tu aventura de aprendizaje?
@@ -529,7 +506,7 @@ export default function GamesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-white text-purple-600 hover:bg-gray-100"
+              className="bg-white/90 text-purple-600 hover:bg-white hover:scale-105 transition-all duration-300"
               onClick={() => router.push('/games/external')}
             >
               <Sparkles className="w-5 h-5 mr-2" />
@@ -538,7 +515,7 @@ export default function GamesPage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-purple-600"
+              className="border-white/50 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300"
               onClick={() => router.push('/student')}
             >
               Volver al Dashboard
