@@ -1,6 +1,8 @@
 // apps/web/src/app/api/quiz/route.ts
 import { NextResponse } from 'next/server';
-import { getServiceRoleClient, supabaseServer } from '@/lib/supabase/server';
+import { supabaseServer } from '@/lib/supabase/server';
+import { getUserAndClient, isAdmin } from '@/lib/auth/server-auth';
+import * as Sentry from '@sentry/nextjs';
 
 type Op =
   | 'status'
@@ -54,11 +56,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, data });
     }
 
-    // Operaciones que probablemente requieran permisos elevados o RLS específica:
-    const sbSrv = getServiceRoleClient();
+    // Operaciones que requieren autenticación (manejadas por RLS)
+    const { supabase } = await getUserAndClient();
 
     if (op === 'create') {
-      // payload esperado: { title, topic, level, questions: JSON }
       const { title, topic, level, questions } = payload || {};
       if (!title || !Array.isArray(questions)) {
         return NextResponse.json(
@@ -66,48 +67,61 @@ export async function POST(req: Request) {
           { status: 400 },
         );
       }
-      const { data, error } = await sbSrv
+      // RLS permitirá insert solo si el JWT tiene role=admin (policy arriba)
+      const { data, error } = await supabase
         .from('quizzes')
-        .insert({
-          title,
-          topic,
-          level,
-          questions,
-        })
+        .insert({ title, topic, level, questions })
         .select('id')
         .single();
-      if (error)
+      if (error) {
+        // Si RLS bloquea la operación, retornar error apropiado
+        if (
+          error.message.includes('permission denied') ||
+          error.message.includes('RLS')
+        ) {
+          return NextResponse.json(
+            { ok: false, error: 'Forbidden - Admin role required' },
+            { status: 403 },
+          );
+        }
         return NextResponse.json(
           { ok: false, error: error.message },
           { status: 400 },
         );
+      }
       return NextResponse.json({ ok: true, data });
     }
 
     if (op === 'submitResult') {
-      // payload esperado: { quiz_id, user_id?, score, answers }
-      const { quiz_id, score, answers, user_id } = payload || {};
+      const { quiz_id, score, answers } = payload || {};
       if (!quiz_id || typeof score !== 'number') {
         return NextResponse.json(
           { ok: false, error: 'Invalid result payload' },
           { status: 400 },
         );
       }
-      const { data, error } = await sbSrv
+      // RLS: user_id = auth.uid() - RLS manejará la asociación con el usuario autenticado
+      const { data, error } = await supabase
         .from('quiz_results')
-        .insert({
-          quiz_id,
-          user_id: user_id ?? null,
-          score,
-          answers: answers ?? null,
-        })
+        .insert({ quiz_id, user_id: null, score, answers: answers ?? null })
         .select('id')
         .single();
-      if (error)
+      if (error) {
+        // Si RLS bloquea la operación, retornar error apropiado
+        if (
+          error.message.includes('permission denied') ||
+          error.message.includes('RLS')
+        ) {
+          return NextResponse.json(
+            { ok: false, error: 'Unauthorized' },
+            { status: 401 },
+          );
+        }
         return NextResponse.json(
           { ok: false, error: error.message },
           { status: 400 },
         );
+      }
       return NextResponse.json({ ok: true, data });
     }
 
@@ -116,9 +130,14 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   } catch (e: any) {
+    Sentry.captureException(e, {
+      tags: { route: 'api/quiz' },
+      extra: { op: 'unknown' },
+    });
+    const status = e?.status ?? 500;
     return NextResponse.json(
-      { ok: false, error: e?.message ?? 'Unexpected error' },
-      { status: 500 },
+      { ok: false, error: e?.message ?? 'Unexpected' },
+      { status },
     );
   }
 }

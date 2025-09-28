@@ -1,6 +1,7 @@
 // apps/web/src/app/api/adaptive/route.ts
 import { NextResponse } from 'next/server';
 import { getServiceRoleClient, supabaseServer } from '@/lib/supabase/server';
+import { assertInternalAuth } from '@/lib/auth/api-guard';
 
 // Opcional: pequeño guard para permitir solo POST
 export async function POST(req: Request) {
@@ -26,7 +27,8 @@ export async function POST(req: Request) {
     }
 
     if (op === 'log') {
-      // Asegúrate de tener una tabla con RLS adecuada (p.ej. adaptive_logs)
+      assertInternalAuth(req); // 🔒 requerido
+      const sbSrv = getServiceRoleClient();
       const { data, error } = await sbSrv
         .from('adaptive_logs')
         .insert({
@@ -49,10 +51,11 @@ export async function POST(req: Request) {
       { ok: false, error: 'Unsupported op' },
       { status: 400 },
     );
-  } catch (err: any) {
+  } catch (e: any) {
+    const status = e?.status ?? 500;
     return NextResponse.json(
-      { ok: false, error: err?.message ?? 'Unexpected error' },
-      { status: 500 },
+      { ok: false, error: e?.message ?? 'Unexpected' },
+      { status },
     );
   }
 }

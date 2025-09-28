@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceRoleClient } from '@/lib/supabase/server';
+import { assertInternalAuth } from '@/lib/auth/api-guard';
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +18,7 @@ export async function POST(req: Request) {
       });
     }
     if (op === 'track') {
+      assertInternalAuth(req); // 🔒 requerido
       const sb = getServiceRoleClient();
       const { data, error } = await sb
         .from('external_games_logs')
@@ -38,9 +40,10 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   } catch (e: any) {
+    const status = e?.status ?? 500;
     return NextResponse.json(
       { ok: false, error: e?.message ?? 'Unexpected' },
-      { status: 500 },
+      { status },
     );
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Trophy, Timer, RotateCcw } from 'lucide-react';
@@ -33,7 +33,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   showFeedback = false,
   feedback,
 }) => {
-  const safePairs = game.pairs ?? [];
+  const safePairs = useMemo(() => game.pairs ?? [], [game.pairs]);
   const safeGridSize = game.gridSize ?? { cols: 4, rows: 4 };
   const [cards, setCards] = useState<CardItem[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -69,7 +69,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
     const shuffled = cardPairs.sort(() => Math.random() - 0.5);
     setCards(shuffled);
     setStartTime(Date.now());
-  }, [game.pairs]);
+  }, [game.pairs, safePairs]);
 
   useEffect(() => {
     if (!isComplete && matchedPairs < safePairs.length) {

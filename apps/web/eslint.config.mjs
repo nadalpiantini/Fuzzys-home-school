@@ -9,7 +9,7 @@ import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   // Ignorar build y dependencias
-  { ignores: ['.next/**', 'dist/**', 'node_modules/**'] },
+  { ignores: ['.next/**', 'dist/**', 'node_modules/**', '.vercel/**', '**/chunks/**', '**/static/**', '**/16-41c88764631f85ae.js', '**/edge-runtime-webpack.js', '**/middleware.js', 'postcss.config.js'] },
 
   // Reglas base JS
   js.configs.recommended,

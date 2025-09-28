@@ -26,12 +26,60 @@ import {
   MapPin,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { toast } from 'sonner';
 
 export default function StudentDashboard() {
   const { t, language } = useTranslation();
   const router = useRouter();
   const [streak, setStreak] = useState(7);
   const [points, setPoints] = useState(1250);
+
+  // Handler functions for different actions
+  const handleAskTutor = () => {
+    toast.info(
+      language === 'es' ? 'Abriendo tutor IA...' : 'Opening AI tutor...',
+    );
+    router.push('/tutor');
+  };
+
+  const handlePlayGames = () => {
+    toast.info(language === 'es' ? 'Cargando juegos...' : 'Loading games...');
+    router.push('/games');
+  };
+
+  const handleExploreLibrary = () => {
+    toast.info(
+      language === 'es' ? 'Abriendo biblioteca...' : 'Opening library...',
+    );
+    router.push('/library');
+  };
+
+  const handleStartGeographyChallenge = () => {
+    toast.success(
+      language === 'es'
+        ? 'Iniciando reto de geografía...'
+        : 'Starting geography challenge...',
+    );
+    router.push('/games?type=geography');
+  };
+
+  const handleStartMathProblem = () => {
+    toast.success(
+      language === 'es'
+        ? 'Iniciando problema de matemáticas...'
+        : 'Starting math problem...',
+    );
+    router.push('/games?type=math');
+  };
+
+  const handleViewAllResources = () => {
+    toast.info(
+      language === 'es'
+        ? 'Mostrando todos los recursos...'
+        : 'Showing all resources...',
+    );
+    router.push('/games');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -86,7 +134,10 @@ export default function StudentDashboard() {
                   ? 'Resuelve tus dudas al instante'
                   : 'Get instant help with your questions'}
               </p>
-              <Button className="mt-4 bg-white text-purple-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-purple-600 hover:bg-gray-100"
+                onClick={handleAskTutor}
+              >
                 {language === 'es' ? 'Preguntar' : 'Ask'}
               </Button>
             </CardContent>
@@ -107,7 +158,7 @@ export default function StudentDashboard() {
               </p>
               <Button
                 className="mt-4 bg-white text-green-600 hover:bg-gray-100"
-                onClick={() => router.push('/games')}
+                onClick={handlePlayGames}
               >
                 {language === 'es' ? 'Jugar' : 'Play'}
               </Button>
@@ -127,7 +178,10 @@ export default function StudentDashboard() {
                   ? 'Accede a todos tus recursos'
                   : 'Access all your resources'}
               </p>
-              <Button className="mt-4 bg-white text-blue-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-blue-600 hover:bg-gray-100"
+                onClick={handleExploreLibrary}
+              >
                 {language === 'es' ? 'Explorar' : 'Explore'}
               </Button>
             </CardContent>
@@ -215,7 +269,7 @@ export default function StudentDashboard() {
           <div className="mt-4 text-center">
             <Button
               variant="outline"
-              onClick={() => router.push('/games')}
+              onClick={handleViewAllResources}
               className="px-6"
             >
               {language === 'es'
@@ -288,7 +342,11 @@ export default function StudentDashboard() {
                       ? 'Identifica 5 países de América del Sur'
                       : 'Identify 5 South American countries'}
                   </p>
-                  <Button className="w-full" size="sm">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    onClick={handleStartGeographyChallenge}
+                  >
                     {language === 'es' ? 'Comenzar' : 'Start'}
                   </Button>
                 </div>
@@ -304,7 +362,12 @@ export default function StudentDashboard() {
                       ? 'Resuelve 3 ecuaciones lineales'
                       : 'Solve 3 linear equations'}
                   </p>
-                  <Button className="w-full" size="sm" variant="outline">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleStartMathProblem}
+                  >
                     {language === 'es' ? 'Comenzar' : 'Start'}
                   </Button>
                 </div>

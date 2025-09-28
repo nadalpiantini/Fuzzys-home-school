@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X, RefreshCw } from 'lucide-react';
@@ -26,7 +26,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
   feedback,
 }) => {
   // defaults seguros (no cambian el tipo, solo evitan undefined en build)
-  const safeItems = game.items ?? [];
+  const safeItems = useMemo(() => game.items ?? [], [game.items]);
   const safeOrder = game.correctOrder ?? [];
   const getId = (i: number) => safeItems[i]?.id;
   const [items, setItems] = useState(game.items);
@@ -39,7 +39,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
       const shuffled = [...safeItems].sort(() => Math.random() - 0.5);
       setItems(shuffled);
     }
-  }, [game.items, showFeedback]);
+  }, [game.items, showFeedback, safeItems]);
 
   const handleDragStart = (e: React.DragEvent, itemId: string) => {
     setDraggedItem(itemId);

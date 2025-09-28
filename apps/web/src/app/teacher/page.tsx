@@ -25,9 +25,98 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function TeacherDashboard() {
   const { t, language } = useTranslation();
+  const router = useRouter();
+
+  // Handler functions for different actions
+  const handleViewClasses = () => {
+    toast.info(
+      language === 'es'
+        ? 'Redirigiendo a clases...'
+        : 'Redirecting to classes...',
+    );
+    // TODO: Implement navigation to classes page
+    router.push('/teacher/classes');
+  };
+
+  const handleCreateContent = () => {
+    toast.info(
+      language === 'es'
+        ? 'Abriendo creador de contenido...'
+        : 'Opening content creator...',
+    );
+    // TODO: Implement navigation to content creation
+    router.push('/teacher/content');
+  };
+
+  const handleViewAnalytics = () => {
+    toast.info(
+      language === 'es' ? 'Cargando analíticas...' : 'Loading analytics...',
+    );
+    // TODO: Implement navigation to analytics
+    router.push('/teacher/analytics');
+  };
+
+  const handleSettings = () => {
+    toast.info(
+      language === 'es' ? 'Abriendo configuración...' : 'Opening settings...',
+    );
+    // TODO: Implement navigation to settings
+    router.push('/teacher/settings');
+  };
+
+  const handleUseInClass = (resource: string) => {
+    toast.success(
+      language === 'es' ? `Abriendo ${resource}...` : `Opening ${resource}...`,
+    );
+    // TODO: Implement external resource opening
+    window.open(
+      `https://${resource.toLowerCase().replace(/\s+/g, '')}.com`,
+      '_blank',
+    );
+  };
+
+  const handleViewAll = () => {
+    toast.info(
+      language === 'es'
+        ? 'Mostrando todos los recursos...'
+        : 'Showing all resources...',
+    );
+    // TODO: Implement view all resources
+    router.push('/teacher/resources');
+  };
+
+  const handleViewReports = () => {
+    toast.info(
+      language === 'es' ? 'Generando reportes...' : 'Generating reports...',
+    );
+    // TODO: Implement navigation to reports
+    router.push('/teacher/reports');
+  };
+
+  const handleReviewTasks = () => {
+    toast.info(
+      language === 'es'
+        ? 'Abriendo tareas pendientes...'
+        : 'Opening pending tasks...',
+    );
+    // TODO: Implement navigation to task review
+    router.push('/teacher/tasks');
+  };
+
+  const handleCreateReport = () => {
+    toast.info(
+      language === 'es'
+        ? 'Creando reporte mensual...'
+        : 'Creating monthly report...',
+    );
+    // TODO: Implement report creation
+    router.push('/teacher/reports/create');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -40,7 +129,7 @@ export default function TeacherDashboard() {
               <h1 className="text-2xl font-bold">{t('teacher.dashboard')}</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleSettings}>
                 <Settings className="w-4 h-4 mr-2" />
                 {language === 'es' ? 'Configuración' : 'Settings'}
               </Button>
@@ -78,7 +167,10 @@ export default function TeacherDashboard() {
                   ? 'Gestiona tus clases y estudiantes'
                   : 'Manage your classes and students'}
               </p>
-              <Button className="mt-4 bg-white text-purple-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-purple-600 hover:bg-gray-100"
+                onClick={handleViewClasses}
+              >
                 {language === 'es' ? 'Ver Clases' : 'View Classes'}
               </Button>
             </CardContent>
@@ -97,7 +189,10 @@ export default function TeacherDashboard() {
                   ? 'Crea lecciones y actividades'
                   : 'Create lessons and activities'}
               </p>
-              <Button className="mt-4 bg-white text-green-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-green-600 hover:bg-gray-100"
+                onClick={handleCreateContent}
+              >
                 {language === 'es' ? 'Crear' : 'Create'}
               </Button>
             </CardContent>
@@ -116,7 +211,10 @@ export default function TeacherDashboard() {
                   ? 'Analiza el progreso de tus estudiantes'
                   : "Analyze your students' progress"}
               </p>
-              <Button className="mt-4 bg-white text-blue-600 hover:bg-gray-100">
+              <Button
+                className="mt-4 bg-white text-blue-600 hover:bg-gray-100"
+                onClick={handleViewAnalytics}
+              >
                 {language === 'es' ? 'Ver Análisis' : 'View Analytics'}
               </Button>
             </CardContent>
@@ -156,7 +254,11 @@ export default function TeacherDashboard() {
                     ? 'Simulaciones interactivas de física y ciencias'
                     : 'Interactive physics and science simulations'}
                 </p>
-                <Button size="sm" className="w-full">
+                <Button
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleUseInClass('PhET Simulations')}
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
                 </Button>
@@ -179,7 +281,11 @@ export default function TeacherDashboard() {
                     ? 'Programación visual para principiantes'
                     : 'Visual programming for beginners'}
                 </p>
-                <Button size="sm" className="w-full">
+                <Button
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleUseInClass('Blockly Games')}
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
                 </Button>
@@ -202,7 +308,11 @@ export default function TeacherDashboard() {
                     ? 'Integración de música y matemáticas'
                     : 'Music and math integration'}
                 </p>
-                <Button size="sm" className="w-full">
+                <Button
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleUseInClass('Music Blocks')}
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
                 </Button>
@@ -225,7 +335,11 @@ export default function TeacherDashboard() {
                     ? 'Exploración histórica con realidad aumentada'
                     : 'Historical exploration with AR'}
                 </p>
-                <Button size="sm" className="w-full">
+                <Button
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleUseInClass('AR Colonial')}
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   {language === 'es' ? 'Usar en Clase' : 'Use in Class'}
                 </Button>
@@ -262,7 +376,12 @@ export default function TeacherDashboard() {
                     <span className="text-gray-500">Matemáticas</span>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
+                <Button
+                  variant="outline"
+                  className="w-full mt-4"
+                  size="sm"
+                  onClick={handleViewAll}
+                >
                   {language === 'es' ? 'Ver Todos' : 'View All'}
                 </Button>
               </CardContent>
@@ -295,7 +414,12 @@ export default function TeacherDashboard() {
                       : 'Your students have explored 80% of available resources'}
                   </p>
                 </div>
-                <Button variant="outline" className="w-full mt-4" size="sm">
+                <Button
+                  variant="outline"
+                  className="w-full mt-4"
+                  size="sm"
+                  onClick={handleViewReports}
+                >
                   {language === 'es' ? 'Ver Reportes' : 'View Reports'}
                 </Button>
               </CardContent>
@@ -375,7 +499,11 @@ export default function TeacherDashboard() {
                       ? '15 tareas pendientes de revisión'
                       : '15 assignments pending review'}
                   </p>
-                  <Button className="w-full" size="sm">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    onClick={handleReviewTasks}
+                  >
                     {language === 'es' ? 'Revisar' : 'Review'}
                   </Button>
                 </div>
@@ -391,7 +519,12 @@ export default function TeacherDashboard() {
                       ? 'Reporte mensual de progreso'
                       : 'Monthly progress report'}
                   </p>
-                  <Button className="w-full" size="sm" variant="outline">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCreateReport}
+                  >
                     {language === 'es' ? 'Crear' : 'Create'}
                   </Button>
                 </div>

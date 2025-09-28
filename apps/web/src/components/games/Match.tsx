@@ -57,7 +57,7 @@ export const Match: React.FC<MatchProps> = ({
 
     setLeftColumn(left);
     setRightColumn(right);
-  }, [game.shuffle, showFeedback, game.pairs]);
+  }, [game.shuffle, showFeedback, game.pairs, baseLeftItems, baseRightItems]);
 
   useEffect(() => {
     // Check if a match should be made

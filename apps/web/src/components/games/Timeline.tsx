@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Calendar, Check, X, Eye, EyeOff } from 'lucide-react';
@@ -25,7 +25,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   showFeedback = false,
   feedback,
 }) => {
-  const safeEvents = game.events ?? [];
+  const safeEvents = useMemo(() => game.events ?? [], [game.events]);
   const [events, setEvents] = useState(safeEvents);
   const [draggedEvent, setDraggedEvent] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -37,7 +37,7 @@ export const Timeline: React.FC<TimelineProps> = ({
       const shuffled = [...safeEvents].sort(() => Math.random() - 0.5);
       setEvents(shuffled);
     }
-  }, [game.events, showFeedback]);
+  }, [game.events, showFeedback, safeEvents]);
 
   const handleDragStart = (e: React.DragEvent, eventId: string) => {
     setDraggedEvent(eventId);

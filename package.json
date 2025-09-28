@@ -19,9 +19,14 @@
     "deploy:vercel": "vercel --prod",
     "deploy:netlify": "netlify deploy --prod",
     "seed": "npx tsx scripts/seed-games.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "@types/node": "^20.10.0",
     "tsx": "^4.6.2",
     "turbo": "^1.10.12",
