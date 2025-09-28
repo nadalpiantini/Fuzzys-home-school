@@ -8,11 +8,11 @@ export async function GET() {
     const s = sb();
 
     // Get queued jobs (limit 2 to avoid overload)
-    const { data: jobs, error } = await s
+    const { data: jobs, error } = (await s
       .from('brain_jobs')
       .select('id, type, params, status')
       .eq('status', 'queued')
-      .limit(2);
+      .limit(2)) as any;
 
     if (error) {
       return NextResponse.json(
@@ -35,7 +35,10 @@ export async function GET() {
       // Mark job as running
       await s
         .from('brain_jobs')
-        .update({ status: 'running', started_at: new Date().toISOString() })
+        .update({
+          status: 'running',
+          started_at: new Date().toISOString(),
+        } as any)
         .eq('id', job.id);
 
       try {
@@ -50,7 +53,7 @@ export async function GET() {
             status: 'completed',
             finished_at: new Date().toISOString(),
             result: res,
-          })
+          } as any)
           .eq('id', job.id);
 
         results.push({ id: job.id, ok: true, res });
@@ -61,7 +64,7 @@ export async function GET() {
             status: 'failed',
             finished_at: new Date().toISOString(),
             error: String(e?.message || e),
-          })
+          } as any)
           .eq('id', job.id);
 
         results.push({ id: job.id, ok: false, error: String(e?.message || e) });

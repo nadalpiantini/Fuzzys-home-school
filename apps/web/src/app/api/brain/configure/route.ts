@@ -9,10 +9,9 @@ export async function POST(req: Request) {
 
     const { error } = await s
       .from('brain_config')
-      .upsert(
-        { name, value, updated_at: new Date().toISOString() },
-        { onConflict: 'name' },
-      );
+      .upsert({ name, value, updated_at: new Date().toISOString() } as any, {
+        onConflict: 'name',
+      });
 
     if (error) {
       return NextResponse.json(
