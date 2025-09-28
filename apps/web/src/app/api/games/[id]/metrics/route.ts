@@ -42,16 +42,25 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    // TODO: Implement game_metrics table operations
+    const s = sb();
+    const { data: metrics, error } = await s
+      .from('game_metrics')
+      .select('*')
+      .eq('game_id', params.id)
+      .single() as any;
+    
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
+    }
+    
     return NextResponse.json({ 
       ok: true, 
-      metrics: { plays: 0, likes: 0, avg_time_seconds: 0 },
-      message: 'Game metrics ready - database operations pending'
+      metrics: metrics || { plays: 0, likes: 0, avg_time_seconds: 0 }
     });
   } catch (error) {
-    console.error('Game metrics GET error:', error);
+    console.error('Metrics GET error:', error);
     return NextResponse.json(
-      { ok: false, error: 'Failed to fetch game metrics' },
+      { ok: false, error: 'Failed to fetch metrics' },
       { status: 500 }
     );
   }

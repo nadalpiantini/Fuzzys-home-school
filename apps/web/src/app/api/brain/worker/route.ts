@@ -12,7 +12,7 @@ export async function GET() {
       .from('brain_jobs')
       .select('id, type, params, status')
       .eq('status', 'queued')
-      .limit(2) as any;
+      .limit(2);
     
     if (error) {
       return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
@@ -24,10 +24,10 @@ export async function GET() {
 
     const results = [];
     
-    for (const job of jobs) {
+    for (const job of jobs as any[]) {
       // Mark job as running
       await s.from('brain_jobs')
-        .update({ status: 'running', started_at: new Date().toISOString() } as any)
+        .update({ status: 'running', started_at: new Date().toISOString() })
         .eq('id', job.id);
       
       try {
@@ -41,7 +41,7 @@ export async function GET() {
             status: 'completed', 
             finished_at: new Date().toISOString(),
             result: res
-          } as any)
+          })
           .eq('id', job.id);
         
         results.push({ id: job.id, ok: true, res });
@@ -51,7 +51,7 @@ export async function GET() {
             status: 'failed', 
             finished_at: new Date().toISOString(), 
             error: String(e?.message || e) 
-          } as any)
+          })
           .eq('id', job.id);
         
         results.push({ id: job.id, ok: false, error: String(e?.message || e) });
