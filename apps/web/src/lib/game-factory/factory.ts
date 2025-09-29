@@ -189,7 +189,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private calculatePlayers(type: GameType): string {
-    const playerCounts: Record<GameType, string> = {
+    const playerCounts: Partial<Record<GameType, string>> = {
       'multiple-choice': '1',
       'true-false': '1',
       'fill-blank': '1',
