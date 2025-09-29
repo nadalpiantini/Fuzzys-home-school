@@ -264,7 +264,11 @@ export type GradeLevel =
   | '7'
   | '8';
 
-export type Difficulty = 'easy' | 'medium' | 'hard';
+// Tipos de dificultad unificados
+export type DifficultyStd = 'easy' | 'medium' | 'hard';
+export type DifficultyAlt = 'beginner' | 'intermediate' | 'advanced';
+export type Difficulty = DifficultyStd | DifficultyAlt;
+
 export type Category = 'quiz' | 'interactive' | 'creative' | 'stem';
 
 // Útil para selects ('all' | T)

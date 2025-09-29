@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { gameFactory } from '@/lib/game-factory/factory';
 import { aiGameGenerator } from '@/lib/game-factory/ai-generator';
+import { normalizeDifficulty } from '@/lib/game-factory/utils';
 import {
   BaseGame,
   GameType,
@@ -48,8 +49,10 @@ export default function EnhancedGameList({
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] =
     React.useState<AllOr<Category>>('all');
-  const [selectedSubject, setSelectedSubject] = React.useState<AllOr<Subject>>('all');
-  const [selectedGrade, setSelectedGrade] = React.useState<AllOr<GradeLevel>>('all');
+  const [selectedSubject, setSelectedSubject] =
+    React.useState<AllOr<Subject>>('all');
+  const [selectedGrade, setSelectedGrade] =
+    React.useState<AllOr<GradeLevel>>('all');
   const [selectedDifficulty, setSelectedDifficulty] =
     React.useState<AllOr<Difficulty>>('all');
   const [showGameTypeSelector, setShowGameTypeSelector] = React.useState(false);
@@ -115,7 +118,9 @@ export default function EnhancedGameList({
     const matchesGrade =
       selectedGrade === 'all' || game.grade === selectedGrade;
     const matchesDifficulty =
-      selectedDifficulty === 'all' || game.difficulty === selectedDifficulty;
+      selectedDifficulty === 'all'
+        ? true
+        : normalizeDifficulty(game.difficulty as Difficulty) === normalizeDifficulty(selectedDifficulty);
 
     return (
       matchesSearch &&
