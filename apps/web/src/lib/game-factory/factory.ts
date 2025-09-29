@@ -4,14 +4,16 @@ import {
   GameConfig,
   GameType,
   GameContent,
+  GAME_TYPES,
 } from './types';
 import { gameTemplates, getGameTemplate } from './templates';
+import { expectCompleteMap } from './helpers';
 
 // Helper genérico para leer mapas parciales con fallback
 function fromMap<T>(
   map: Partial<Record<GameType, T>>,
   type: GameType,
-  fallback: T
+  fallback: T,
 ): T {
   return map[type] ?? fallback;
 }
@@ -217,21 +219,15 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private getEmoji(type: GameType): string {
-    const emojis: Partial<Record<GameType, string>> = {
-      'multiple-choice': '❓',
-      'true-false': '✅',
-      'fill-blank': '📝',
-      'short-answer': '✍️',
-      'drag-drop': '🧩',
-      hotspot: '📍',
-      sequence: '🔢',
-      matching: '🔗',
-      'memory-cards': '🃏',
-      'blockly-puzzle': '🧱',
-      // … deja los que ya tenías
-      'badge-collection': '🏅',
-    };
-    return fromMap(emojis, type, '🎮'); // fallback
+    const EMOJIS = expectCompleteMap(GAME_TYPES, {
+      'multiple-choice':'❓','true-false':'✅','fill-blank':'📝','short-answer':'✍️',
+      'drag-drop':'🧩','hotspot':'📍','sequence':'🔢','matching':'🔗','memory-cards':'🃏',
+      'blockly-puzzle':'🧱','flashcards':'💡','essay':'🧾','timeline':'🕰️',
+      'live-quiz':'📡','mind-map':'🧠','branching-scenario':'🌿','team-challenge':'🤝',
+      'code-challenge':'💻','research-methods':'🔬','critical-thinking':'🧩',
+      'leadership':'⭐','badge-collection':'🏅',
+    });
+    return EMOJIS[type];
   }
 
   private getGradeName(grade: string): string {

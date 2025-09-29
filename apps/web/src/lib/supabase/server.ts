@@ -1,22 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
-import {
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-  SUPABASE_SERVICE_ROLE_KEY,
-} from './env';
 
-function required(name: string, v: string) {
-  if (!v) throw new Error(`Missing env: ${name}`);
+function required(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`${name} is required`);
   return v;
 }
 
 export function getSupabaseServer(useServiceRole = false) {
-  const url = required('SUPABASE_URL', SUPABASE_URL);
-  const key = useServiceRole
-    ? required('SUPABASE_SERVICE_ROLE_KEY', SUPABASE_SERVICE_ROLE_KEY)
-    : required('SUPABASE_ANON_KEY', SUPABASE_ANON_KEY);
-  return createClient(url, key, {
+  const supabaseUrl = required('NEXT_PUBLIC_SUPABASE_URL');
+  const supabaseKey = useServiceRole
+    ? required('SUPABASE_SERVICE_ROLE_KEY')
+    : required('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+
+  // No instanciar en top-level; siempre dentro de la función
+  const client = createClient(supabaseUrl, supabaseKey, {
+    global: {
+      headers: {
+        'x-app-id': 'fuzzys-web',
+        'x-runtime': 'server',
+      },
+    },
     auth: { persistSession: false },
-    global: { headers: { 'X-Client-Info': 'fuzzys-web@1.0.0' } },
   });
+
+  return client;
 }

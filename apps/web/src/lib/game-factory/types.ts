@@ -241,233 +241,67 @@ export interface GameConfig {
 
 // === Subjects ===============================
 export type Subject =
-  | 'math'
-  | 'science'
-  | 'spanish'
-  | 'english'
-  | 'history'
-  | 'geography'
-  | 'art'
-  | 'music'
-  | 'coding'
-  | 'robotics'
-  | 'reading'
-  | 'writing'
-  | 'civics'
-  | 'economics'
-  | 'biology'
-  | 'chemistry'
-  | 'physics'
-  | 'astronomy'
-  | 'language'; // <- incluye "language" para compatibilidad
+  | 'math' | 'science' | 'language' | 'history' | 'geography'
+  | 'art'  | 'music'   | 'technology' | 'coding' | 'reading' | 'writing';
 
-// Lista canónica para selects / filtros
 export const SUBJECTS = [
-  'math',
-  'science',
-  'spanish',
-  'english',
-  'history',
-  'geography',
-  'art',
-  'music',
-  'coding',
-  'robotics',
-  'reading',
-  'writing',
-  'civics',
-  'economics',
-  'biology',
-  'chemistry',
-  'physics',
-  'astronomy',
-  'language',
+  'math','science','language','history','geography',
+  'art','music','technology','coding','reading','writing',
 ] as const satisfies readonly Subject[];
 
-// Etiquetas en ES
-export const SUBJECT_LABELS: Record<Subject, string> = {
-  math: 'Matemáticas',
-  science: 'Ciencias',
-  spanish: 'Español',
-  english: 'Inglés',
-  history: 'Historia',
-  geography: 'Geografía',
-  art: 'Arte',
-  music: 'Música',
-  coding: 'Programación',
-  robotics: 'Robótica',
-  reading: 'Lectura',
-  writing: 'Escritura',
-  civics: 'Cívica',
-  economics: 'Economía',
-  biology: 'Biología',
-  chemistry: 'Química',
-  physics: 'Física',
-  astronomy: 'Astronomía',
-  language: 'Lenguaje', // genérico
+export const SUBJECT_LABELS: Record<Subject,string> = {
+  math:'Matemáticas', science:'Ciencias', language:'Lenguaje',
+  history:'Historia', geography:'Geografía', art:'Arte', music:'Música',
+  technology:'Tecnología', coding:'Programación', reading:'Lectura', writing:'Escritura',
 };
 
-// Utilidad por si te llega algo no canónico y quieres mapearlo
-export function normalizeSubject(s: string): Subject | null {
-  const m = s.toLowerCase();
-  const alias: Record<string, Subject> = {
-    lang: 'language',
-    languages: 'language',
-    lengua: 'language',
-    'language-arts': 'language',
-  };
-  if ((SUBJECTS as readonly string[]).includes(m)) return m as Subject;
-  if (alias[m]) return alias[m];
-  return null;
-}
+// Grados (1–12 + pre-k/kinder si aplica)
+export type GradeLevel = 'pre-k'|'k'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12';
 
-// Grados escolares canónicos
-export type GradeLevel =
-  | 'pre-k'
-  | 'k'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
-  | '10'
-  | '11'
-  | '12';
-
-// Lista canónica para selects / filtros
 export const GRADE_LEVELS = [
-  'pre-k',
-  'k',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10',
-  '11',
-  '12',
+  'pre-k','k','1','2','3','4','5','6','7','8','9','10','11','12',
 ] as const satisfies readonly GradeLevel[];
 
-// Labels en ES
-export const GRADE_LABELS: Record<GradeLevel, string> = {
-  'pre-k': 'Pre-K',
-  k: 'Kínder',
-  '1': '1.º',
-  '2': '2.º',
-  '3': '3.º',
-  '4': '4.º',
-  '5': '5.º',
-  '6': '6.º',
-  '7': '7.º',
-  '8': '8.º',
-  '9': '9.º',
-  '10': '10.º',
-  '11': '11.º',
-  '12': '12.º',
+export const GRADE_LABELS: Record<GradeLevel,string> = {
+  'pre-k':'Pre-K', k:'Kinder', '1':'1.º','2':'2.º','3':'3.º','4':'4.º','5':'5.º','6':'6.º',
+  '7':'7.º','8':'8.º','9':'9.º','10':'10.º','11':'11.º','12':'12.º',
 };
 
-// Normalizador por si llegan aliases
-export function normalizeGrade(g: string): GradeLevel | null {
-  const m = g.toLowerCase().replace(/\s+/g, '');
-  const alias: Record<string, GradeLevel> = {
-    pk: 'pre-k',
-    prek: 'pre-k',
-    prekindergarten: 'pre-k',
-    kinder: 'k',
-    kindergarten: 'k',
-    primero: '1',
-    segundo: '2',
-    tercero: '3',
-    cuarto: '4',
-    quinto: '5',
-    sexto: '6',
-    septimo: '7',
-    séptimo: '7',
-    octavo: '8',
-    noveno: '9',
-    decimo: '10',
-    décimo: '10',
-    undecimo: '11',
-    undécimo: '11',
-    duodecimo: '12',
-    duodécimo: '12',
-  };
-  if ((GRADE_LEVELS as readonly string[]).includes(m)) return m as GradeLevel;
-  if (alias[m]) return alias[m];
-  return null;
-}
+export type Difficulty = 'easy'|'medium'|'hard';
+export const DIFFICULTIES = ['easy','medium','hard'] as const satisfies readonly Difficulty[];
+export const DIFFICULTY_LABELS: Record<Difficulty,string> = { easy:'Fácil', medium:'Media', hard:'Difícil' };
 
-// Tipos de dificultad unificados
-export type DifficultyStd = 'easy' | 'medium' | 'hard';
-export type DifficultyAlt = 'beginner' | 'intermediate' | 'advanced';
-export type Difficulty = DifficultyStd | DifficultyAlt;
-
-// Categorías canónicas
 export type Category =
-  | 'assessment'
-  | 'interactive'
-  | 'programming'
-  | 'creative'
-  | 'simulation'
-  | 'ar-vr'
-  | 'language'
-  | 'stem'
-  | 'social'
-  | 'gamification';
+  | 'assessment' | 'interactive' | 'programming' | 'creative'
+  | 'simulation' | 'ar-vr' | 'language' | 'stem' | 'social' | 'gamification';
 
-// Lista canónica (para selects / filtros)
 export const CATEGORIES = [
-  'assessment',
-  'interactive',
-  'programming',
-  'creative',
-  'simulation',
-  'ar-vr',
-  'language',
-  'stem',
-  'social',
-  'gamification',
+  'assessment','interactive','programming','creative','simulation',
+  'ar-vr','language','stem','social','gamification',
 ] as const satisfies readonly Category[];
 
-// Labels en ES (o EN si prefieres)
-export const CATEGORY_LABELS: Record<Category, string> = {
-  assessment:   'Evaluación',
-  interactive:  'Interactivo',
-  programming:  'Programación',
-  creative:     'Creativo',
-  simulation:   'Simulación',
-  'ar-vr':      'AR/VR',
-  language:     'Lenguaje',
-  stem:         'STEM',
-  social:       'Aprendizaje Social',
-  gamification: 'Gamificación',
+export const CATEGORY_LABELS: Record<Category,string> = {
+  assessment:'Evaluación', interactive:'Interactivo', programming:'Programación',
+  creative:'Creativo', simulation:'Simulación', 'ar-vr':'AR/VR', language:'Lenguaje',
+  stem:'STEM', social:'Aprendizaje Social', gamification:'Gamificación',
 };
 
-// Normalizador (acepta "Assessment", "ASSESSMENT", "Ar Vr", etc.)
-export function normalizeCategory(c: string): Category | null {
-  const key = c.toLowerCase().replace(/\s+/g, '-');
-  const alias: Record<string, Category> = {
-    'arvr': 'ar-vr',
-    'ar-vr': 'ar-vr',
-    'ar/vr': 'ar-vr',
-  };
-  if ((CATEGORIES as readonly string[]).includes(key)) return key as Category;
-  if (alias[key]) return alias[key];
-  return null;
-}
+// GameType: deja solo los que realmente renderices hoy (agrega luego)
+export type GameType =
+  | 'multiple-choice' | 'true-false' | 'fill-blank' | 'short-answer'
+  | 'drag-drop' | 'hotspot' | 'sequence' | 'matching' | 'memory-cards'
+  | 'blockly-puzzle' | 'flashcards' | 'essay' | 'timeline' | 'live-quiz'
+  | 'mind-map' | 'branching-scenario' | 'team-challenge' | 'code-challenge'
+  | 'research-methods' | 'critical-thinking' | 'leadership'
+  | 'badge-collection';
 
-// Útil para selects ('all' | T)
+export const GAME_TYPES = [
+  'multiple-choice','true-false','fill-blank','short-answer',
+  'drag-drop','hotspot','sequence','matching','memory-cards',
+  'blockly-puzzle','flashcards','essay','timeline','live-quiz',
+  'mind-map','branching-scenario','team-challenge','code-challenge',
+  'research-methods','critical-thinking','leadership',
+  'badge-collection',
+] as const satisfies readonly GameType[];
+
 export type AllOr<T extends string> = 'all' | T;
-
-// (Opcional) Si conviertes strings a GameType dinámicamente:
-export function isGameType(x: string): x is GameType {
-  return !!x; // deja simple: sólo afina si validas contra una whitelist
-}
