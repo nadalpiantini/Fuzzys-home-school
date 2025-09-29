@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { gameFactory } from '@/lib/game-factory/factory';
+import { normalizeCategory } from '@/lib/game-factory/normalize';
+import { includesIfNotAll } from '@/lib/game-factory/helpers';
 import {
   GameType,
   Subject,
@@ -160,7 +162,8 @@ export default function GameTypeSelector({
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === 'all' || template.category === selectedCategory;
+      selectedCategory === 'all' ||
+      normalizeCategory(template.category) === selectedCategory;
     const matchesSubject = includesIfNotAll(
       template.subjects as readonly Subject[],
       selectedSubject,
