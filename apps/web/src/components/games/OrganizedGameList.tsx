@@ -102,11 +102,52 @@ export default function OrganizedGameList() {
 
   const fetchGames = async () => {
     try {
-      const response = await fetch('/api/games');
+      const response = await fetch('/api/games/next');
       const data = await response.json();
       setGames(data.games || []);
     } catch (error) {
       console.error('Error fetching games:', error);
+      // Fallback: usar datos mock si la API falla
+      const mockGames = [
+        {
+          id: 'mock-1',
+          title: 'Sumas del Colmado',
+          subject: 'math',
+          grade: 'K-2',
+          content: {
+            type: 'quiz',
+            difficulty: 'easy',
+            theme: 'colmado',
+            metadata: {
+              estimatedTime: '10-15 min',
+              learningObjectives: [
+                'Sumar números del 1 al 10',
+                'Reconocer operaciones básicas',
+              ],
+            },
+          },
+          status: 'ready',
+          source: 'seed',
+        },
+        {
+          id: 'mock-2',
+          title: 'Rally del Barrio',
+          subject: 'social',
+          grade: '3-4',
+          content: {
+            type: 'scavenger',
+            difficulty: 'medium',
+            theme: 'barrio',
+            metadata: {
+              estimatedTime: '20-30 min',
+              learningObjectives: ['Explorar el entorno', 'Trabajar en equipo'],
+            },
+          },
+          status: 'ready',
+          source: 'seed',
+        },
+      ];
+      setGames(mockGames);
     } finally {
       setLoading(false);
     }
@@ -143,11 +184,55 @@ export default function OrganizedGameList() {
   };
 
   const getSubjects = () => {
-    return Array.from(new Set(games.map((game) => game.subject)));
+    const subjects = Array.from(new Set(games.map((game) => game.subject)));
+    // Agregar materias estándar si no hay datos
+    if (subjects.length === 0) {
+      return ['math', 'science', 'language', 'social', 'history', 'art'];
+    }
+    return subjects;
   };
 
   const getGrades = () => {
-    return Array.from(new Set(games.map((game) => game.grade))).sort();
+    const grades = Array.from(new Set(games.map((game) => game.grade))).sort();
+    // Agregar grados estándar si no hay datos
+    if (grades.length === 0) {
+      return ['K-2', '3-4', '5-6', '7-8', '9-12'];
+    }
+    return grades;
+  };
+
+  const getSubjectLabel = (subject: string) => {
+    const labels: { [key: string]: string } = {
+      math: 'Matemáticas',
+      science: 'Ciencias',
+      language: 'Español',
+      social: 'Sociales',
+      history: 'Historia',
+      art: 'Arte',
+      music: 'Música',
+      geography: 'Geografía',
+      physics: 'Física',
+      chemistry: 'Química',
+      biology: 'Biología',
+    };
+    return (
+      labels[subject] || subject.charAt(0).toUpperCase() + subject.slice(1)
+    );
+  };
+
+  const getGradeLabel = (grade: string) => {
+    const labels: { [key: string]: string } = {
+      'K-2': 'Pre-K a 2do',
+      '3-4': '3ro a 4to',
+      '5-6': '5to a 6to',
+      '7-8': '7mo a 8vo',
+      '9-12': '9no a 12mo',
+      'K-1': 'Pre-K a 1ro',
+      '1-2': '1ro a 2do',
+      '3-5': '3ro a 5to',
+      '6-8': '6to a 8vo',
+    };
+    return labels[grade] || `Grado ${grade}`;
   };
 
   const handleGameClick = (game: Game) => {
@@ -180,7 +265,7 @@ export default function OrganizedGameList() {
             <option value="all">Todas</option>
             {getSubjects().map((subject) => (
               <option key={subject} value={subject}>
-                {subject.charAt(0).toUpperCase() + subject.slice(1)}
+                {getSubjectLabel(subject)}
               </option>
             ))}
           </select>
@@ -196,7 +281,7 @@ export default function OrganizedGameList() {
             <option value="all">Todos</option>
             {getGrades().map((grade) => (
               <option key={grade} value={grade}>
-                Grado {grade}
+                {getGradeLabel(grade)}
               </option>
             ))}
           </select>
@@ -210,9 +295,7 @@ export default function OrganizedGameList() {
           <div key={subject} className="space-y-4">
             <div className="flex items-center gap-2">
               {subjectIcons[subject as keyof typeof subjectIcons]}
-              <h2 className="text-xl font-bold">
-                {subject.charAt(0).toUpperCase() + subject.slice(1)}
-              </h2>
+              <h2 className="text-xl font-bold">{getSubjectLabel(subject)}</h2>
               <Badge
                 className={subjectColors[subject as keyof typeof subjectColors]}
               >
@@ -227,7 +310,9 @@ export default function OrganizedGameList() {
                   className="hover:shadow-md transition-shadow"
                 >
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Grado {grade}</CardTitle>
+                    <CardTitle className="text-lg">
+                      {getGradeLabel(grade)}
+                    </CardTitle>
                     <Badge variant="outline" className="w-fit">
                       {gradeGames.length} juegos
                     </Badge>
@@ -304,10 +389,9 @@ export default function OrganizedGameList() {
                       subjectColors[game.subject as keyof typeof subjectColors]
                     }
                   >
-                    {game.subject.charAt(0).toUpperCase() +
-                      game.subject.slice(1)}
+                    {getSubjectLabel(game.subject)}
                   </Badge>
-                  <Badge variant="outline">Grado {game.grade}</Badge>
+                  <Badge variant="outline">{getGradeLabel(game.grade)}</Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
