@@ -39,35 +39,38 @@ export default function QuestPage() {
 
   const supabase = createSupabaseClient();
 
-  const fetchQuest = useCallback(async (questId: string) => {
-    try {
-      setLoading(true);
-      setError(null);
+  const fetchQuest = useCallback(
+    async (questId: string) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const { data, error } = await supabase
-        .from('quests')
-        .select('*')
-        .eq('id', questId)
-        .eq('is_active', true)
-        .single();
+        const { data, error } = await supabase
+          .from('quests')
+          .select('*')
+          .eq('id', questId)
+          .eq('is_active', true)
+          .single();
 
-      if (error) {
-        throw error;
+        if (error) {
+          throw error;
+        }
+
+        if (!data) {
+          setError('Reto no encontrado');
+          return;
+        }
+
+        setQuest(data);
+      } catch (err) {
+        console.error('Error fetching quest:', err);
+        setError('Error al cargar el reto');
+      } finally {
+        setLoading(false);
       }
-
-      if (!data) {
-        setError('Reto no encontrado');
-        return;
-      }
-
-      setQuest(data);
-    } catch (err) {
-      console.error('Error fetching quest:', err);
-      setError('Error al cargar el reto');
-    } finally {
-      setLoading(false);
-    }
-  }, [supabase]);
+    },
+    [supabase],
+  );
 
   useEffect(() => {
     if (params.id) {

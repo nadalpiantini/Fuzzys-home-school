@@ -67,7 +67,8 @@ export default function SettingsPage() {
     toast.success(
       language === 'es' ? 'Configuración guardada' : 'Settings saved',
     );
-    // TODO: Implement settings save
+    // Basic settings save implementation
+    localStorage.setItem('teacherSettings', JSON.stringify(settings));
   };
 
   const handleLanguageChange = (newLanguage: string) => {

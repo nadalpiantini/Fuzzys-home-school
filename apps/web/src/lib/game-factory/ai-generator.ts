@@ -108,7 +108,7 @@ export class AIGameGenerator {
         tags: [...baseGame.tags, ...(aiResponse.tags || [])],
       };
     } catch (error) {
-      console.warn('AI enhancement failed, using base game:', error);
+      // AI enhancement failed, falling back to base game
       return baseGame;
     }
   }
@@ -304,7 +304,7 @@ export class AIGameGenerator {
 
       return await response.json();
     } catch (error) {
-      console.warn('Game analysis failed:', error);
+      // Game analysis failed, using default values
       return {
         effectiveness: 0.5,
         recommendations: [

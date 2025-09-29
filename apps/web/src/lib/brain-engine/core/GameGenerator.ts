@@ -16,12 +16,10 @@ export class GameGenerator {
 
     // Log request
     try {
-      await s
-        .from('brain_logs')
-        .insert({
-          kind: 'request',
-          payload: JSON.stringify(withDiff).slice(0, 8000),
-        } as any);
+      await s.from('brain_logs').insert({
+        kind: 'request',
+        payload: JSON.stringify(withDiff).slice(0, 8000),
+      } as any);
     } catch {}
 
     const messages = genPrompt(withDiff);
@@ -29,12 +27,10 @@ export class GameGenerator {
 
     // Log response
     try {
-      await s
-        .from('brain_logs')
-        .insert({
-          kind: 'response',
-          payload: String(raw).slice(0, 8000),
-        } as any);
+      await s.from('brain_logs').insert({
+        kind: 'response',
+        payload: String(raw).slice(0, 8000),
+      } as any);
     } catch {}
 
     const out = safeParseGames(raw);
@@ -89,22 +85,18 @@ export class GameGenerator {
       if (ge) {
         if ((ge as any).code === '23505') {
           try {
-            await s
-              .from('brain_logs')
-              .insert({
-                kind: 'parse_issues',
-                payload: `duplicate: ${g.title}/${g.subject}/${g.grade}`,
-              } as any);
+            await s.from('brain_logs').insert({
+              kind: 'parse_issues',
+              payload: `duplicate: ${g.title}/${g.subject}/${g.grade}`,
+            } as any);
           } catch {}
           continue;
         }
         try {
-          await s
-            .from('brain_logs')
-            .insert({
-              kind: 'parse_issues',
-              payload: `insert_game_error: ${ge.message}`,
-            } as any);
+          await s.from('brain_logs').insert({
+            kind: 'parse_issues',
+            payload: `insert_game_error: ${ge.message}`,
+          } as any);
         } catch {}
         continue;
       }

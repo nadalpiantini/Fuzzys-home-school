@@ -40,11 +40,7 @@ export function useGamePool() {
 
       const data = await response.json();
 
-      if (data.ok) {
-        console.log(
-          `Pool health: ${data.ready} ready games, needs generation: ${data.needs_generation}`,
-        );
-      }
+      // Pool health check completed successfully
     } catch (error) {
       console.error('Error ensuring pool health:', error);
     }
@@ -79,7 +75,6 @@ export function useGamePool() {
       }));
     }
   }, [ensurePoolHealth]);
-
 
   // Cargar juegos al montar el componente
   useEffect(() => {

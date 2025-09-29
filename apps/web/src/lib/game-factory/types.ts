@@ -437,7 +437,6 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   gamification: 'Gamificación',
 };
 
-
 export const GAME_TYPES = [
   'multiple-choice',
   'true-false',

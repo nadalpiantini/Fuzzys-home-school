@@ -5,8 +5,8 @@ export const genPrompt = (p: any) => [
       'Eres un generador de JSON puro.',
       'Devuelve UN objeto JSON en el siguiente formato:',
       '{"games":[{"title":"string","subject":"string","grade":number,"language":"string","metadata":{"cultural":"string","los":"string[]"},"questions":[{"prompt":"string","choices":"string[]","answer":number}]}]}',
-      'Prohibido: texto extra, backticks, comentarios.'
-    ].join(' ')
+      'Prohibido: texto extra, backticks, comentarios.',
+    ].join(' '),
   },
   {
     role: 'user',
@@ -19,8 +19,8 @@ export const genPrompt = (p: any) => [
         cultural: p.culturalContext ?? 'general',
         los: p.learningObjectives ?? [],
         quantity: p.quantity ?? 1,
-        constraints: { minChoices: 4, maxTitleLen: 80, minQ: 2, maxQ: 8 }
-      }
-    })
-  }
+        constraints: { minChoices: 4, maxTitleLen: 80, minQ: 2, maxQ: 8 },
+      },
+    }),
+  },
 ];

@@ -33,8 +33,8 @@ export async function getSupabasePing() {
 
     const r = await fetch(`${ENV.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/settings`, {
       headers: {
-        'apikey': ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        apikey: ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
       },
       cache: 'no-store',
     });

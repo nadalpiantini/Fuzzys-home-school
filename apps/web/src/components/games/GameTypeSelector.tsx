@@ -159,17 +159,12 @@ export default function GameTypeSelector({
     const matchesCategory =
       selectedCategory === 'all' ||
       normalizeCategory(template.category) === selectedCategory;
-    const matchesSubject = includesIfNotAll(
-      selectedSubject,
-      template.subjects,
-    );
-    const matchesGrade = includesIfNotAll(
-      selectedGrade,
-      template.ageRange,
-    );
+    const matchesSubject = includesIfNotAll(selectedSubject, template.subjects);
+    const matchesGrade = includesIfNotAll(selectedGrade, template.ageRange);
     const matchesDifficulty = includesIfNotAll(
       selectedDifficulty,
-      ('difficultyTags' in template ? template.difficultyTags : undefined) ?? [],
+      ('difficultyTags' in template ? template.difficultyTags : undefined) ??
+        [],
     );
 
     return (

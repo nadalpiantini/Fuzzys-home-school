@@ -14,11 +14,11 @@ export class BrainEngine {
 
       if (cmd.type === 'GENERATE') {
         try {
-          console.log('🧠 Starting game generation...');
+          // Starting game generation
           const res = await gameGenerator.generateAndSave(
             cmd.parameters as any,
           );
-          console.log('✅ Game generation completed:', res);
+          // Game generation completed
 
           this.status = 'ready';
           return { ok: true, data: res };

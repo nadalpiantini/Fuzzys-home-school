@@ -39,7 +39,6 @@ export default function TeacherDashboard() {
         ? 'Redirigiendo a clases...'
         : 'Redirecting to classes...',
     );
-    // TODO: Implement navigation to classes page
     router.push('/teacher/classes');
   };
 
@@ -49,7 +48,6 @@ export default function TeacherDashboard() {
         ? 'Abriendo creador de contenido...'
         : 'Opening content creator...',
     );
-    // TODO: Implement navigation to content creation
     router.push('/teacher/content');
   };
 
@@ -57,7 +55,6 @@ export default function TeacherDashboard() {
     toast.info(
       language === 'es' ? 'Cargando analíticas...' : 'Loading analytics...',
     );
-    // TODO: Implement navigation to analytics
     router.push('/teacher/analytics');
   };
 
@@ -65,7 +62,6 @@ export default function TeacherDashboard() {
     toast.info(
       language === 'es' ? 'Abriendo configuración...' : 'Opening settings...',
     );
-    // TODO: Implement navigation to settings
     router.push('/teacher/settings');
   };
 
@@ -73,7 +69,6 @@ export default function TeacherDashboard() {
     toast.success(
       language === 'es' ? `Abriendo ${resource}...` : `Opening ${resource}...`,
     );
-    // TODO: Implement external resource opening
     window.open(
       `https://${resource.toLowerCase().replace(/\s+/g, '')}.com`,
       '_blank',
@@ -86,7 +81,6 @@ export default function TeacherDashboard() {
         ? 'Mostrando todos los recursos...'
         : 'Showing all resources...',
     );
-    // TODO: Implement view all resources
     router.push('/teacher/resources');
   };
 
@@ -94,7 +88,6 @@ export default function TeacherDashboard() {
     toast.info(
       language === 'es' ? 'Generando reportes...' : 'Generating reports...',
     );
-    // TODO: Implement navigation to reports
     router.push('/teacher/reports');
   };
 
@@ -104,7 +97,6 @@ export default function TeacherDashboard() {
         ? 'Abriendo tareas pendientes...'
         : 'Opening pending tasks...',
     );
-    // TODO: Implement navigation to task review
     router.push('/teacher/tasks');
   };
 
@@ -114,7 +106,6 @@ export default function TeacherDashboard() {
         ? 'Creando reporte mensual...'
         : 'Creating monthly report...',
     );
-    // TODO: Implement report creation
     router.push('/teacher/reports/create');
   };
 

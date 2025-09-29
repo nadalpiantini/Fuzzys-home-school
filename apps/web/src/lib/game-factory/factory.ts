@@ -219,7 +219,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private getEmoji(type: GameType): string {
-    const EMOJIS = ({
+    const EMOJIS = {
       'multiple-choice': '❓',
       'true-false': '✅',
       'fill-blank': '📝',
@@ -242,7 +242,7 @@ export class GameFactoryImpl implements GameFactory {
       'critical-thinking': '🧩',
       leadership: '⭐',
       'badge-collection': '🏅',
-    } as any);
+    } as any;
     return EMOJIS[type] ?? '🎮';
   }
 

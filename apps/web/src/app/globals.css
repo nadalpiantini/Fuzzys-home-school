@@ -1,36 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300;400;500;600;700&family=Caveat+Brush&family=Schoolbell&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Variables CSS para colores tierra */
+/* Variables CSS para colores Barney (sin púrpura) */
 :root {
-  --earth-50: #fdf8f6;
-  --earth-100: #f2e8e5;
-  --earth-200: #eaddd7;
-  --earth-300: #e0cec7;
-  --earth-400: #d2bab0;
-  --earth-500: #bfa094;
-  --earth-600: #a18072;
-  --earth-700: #977669;
-  --earth-800: #846358;
-  --earth-900: #43302b;
+  /* Verde grama fuerte - Barney Green */
+  --barney-green-50: #f0fdf4;
+  --barney-green-100: #dcfce7;
+  --barney-green-200: #bbf7d0;
+  --barney-green-300: #86efac;
+  --barney-green-400: #4ade80;
+  --barney-green-500: #22c55e;
+  --barney-green-600: #16a34a;
+  --barney-green-700: #15803d;
+  --barney-green-800: #166534;
+  --barney-green-900: #14532d;
+
+  /* Amarillo Barney */
+  --barney-yellow-50: #fefce8;
+  --barney-yellow-100: #fef3c7;
+  --barney-yellow-200: #fde68a;
+  --barney-yellow-300: #fcd34d;
+  --barney-yellow-400: #fbbf24;
+  --barney-yellow-500: #f59e0b;
+  --barney-yellow-600: #d97706;
+  --barney-yellow-700: #b45309;
+  --barney-yellow-800: #92400e;
+  --barney-yellow-900: #78350f;
+
+  /* Rojo Barney */
+  --barney-red-50: #fef2f2;
+  --barney-red-100: #fee2e2;
+  --barney-red-200: #fecaca;
+  --barney-red-300: #fca5a5;
+  --barney-red-400: #f87171;
+  --barney-red-500: #ef4444;
+  --barney-red-600: #dc2626;
+  --barney-red-700: #b91c1c;
+  --barney-red-800: #991b1b;
+  --barney-red-900: #7f1d1d;
+
+  /* Azul Barney */
+  --barney-blue-50: #eff6ff;
+  --barney-blue-100: #dbeafe;
+  --barney-blue-200: #bfdbfe;
+  --barney-blue-300: #93c5fd;
+  --barney-blue-400: #60a5fa;
+  --barney-blue-500: #3b82f6;
+  --barney-blue-600: #2563eb;
+  --barney-blue-700: #1d4ed8;
+  --barney-blue-800: #1e40af;
+  --barney-blue-900: #1e3a8a;
+
+  /* Naranja Barney */
+  --barney-orange-50: #fff7ed;
+  --barney-orange-100: #ffedd5;
+  --barney-orange-200: #fed7aa;
+  --barney-orange-300: #fdba74;
+  --barney-orange-400: #fb923c;
+  --barney-orange-500: #f97316;
+  --barney-orange-600: #ea580c;
+  --barney-orange-700: #c2410c;
+  --barney-orange-800: #9a3412;
+  --barney-orange-900: #7c2d12;
+
+  /* Crema para contraste con verde */
+  --cream-50: #fefdfb;
+  --cream-100: #fdf9f3;
+  --cream-200: #faf2e6;
+  --cream-300: #f7e6d3;
+  --cream-400: #f2d4b8;
+  --cream-500: #ecc094;
+  --cream-600: #e6a870;
+  --cream-700: #d4904c;
+  --cream-800: #b8753a;
+  --cream-900: #9c5f2f;
 }
 
 @layer base {
   body {
-    background-color: var(--earth-50);
-    color: var(--earth-900);
-    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--barney-green-600);
+    min-height: 100vh;
+    color: var(--barney-green-900);
+    font-family: 'Alan Sans', 'Inter', system-ui, sans-serif;
+  }
+
+  /* Tipografías específicas */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Schoolbell', cursive;
+  }
+
+  .title-font {
+    font-family: 'Caveat Brush', cursive;
+  }
+
+  .body-font {
+    font-family: 'Alan Sans', sans-serif;
+  }
+
+  /* Tipografía Caveat Brush para Fuzzy */
+  .fuzzy-title {
+    font-family: 'Caveat Brush', cursive;
+    font-weight: 400;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--cream-50), var(--cream-200));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .fuzzy-title:hover {
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+    filter: brightness(1.1);
   }
 }
 
 @layer components {
-  /* Efectos glassmorphism */
+  /* Efectos glassmorphism con crema */
   .glass {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(254, 253, 251, 0.9);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(247, 230, 211, 0.8);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
   }
 
   .glass-dark {
@@ -45,22 +148,27 @@
     @apply glass rounded-xl p-6 transition-all duration-300;
   }
 
-  .btn-earth {
-    background-color: var(--earth-600);
-    color: white;
+  .btn-cream {
+    background-color: var(--cream-100);
+    color: var(--barney-green-800);
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
     transition: all 0.2s;
     font-weight: 500;
+    border: 2px solid var(--cream-300);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .btn-earth:hover {
-    background-color: var(--earth-700);
+  .btn-cream:hover {
+    background-color: var(--cream-200);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--cream-400);
   }
 
   .btn-glass {
     @apply glass;
-    color: var(--earth-800);
+    color: var(--barney-green-800);
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
     transition: all 0.2s;
@@ -68,6 +176,7 @@
   }
 
   .btn-glass:hover {
-    background-color: rgba(242, 232, 229, 0.5);
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
   }
 }
