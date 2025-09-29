@@ -23,7 +23,7 @@ export async function POST(req: Request) {
           console.error('Error fetching external game configs:', configsError);
           return NextResponse.json(
             { ok: false, error: 'Failed to fetch game configs' },
-            { status: 500 }
+            { status: 500 },
           );
         }
 
@@ -31,18 +31,18 @@ export async function POST(req: Request) {
           ok: true,
           data: {
             activeGames: configs?.length || 0,
-            games: configs || []
-          }
+            games: configs || [],
+          },
         });
 
       case 'track':
         // Trackear eventos de juegos externos
         const { kind, meta } = payload || {};
-        
+
         if (!kind) {
           return NextResponse.json(
             { ok: false, error: 'Event kind is required' },
-            { status: 400 }
+            { status: 400 },
           );
         }
 
@@ -52,14 +52,14 @@ export async function POST(req: Request) {
           .insert({
             event_type: kind,
             event_data: meta || {},
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
 
         if (trackError) {
           console.error('Error tracking external game event:', trackError);
           return NextResponse.json(
             { ok: false, error: 'Failed to track event' },
-            { status: 500 }
+            { status: 500 },
           );
         }
 
@@ -68,14 +68,14 @@ export async function POST(req: Request) {
       default:
         return NextResponse.json(
           { ok: false, error: 'Invalid operation' },
-          { status: 400 }
+          { status: 400 },
         );
     }
   } catch (e: any) {
     console.error('External games API error:', e);
     return NextResponse.json(
       { ok: false, error: e?.message ?? 'Server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 export async function GET() {
   try {
     const supabase = getSupabaseServer(false);
-    
+
     // Obtener juegos externos activos
     const { data: games, error } = await supabase
       .from('external_game_configs')
@@ -95,19 +95,19 @@ export async function GET() {
       console.error('Error fetching external games:', error);
       return NextResponse.json(
         { ok: false, error: 'Failed to fetch games' },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json({
       ok: true,
-      data: games || []
+      data: games || [],
     });
   } catch (e: any) {
     console.error('External games GET error:', e);
     return NextResponse.json(
       { ok: false, error: e?.message ?? 'Server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

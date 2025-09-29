@@ -83,6 +83,40 @@ const externalGames: ExternalGame[] = [
     glassColor: 'bg-green-100/20',
   },
   {
+    id: 'blockly-music',
+    title: 'Blockly Music',
+    description: 'Crea música con programación visual',
+    difficulty: 'beginner',
+    ageRange: '6-16',
+    duration: '15-30 min',
+    players: '1',
+    type: 'programming',
+    url: 'https://blockly.games/music?lang=es',
+    tags: ['Programación', 'Música', 'Creatividad'],
+    rating: 4.7,
+    plays: 12340,
+    icon: <Music className="w-8 h-8" />,
+    color: 'from-purple-400 to-pink-400',
+    glassColor: 'bg-purple-100/20',
+  },
+  {
+    id: 'blockly-movie',
+    title: 'Blockly Movie',
+    description: 'Crea animaciones con programación visual',
+    difficulty: 'intermediate',
+    ageRange: '8-16',
+    duration: '20-40 min',
+    players: '1',
+    type: 'programming',
+    url: 'https://blockly.games/movie?lang=es',
+    tags: ['Programación', 'Animación', 'Creatividad'],
+    rating: 4.6,
+    plays: 9876,
+    icon: <Camera className="w-8 h-8" />,
+    color: 'from-cyan-400 to-blue-400',
+    glassColor: 'bg-cyan-100/20',
+  },
+  {
     id: 'music-blocks',
     title: 'Music Blocks',
     description: 'Crea música mientras aprendes matemáticas',
@@ -190,6 +224,159 @@ const traditionalGames: ExternalGame[] = [
     color: 'from-teal-400 to-cyan-400',
     glassColor: 'bg-teal-100/20',
   },
+  {
+    id: 'live-quiz',
+    title: 'Quiz en Vivo',
+    description: 'Participa en quizzes interactivos en tiempo real',
+    difficulty: 'intermediate',
+    ageRange: '8-16',
+    duration: '10-20 min',
+    players: '1-50',
+    type: 'traditional',
+    url: '/games/live-quiz',
+    tags: ['Quiz', 'Interactivo', 'Tiempo Real'],
+    rating: 4.7,
+    plays: 15670,
+    icon: <Brain className="w-8 h-8" />,
+    color: 'from-indigo-400 to-purple-400',
+    glassColor: 'bg-indigo-100/20',
+  },
+  {
+    id: 'mind-map',
+    title: 'Mapa Mental',
+    description: 'Crea mapas mentales interactivos',
+    difficulty: 'beginner',
+    ageRange: '6-16',
+    duration: '15-30 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/mind-map',
+    tags: ['Creatividad', 'Organización', 'Visual'],
+    rating: 4.6,
+    plays: 9876,
+    icon: <Target className="w-8 h-8" />,
+    color: 'from-pink-400 to-rose-400',
+    glassColor: 'bg-pink-100/20',
+  },
+  {
+    id: 'branching-scenario',
+    title: 'Escenario Ramificado',
+    description: 'Toma decisiones y ve las consecuencias',
+    difficulty: 'intermediate',
+    ageRange: '10-18',
+    duration: '20-40 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/branching-scenario',
+    tags: ['Decisión', 'Historia', 'Consecuencias'],
+    rating: 4.8,
+    plays: 11234,
+    icon: <BookOpen className="w-8 h-8" />,
+    color: 'from-emerald-400 to-teal-400',
+    glassColor: 'bg-emerald-100/20',
+  },
+  {
+    id: 'team-challenge',
+    title: 'Desafío en Equipo',
+    description: 'Colabora con otros estudiantes en desafíos',
+    difficulty: 'intermediate',
+    ageRange: '8-16',
+    duration: '30-60 min',
+    players: '2-6',
+    type: 'traditional',
+    url: '/games/team-challenge',
+    tags: ['Colaboración', 'Equipo', 'Desafío'],
+    rating: 4.9,
+    plays: 8765,
+    icon: <Users className="w-8 h-8" />,
+    color: 'from-orange-400 to-red-400',
+    glassColor: 'bg-orange-100/20',
+  },
+  {
+    id: 'match',
+    title: 'Juego de Emparejamiento',
+    description: 'Empareja conceptos y mejora tu memoria',
+    difficulty: 'beginner',
+    ageRange: '6-12',
+    duration: '5-15 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/match',
+    tags: ['Memoria', 'Emparejamiento', 'Rápido'],
+    rating: 4.5,
+    plays: 18765,
+    icon: <Sparkles className="w-8 h-8" />,
+    color: 'from-violet-400 to-purple-400',
+    glassColor: 'bg-violet-100/20',
+  },
+  {
+    id: 'true-false',
+    title: 'Verdadero o Falso',
+    description: 'Responde preguntas de verdadero o falso',
+    difficulty: 'beginner',
+    ageRange: '6-16',
+    duration: '5-10 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/true-false',
+    tags: ['Rápido', 'Conocimiento', 'Decisión'],
+    rating: 4.4,
+    plays: 22340,
+    icon: <Target className="w-8 h-8" />,
+    color: 'from-green-400 to-emerald-400',
+    glassColor: 'bg-green-100/20',
+  },
+  {
+    id: 'research-methods',
+    title: 'Métodos de Investigación',
+    description: 'Aprende técnicas de investigación científica',
+    difficulty: 'advanced',
+    ageRange: '12-18',
+    duration: '30-60 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/research-methods',
+    tags: ['Ciencia', 'Investigación', 'Método'],
+    rating: 4.7,
+    plays: 5432,
+    icon: <Beaker className="w-8 h-8" />,
+    color: 'from-blue-400 to-indigo-400',
+    glassColor: 'bg-blue-100/20',
+  },
+  {
+    id: 'critical-thinking',
+    title: 'Pensamiento Crítico',
+    description: 'Desarrolla habilidades de análisis y razonamiento',
+    difficulty: 'intermediate',
+    ageRange: '10-18',
+    duration: '20-40 min',
+    players: '1',
+    type: 'traditional',
+    url: '/games/critical-thinking',
+    tags: ['Análisis', 'Razonamiento', 'Lógica'],
+    rating: 4.8,
+    plays: 7654,
+    icon: <Brain className="w-8 h-8" />,
+    color: 'from-purple-400 to-pink-400',
+    glassColor: 'bg-purple-100/20',
+  },
+  {
+    id: 'leadership',
+    title: 'Liderazgo',
+    description: 'Desarrolla habilidades de liderazgo y trabajo en equipo',
+    difficulty: 'intermediate',
+    ageRange: '12-18',
+    duration: '25-50 min',
+    players: '1-4',
+    type: 'traditional',
+    url: '/games/leadership',
+    tags: ['Liderazgo', 'Equipo', 'Habilidades'],
+    rating: 4.6,
+    plays: 4321,
+    icon: <Trophy className="w-8 h-8" />,
+    color: 'from-amber-400 to-yellow-400',
+    glassColor: 'bg-amber-100/20',
+  },
 ];
 
 export default function ExternalGamesPage() {
@@ -220,17 +407,36 @@ export default function ExternalGamesPage() {
         router.push('/games/flashcards');
       } else if (game === 'drag-drop') {
         router.push('/games/drag-drop');
+      } else if (game === 'music' && type === 'blockly') {
+        // Show Blockly Music games
+        setSelectedType('programming');
+      } else if (game === 'movie' && type === 'blockly') {
+        // Show Blockly Movie games
+        setSelectedType('programming');
       }
     }
   }, [game, type, router]);
 
   const allGames = [...externalGames, ...curriculumGames, ...traditionalGames];
 
-  const filteredGames = allGames.filter((game) => {
-    const typeMatch = selectedType === 'all' || game.type === selectedType;
+  const filteredGames = allGames.filter((gameItem) => {
+    const typeMatch = selectedType === 'all' || gameItem.type === selectedType;
     const difficultyMatch =
-      selectedDifficulty === 'all' || game.difficulty === selectedDifficulty;
-    return typeMatch && difficultyMatch;
+      selectedDifficulty === 'all' ||
+      gameItem.difficulty === selectedDifficulty;
+
+    // If specific game is requested, filter by game ID or title
+    let gameMatch = true;
+    if (game) {
+      gameMatch =
+        gameItem.id.includes(game) ||
+        gameItem.title.toLowerCase().includes(game.toLowerCase()) ||
+        gameItem.tags.some((tag) =>
+          tag.toLowerCase().includes(game.toLowerCase()),
+        );
+    }
+
+    return typeMatch && difficultyMatch && gameMatch;
   });
 
   const getDifficultyColor = (difficulty: string) => {
