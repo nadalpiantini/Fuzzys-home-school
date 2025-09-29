@@ -3,7 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { gameFactory } from '@/lib/game-factory/factory';
-import { GameType, Subject, GradeLevel, Difficulty, Category, AllOr } from '@/lib/game-factory/types';
+import {
+  GameType,
+  Subject,
+  GradeLevel,
+  Difficulty,
+  Category,
+  AllOr,
+} from '@/lib/game-factory/types';
 import {
   Search,
   Filter,
@@ -28,19 +35,28 @@ function includesIfNotAll<T extends string>(arr: readonly T[], val: AllOr<T>) {
 
 interface GameTypeSelectorProps {
   onGameSelect: (gameType: GameType) => void;
-  selectedSubject?: AllOr<Subject>;
-  selectedGrade?: AllOr<GradeLevel>;
-  selectedDifficulty?: AllOr<Difficulty>;
+  selectedCategory: AllOr<Category>;
+  setSelectedCategory: (v: AllOr<Category>) => void;
+  selectedSubject: AllOr<Subject>;
+  setSelectedSubject: (v: AllOr<Subject>) => void;
+  selectedGrade: AllOr<GradeLevel>;
+  setSelectedGrade: (v: AllOr<GradeLevel>) => void;
+  selectedDifficulty: AllOr<Difficulty>;
+  setSelectedDifficulty: (v: AllOr<Difficulty>) => void;
 }
 
 export default function GameTypeSelector({
   onGameSelect,
-  selectedSubject = 'all',
-  selectedGrade = 'all',
-  selectedDifficulty = 'all',
+  selectedCategory,
+  setSelectedCategory,
+  selectedSubject,
+  setSelectedSubject,
+  selectedGrade,
+  setSelectedGrade,
+  selectedDifficulty,
+  setSelectedDifficulty,
 }: GameTypeSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<AllOr<Category>>('all');
 
   const templates = gameFactory.getTemplates();
 
@@ -196,14 +212,13 @@ export default function GameTypeSelector({
     const matchesSearch =
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === 'all' || template.category === selectedCategory;
-    const matchesSubject = includesIfNotAll(
-      template.subjects as readonly Subject[],
-      selectedSubject,
+    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
+    const matchesSubject = includesIfNotAll(template.subjects as readonly Subject[], selectedSubject);
+    const matchesGrade = includesIfNotAll(template.ageRange as readonly GradeLevel[], selectedGrade);
+    const matchesDifficulty = includesIfNotAll(
+      (template.difficultyTags ?? []) as readonly Difficulty[],
+      selectedDifficulty
     );
-    const matchesGrade = selectedGrade === 'all' || template.ageRange.includes(selectedGrade);
-    const matchesDifficulty = selectedDifficulty === 'all'; // TODO: Implement proper difficulty filtering
 
     return (
       matchesSearch &&
@@ -244,7 +259,9 @@ export default function GameTypeSelector({
               key={category.id}
               variant={selectedCategory === category.id ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setSelectedCategory(category.id as AllOr<Category>)}
+              onClick={() =>
+                setSelectedCategory(category.id as AllOr<Category>)
+              }
               className="flex items-center gap-2"
             >
               {category.icon}

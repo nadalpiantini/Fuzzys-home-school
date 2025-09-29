@@ -240,10 +240,15 @@ export interface GameConfig {
 }
 
 // Tipos específicos para los filtros
-export type Subject = 'math' | 'science' | 'language' | 'history' | 'geography' | 'art' | 'music' | 'programming' | 'literature' | 'grammar' | 'creativity' | 'physics' | 'chemistry' | 'anatomy' | 'logic' | 'spatial' | 'geometry' | 'vocabulary' | 'computer-science' | 'philosophy' | 'general';
-export type GradeLevel = 'prek' | 'k' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12';
-export type Difficulty = 'easy' | 'medium' | 'hard' | 'beginner' | 'intermediate' | 'advanced';
-export type Category = 'Assessment' | 'Interactive' | 'Programming' | 'Creative' | 'Simulation' | 'AR/VR' | 'Language' | 'STEM' | 'Social' | 'Gamification';
+export type Subject =
+  | 'math' | 'science' | 'spanish' | 'english' | 'history' | 'geography'
+  | 'art' | 'music' | 'technology' | 'coding';
+
+export type GradeLevel =
+  | 'prek' | 'k' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
+
+export type Difficulty = 'easy' | 'medium' | 'hard';
+export type Category = 'quiz' | 'interactive' | 'creative' | 'stem';
 
 // Tipo helper para filtros con 'all'
 export type AllOr<T extends string> = 'all' | T;

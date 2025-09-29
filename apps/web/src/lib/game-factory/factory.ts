@@ -250,7 +250,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private getEmoji(type: GameType): string {
-    const emojis = {
+    const emojis: Partial<Record<GameType, string>> = {
       'multiple-choice': '❓',
       'true-false': '✅',
       'fill-blank': '📝',
