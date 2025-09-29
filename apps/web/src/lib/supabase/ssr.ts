@@ -18,5 +18,13 @@ export function getSupabaseSSR(opts: {
     throw new Error(
       `Missing env: ${opts.useServiceRole ? 'SUPABASE_SERVICE_ROLE_KEY' : 'NEXT_PUBLIC_SUPABASE_ANON_KEY'}`,
     );
-  return createServerClient(url, key, { cookies: () => opts.cookies });
+  return createServerClient(url, key, {
+    cookies: {
+      get: (name: string) => opts.cookies().get(name)?.value,
+      set: (name: string, value: string, options: any) =>
+        opts.cookies().set(name, value, options),
+      remove: (name: string, options: any) =>
+        opts.cookies().set(name, '', { ...options, maxAge: 0 }),
+    },
+  });
 }

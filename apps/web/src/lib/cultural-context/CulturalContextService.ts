@@ -72,7 +72,7 @@ export class CulturalContextService {
   ): Promise<CulturalContext | null> {
     try {
       const supabase = getSupabaseServer(true); // useServiceRole = true
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('cultural_contexts')
         .select('*')
         .eq('country_code', countryCode.toUpperCase())
@@ -118,7 +118,7 @@ export class CulturalContextService {
     const supabase = getSupabaseServer(true); // useServiceRole = true
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('cultural_contexts')
         .select('*')
         .eq('is_default', true)
@@ -150,7 +150,7 @@ export class CulturalContextService {
       }
 
       const supabase = getSupabaseServer(true); // useServiceRole = true
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('user_cultural_preferences')
         .select('*')
         .eq('user_id', userId)
@@ -183,7 +183,7 @@ export class CulturalContextService {
     manualOverride: boolean = false,
   ): Promise<boolean> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('user_cultural_preferences')
         .upsert({
           user_id: userId,
@@ -216,13 +216,13 @@ export class CulturalContextService {
     category?: string,
   ): Promise<CulturalElement[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('cultural_elements')
         .select('category, elements')
         .eq('context_id', contextId);
 
       if (category) {
-        data?.filter((element) => element.category === category);
+        data?.filter((element: any) => element.category === category);
       }
 
       if (error) {
@@ -246,11 +246,14 @@ export class CulturalContextService {
     grade: string,
   ): Promise<string> {
     try {
-      const { data, error } = await supabase.rpc('generate_cultural_prompt', {
-        p_context_id: contextId,
-        p_subject: subject,
-        p_grade: grade,
-      });
+      const { data, error } = await this.supabase.rpc(
+        'generate_cultural_prompt',
+        {
+          p_context_id: contextId,
+          p_subject: subject,
+          p_grade: grade,
+        },
+      );
 
       if (error) {
         console.error('Error generating cultural prompt:', error);
@@ -280,7 +283,7 @@ export class CulturalContextService {
         preferences.preferred_context_id
       ) {
         // Usuario eligió contexto específico
-        const { data, error } = await supabase
+        const { data, error } = await this.supabase
           .from('cultural_contexts')
           .select('*')
           .eq('id', preferences.preferred_context_id)
@@ -307,7 +310,7 @@ export class CulturalContextService {
    */
   async getAllContexts(): Promise<CulturalContext[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await this.supabase
         .from('cultural_contexts')
         .select('*')
         .eq('is_active', true)

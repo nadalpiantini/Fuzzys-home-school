@@ -71,7 +71,32 @@ export type GameType =
   | 'achievement-system'
   | 'leaderboard'
   | 'quest-chain'
-  | 'badge-collection';
+  | 'badge-collection'
+  // Additional types for AI generation
+  | 'essay'
+  | 'timeline'
+  | 'flashcards'
+  | 'creative-writing'
+  | 'language-arts'
+  | 'field-trip'
+  | 'immersive-learning'
+  | 'personalized-learning'
+  | 'language-learning'
+  | 'language-exchange'
+  | 'writing-practice'
+  | 'programming'
+  | 'engineering'
+  | 'statistics'
+  | 'scientific-method'
+  | 'debate'
+  | 'knowledge-sharing'
+  | 'teamwork'
+  | 'public-speaking'
+  | 'ranking'
+  | 'adventure'
+  | 'progressive-learning'
+  | 'gamification'
+  | 'recognition';
 
 export interface GameContent {
   type: GameType;
@@ -125,6 +150,8 @@ export interface Item {
   category?: string;
   properties?: Record<string, any>;
   position?: { x: number; y: number };
+  order?: number;
+  match?: string;
 }
 
 export interface Block {
