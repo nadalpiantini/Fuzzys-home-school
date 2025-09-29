@@ -700,21 +700,23 @@ export const gameTemplates = {
 } as const satisfies Partial<Record<GameType, GameTemplate>>;
 
 export function getGameTemplate(type: GameType): GameTemplate {
-  return gameTemplates[type] ?? {
-    type: 'multiple-choice',
-    name: 'Juego Genérico',
-    description: 'Juego educativo genérico',
-    category: 'General',
-    ageRange: '6-18',
-    subjects: ['general'],
-    features: ['scoring'],
-    template: () => ({
+  return (
+    gameTemplates[type] ?? {
       type: 'multiple-choice',
-      theme: 'quiz',
-      difficulty: 'medium',
-      questions: [],
-    }),
-  };
+      name: 'Juego Genérico',
+      description: 'Juego educativo genérico',
+      category: 'General',
+      ageRange: '6-18',
+      subjects: ['general'],
+      features: ['scoring'],
+      template: () => ({
+        type: 'multiple-choice',
+        theme: 'quiz',
+        difficulty: 'medium',
+        questions: [],
+      }),
+    }
+  );
 }
 
 export function getAllTemplates(): GameTemplate[] {

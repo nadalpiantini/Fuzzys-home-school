@@ -8,8 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "prebuild": "node scripts/verify-env.mjs && node scripts/guard-antipatterns.mjs && node scripts/guard-disabled.mjs",
-    "build": "next build",
+    "prebuild": "node scripts/verify-env.mjs && node scripts/guard-antipatterns.mjs && node scripts/guard-disabled.mjs && node scripts/print-api.mjs",
+    "build": "next build && node scripts/print-output.mjs",
     "preview": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --confirm",
     "ship": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --prod --confirm",
     "status": "vercel ls --cwd apps/web | head -n 15",
