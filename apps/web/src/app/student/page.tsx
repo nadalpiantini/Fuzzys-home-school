@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -58,6 +58,20 @@ export default function StudentDashboard() {
   } = useHookedSystem();
   const [points, setPoints] = useState(1250);
   const [questCompleted, setQuestCompleted] = useState(false);
+
+  // Verificar si el reto de hoy está completado
+  const checkQuestCompleted = async () => {
+    const completed = await isTodayQuestCompleted();
+    setQuestCompleted(completed);
+  };
+
+  // Verificar estado del reto al cargar
+  useEffect(() => {
+    if (todayQuest) {
+      checkQuestCompleted();
+    }
+  }, [todayQuest, checkQuestCompleted]);
+
   const { showTour, completeTour, skipTour } = useOnboardingTour();
 
   // Mostrar onboarding si no está completo
@@ -182,7 +196,11 @@ export default function StudentDashboard() {
       {todayQuest && !questCompleted && (
         <MessageBar
           quest={todayQuest}
-          onDismiss={() => setQuestCompleted(true)}
+          onDismiss={async () => {
+            setQuestCompleted(true);
+            // Verificar el estado real del reto
+            await checkQuestCompleted();
+          }}
           onStartQuest={(questId) => router.push(`/quest/${questId}`)}
         />
       )}

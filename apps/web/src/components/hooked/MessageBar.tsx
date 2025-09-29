@@ -26,21 +26,13 @@ export default function MessageBar({
 
   useEffect(() => {
     if (quest) {
-      const dismissedKey = `msg.dismiss.${quest.id}`;
-      const wasDismissed = localStorage.getItem(dismissedKey);
-
-      if (!wasDismissed) {
-        setShow(true);
-        // Pequeño delay para la animación
-        setTimeout(() => setIsVisible(true), 100);
-      }
+      setShow(true);
+      // Pequeño delay para la animación
+      setTimeout(() => setIsVisible(true), 100);
     }
   }, [quest]);
 
   const handleDismiss = () => {
-    if (quest) {
-      localStorage.setItem(`msg.dismiss.${quest.id}`, '1');
-    }
     setIsVisible(false);
     setTimeout(() => {
       setShow(false);

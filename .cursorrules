@@ -2,6 +2,8 @@
 
 ## DENY - No tocar config de build/deploy
 deny: [
+  ".vercel/*",
+  ".vercel/project.json",
   "vercel.json",
   "turbo.json", 
   "package.json",
@@ -21,7 +23,7 @@ readonly: [
 ]
 
 ## Mensaje de protección
-onDenyMessage: "No toques config de build/deploy. Pregunta primero. (Regla de la casa 🧱)"
+onDenyMessage: "No toques Vercel ni build. Proyecto fijado. 🧱"
 
 ## Reglas de desarrollo
 - Operación Bisturí: No tocar más nada que lo que se está arreglando
