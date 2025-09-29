@@ -24,6 +24,8 @@ import {
 import { gameFactory } from '@/lib/game-factory/factory';
 import { aiGameGenerator } from '@/lib/game-factory/ai-generator';
 import { normalizeDifficulty } from '@/lib/game-factory/utils';
+import { normalizeCategory } from '@/lib/game-factory/normalize';
+import { includesIfNotAll } from '@/lib/game-factory/helpers';
 import {
   BaseGame,
   GameType,
@@ -118,9 +120,12 @@ export default function EnhancedGameList({
       game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       game.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === 'all' || game.type.includes(selectedCategory);
-    const matchesSubject =
-      selectedSubject === 'all' || game.subject === selectedSubject;
+      selectedCategory === 'all' ||
+      normalizeCategory(game.type) === selectedCategory;
+    const matchesSubject = includesIfNotAll(
+      selectedSubject,
+      [game.subject] as readonly Subject[]
+    );
     const matchesGrade =
       selectedGrade === 'all' || game.grade === selectedGrade;
     const matchesDifficulty =

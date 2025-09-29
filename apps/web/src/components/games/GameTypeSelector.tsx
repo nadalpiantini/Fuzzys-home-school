@@ -14,6 +14,8 @@ import {
   SUBJECT_LABELS,
   GRADE_LEVELS,
   GRADE_LABELS,
+  DIFFICULTIES,
+  DIFFICULTY_LABELS,
   CATEGORIES,
   CATEGORY_LABELS,
 } from '@/lib/game-factory/types';
@@ -72,14 +74,8 @@ export default function GameTypeSelector({
   // Usar la lista canónica de grados
   const GRADE_OPTIONS = GRADE_LEVELS;
 
-  const DIFFICULTY_OPTIONS = [
-    'easy',
-    'medium',
-    'hard',
-    'beginner',
-    'intermediate',
-    'advanced',
-  ] as const satisfies readonly Difficulty[];
+  // Usar la lista canónica de dificultades
+  const DIFFICULTY_OPTIONS = DIFFICULTIES;
 
   // Usar la lista canónica de categorías
   const CATEGORY_OPTIONS = CATEGORIES;
