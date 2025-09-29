@@ -1,1 +1,8 @@
-npx lint-staged
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🧠 Ejecutando pre-commit guardias..."
+node scripts/verify-env.mjs || exit 1
+node scripts/guard-antipatterns.mjs || exit 1
+node scripts/guard-disabled.mjs || exit 1
+echo "✅ Guardias pasados. Commit seguro."

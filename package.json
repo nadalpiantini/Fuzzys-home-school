@@ -8,19 +8,21 @@
     "packages/*"
   ],
   "scripts": {
-    "prebuild": "node scripts/verify-env.mjs && node scripts/guard-antipatterns.mjs && node scripts/guard-disabled.mjs",
+    "prebuild": "npm run test:tutor && node scripts/verify-env.mjs && node scripts/guard-antipatterns.mjs && node scripts/guard-disabled.mjs",
     "build": "next build",
     "preview": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --confirm",
     "ship": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --prod --confirm",
     "status": "vercel ls --cwd apps/web | head -n 15",
-    "rollback": "vercel rollback --cwd apps/web"
+    "rollback": "vercel rollback --cwd apps/web",
+    "test:tutor": "vitest run apps/web/src/lib/tutor/prompt.test.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",
     "@types/node": "^20.10.0",
     "tsx": "^4.6.2",
     "turbo": "^1.10.12",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18.0.0",

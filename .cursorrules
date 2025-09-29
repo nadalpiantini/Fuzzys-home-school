@@ -12,7 +12,9 @@ deny: [
   "apps/web/tailwind.config.*",
   "apps/web/postcss.config.*",
   ".github/workflows/*",
-  ".github/CODEOWNERS"
+  ".github/CODEOWNERS",
+  "apps/web/src/lib/tutor/prompt.ts",
+  "apps/web/src/lib/tutor/compose.ts"
 ]
 
 ## READONLY - Solo lectura, cambios por PR
@@ -24,6 +26,9 @@ readonly: [
 
 ## Mensaje de protección
 onDenyMessage: "No toques Vercel ni build. Proyecto fijado. 🧱"
+
+## Protección de Fuzzy
+onDenyMessage: "Fuzzy es sagrado: su personalidad no se toca sin aprobar PR. 🔒"
 
 ## Reglas de desarrollo
 - Operación Bisturí: No tocar más nada que lo que se está arreglando

@@ -1,5 +1,7 @@
-# Dueño de los candados
-/.vercel/project.json               @nadalpiantini
-/vercel.json                        @nadalpiantini
-/apps/web/next.config.*             @nadalpiantini
-/.github/workflows/*                @nadalpiantini
+# Archivos protegidos - Operación Bisturí 🧱
+/.vercel/                     @nadalpiantini
+/vercel.json                  @nadalpiantini
+/package.json                 @nadalpiantini
+/scripts/*.mjs                @nadalpiantini
+/.cursorrules                 @nadalpiantini
+/.husky/pre-commit            @nadalpiantini
