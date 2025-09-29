@@ -84,7 +84,7 @@ export function useGamePool() {
   // Cargar juegos al montar el componente
   useEffect(() => {
     fetchNextGames();
-  }, []);
+  }, [fetchNextGames]);
 
   // Refrescar juegos después de completar uno
   const refreshGames = useCallback(() => {

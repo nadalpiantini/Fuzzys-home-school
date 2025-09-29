@@ -57,14 +57,7 @@ export function useHookedSystem() {
 
   const supabase = createSupabaseClient();
 
-  // Cargar datos del sistema Hooked
-  useEffect(() => {
-    if (user) {
-      loadHookedData();
-    }
-  }, [user]);
-
-  const loadHookedData = async () => {
+  const loadHookedData = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -144,7 +137,14 @@ export function useHookedSystem() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, supabase]);
+
+  // Cargar datos del sistema Hooked
+  useEffect(() => {
+    if (user) {
+      loadHookedData();
+    }
+  }, [user, loadHookedData]);
 
   // Verificar si el reto de hoy está completado
   const isTodayQuestCompleted = async (): Promise<boolean> => {
