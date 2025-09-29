@@ -6,10 +6,61 @@ import { gameFactory } from '@/lib/game-factory/factory';
 import { GameType } from '@/lib/game-factory/types';
 
 // Tipos específicos para los filtros
-type Subject = 'math' | 'science' | 'language' | 'history' | 'geography' | 'art' | 'music' | 'programming' | 'literature' | 'grammar' | 'creativity' | 'physics' | 'chemistry' | 'anatomy' | 'logic' | 'spatial' | 'geometry' | 'vocabulary' | 'computer-science' | 'philosophy' | 'general';
-type GradeLevel = 'prek' | 'k' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12';
-type Difficulty = 'easy' | 'medium' | 'hard' | 'beginner' | 'intermediate' | 'advanced';
-type Category = 'Assessment' | 'Interactive' | 'Programming' | 'Creative' | 'Simulation' | 'AR/VR' | 'Language' | 'STEM' | 'Social' | 'Gamification';
+type Subject =
+  | 'math'
+  | 'science'
+  | 'language'
+  | 'history'
+  | 'geography'
+  | 'art'
+  | 'music'
+  | 'programming'
+  | 'literature'
+  | 'grammar'
+  | 'creativity'
+  | 'physics'
+  | 'chemistry'
+  | 'anatomy'
+  | 'logic'
+  | 'spatial'
+  | 'geometry'
+  | 'vocabulary'
+  | 'computer-science'
+  | 'philosophy'
+  | 'general';
+type GradeLevel =
+  | 'prek'
+  | 'k'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | '11'
+  | '12';
+type Difficulty =
+  | 'easy'
+  | 'medium'
+  | 'hard'
+  | 'beginner'
+  | 'intermediate'
+  | 'advanced';
+type Category =
+  | 'Assessment'
+  | 'Interactive'
+  | 'Programming'
+  | 'Creative'
+  | 'Simulation'
+  | 'AR/VR'
+  | 'Language'
+  | 'STEM'
+  | 'Social'
+  | 'Gamification';
 import {
   Search,
   Filter,
@@ -46,22 +97,75 @@ export default function GameTypeSelector({
   selectedDifficulty = 'all',
 }: GameTypeSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<'all' | Category>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | Category>(
+    'all',
+  );
 
   const templates = gameFactory.getTemplates();
 
   // Opciones tipadas con as const para inferencia de literales
   const SUBJECT_OPTIONS = [
-    'math','science','language','history','geography','art','music','programming','literature','grammar','creativity','physics','chemistry','anatomy','logic','spatial','geometry','vocabulary','computer-science','philosophy','general'
+    'math',
+    'science',
+    'language',
+    'history',
+    'geography',
+    'art',
+    'music',
+    'programming',
+    'literature',
+    'grammar',
+    'creativity',
+    'physics',
+    'chemistry',
+    'anatomy',
+    'logic',
+    'spatial',
+    'geometry',
+    'vocabulary',
+    'computer-science',
+    'philosophy',
+    'general',
   ] as const satisfies readonly Subject[];
 
   const GRADE_OPTIONS = [
-    'prek','k','1','2','3','4','5','6','7','8','9','10','11','12'
+    'prek',
+    'k',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
   ] as const satisfies readonly GradeLevel[];
 
-  const DIFFICULTY_OPTIONS = ['easy','medium','hard','beginner','intermediate','advanced'] as const satisfies readonly Difficulty[];
+  const DIFFICULTY_OPTIONS = [
+    'easy',
+    'medium',
+    'hard',
+    'beginner',
+    'intermediate',
+    'advanced',
+  ] as const satisfies readonly Difficulty[];
 
-  const CATEGORY_OPTIONS = ['Assessment','Interactive','Programming','Creative','Simulation','AR/VR','Language','STEM','Social','Gamification'] as const satisfies readonly Category[];
+  const CATEGORY_OPTIONS = [
+    'Assessment',
+    'Interactive',
+    'Programming',
+    'Creative',
+    'Simulation',
+    'AR/VR',
+    'Language',
+    'STEM',
+    'Social',
+    'Gamification',
+  ] as const satisfies readonly Category[];
 
   const categories = [
     { id: 'all', name: 'Todos', icon: <Gamepad2 className="w-4 h-4" /> },
@@ -153,11 +257,17 @@ export default function GameTypeSelector({
       template.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       selectedCategory === 'all' || template.category === selectedCategory;
-    const matchesSubject = includesIfNotAll(template.subjects as readonly Subject[], selectedSubject);
-    const matchesGrade = includesIfNotAll(template.ageRange as readonly GradeLevel[], selectedGrade);
+    const matchesSubject = includesIfNotAll(
+      template.subjects as readonly Subject[],
+      selectedSubject,
+    );
+    const matchesGrade = includesIfNotAll(
+      template.ageRange as readonly GradeLevel[],
+      selectedGrade,
+    );
     const matchesDifficulty = includesIfNotAll(
       (template.features ?? []) as readonly Difficulty[],
-      selectedDifficulty
+      selectedDifficulty,
     );
 
     return (
