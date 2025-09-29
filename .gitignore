@@ -68,3 +68,4 @@ pids
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
+.vercel

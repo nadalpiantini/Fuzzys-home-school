@@ -31,6 +31,25 @@ export function useGamePool() {
   });
 
   // Obtener 2 juegos listos para jugar
+  const ensurePoolHealth = useCallback(async () => {
+    try {
+      const response = await fetch('/api/pool/ensure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        console.log(
+          `Pool health: ${data.ready} ready games, needs generation: ${data.needs_generation}`,
+        );
+      }
+    } catch (error) {
+      console.error('Error ensuring pool health:', error);
+    }
+  }, []);
+
   const fetchNextGames = useCallback(async () => {
     try {
       setState((prev) => ({ ...prev, isLoading: true, error: null }));
@@ -59,32 +78,13 @@ export function useGamePool() {
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
     }
-  }, []);
+  }, [ensurePoolHealth]);
 
-  // Asegurar salud del pool (verificar si necesita más juegos)
-  const ensurePoolHealth = useCallback(async () => {
-    try {
-      const response = await fetch('/api/pool/ensure', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const data = await response.json();
-
-      if (data.ok) {
-        console.log(
-          `Pool health: ${data.ready} ready games, needs generation: ${data.needs_generation}`,
-        );
-      }
-    } catch (error) {
-      console.error('Error ensuring pool health:', error);
-    }
-  }, []);
 
   // Cargar juegos al montar el componente
   useEffect(() => {
     fetchNextGames();
-  }, [fetchNextGames]);
+  }, []);
 
   // Refrescar juegos después de completar uno
   const refreshGames = useCallback(() => {

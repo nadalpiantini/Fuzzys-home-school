@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   DndContext,
   DragEndEvent,
@@ -177,48 +177,7 @@ export default function QuestGame({
     }),
   );
 
-  // Timer
-  useEffect(() => {
-    if (quest.time_limit && timeLeft > 0 && !isCompleted) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            handleComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [timeLeft, isCompleted]);
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    const item = items.find((i) => i.id === active.id);
-    setDraggedItem(item || null);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setDraggedItem(null);
-
-    if (!over) return;
-
-    const draggedItem = items.find((item) => item.id === active.id);
-    if (!draggedItem) return;
-
-    // Mover item a la zona de drop
-    setPlacedItems((prev) => ({
-      ...prev,
-      [over.id as string]: [...(prev[over.id as string] || []), draggedItem],
-    }));
-
-    // Remover item de la lista original
-    setItems((prev) => prev.filter((item) => item.id !== active.id));
-  };
-
-  const checkAnswer = () => {
+  const checkAnswer = useCallback(() => {
     let correctAnswers = 0;
     let totalAnswers = 0;
 
@@ -258,13 +217,55 @@ export default function QuestGame({
 
     const timeSpent = Math.floor((Date.now() - startTime) / 1000);
     onComplete(finalScore, timeSpent);
-  };
+  }, [placedItems, quest.payload.type, quest.points, startTime, onComplete]);
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     if (!isCompleted) {
       checkAnswer();
     }
+  }, [isCompleted, checkAnswer]);
+
+  // Timer
+  useEffect(() => {
+    if (quest.time_limit && timeLeft > 0 && !isCompleted) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            handleComplete();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft, isCompleted, handleComplete, quest.time_limit]);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const item = items.find((i) => i.id === active.id);
+    setDraggedItem(item || null);
   };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setDraggedItem(null);
+
+    if (!over) return;
+
+    const draggedItem = items.find((item) => item.id === active.id);
+    if (!draggedItem) return;
+
+    // Mover item a la zona de drop
+    setPlacedItems((prev) => ({
+      ...prev,
+      [over.id as string]: [...(prev[over.id as string] || []), draggedItem],
+    }));
+
+    // Remover item de la lista original
+    setItems((prev) => prev.filter((item) => item.id !== active.id));
+  };
+
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

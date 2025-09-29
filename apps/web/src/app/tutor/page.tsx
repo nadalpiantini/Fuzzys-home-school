@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ export default function TutorPage() {
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   // Inicializar sesión del tutor
-  const initializeSession = async () => {
+  const initializeSession = useCallback(async () => {
     if (sessionId) return; // Ya hay una sesión activa
 
     try {
@@ -74,12 +74,12 @@ export default function TutorPage() {
     } catch (error) {
       console.error('Error initializing session:', error);
     }
-  };
+  }, [sessionId, childData]);
 
   // Inicializar sesión al cargar la página
   React.useEffect(() => {
     initializeSession();
-  }, []);
+  }, [initializeSession]);
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading || !sessionId) return;

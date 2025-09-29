@@ -267,7 +267,7 @@ export default function ChildOnboarding({ onComplete }: OnboardingProps) {
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-8 h-8 text-pink-500" />
             <h1 className="text-2xl font-bold text-pink-600">
-              🎓 Fuzzy's Home School
+              🎓 Fuzzy&apos;s Home School
             </h1>
           </div>
           <div className="flex justify-center gap-2">

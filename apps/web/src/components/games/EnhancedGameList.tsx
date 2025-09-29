@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,11 +66,7 @@ export default function EnhancedGameList({
     React.useState<AllOr<Difficulty>>('all');
   const [showGameTypeSelector, setShowGameTypeSelector] = React.useState(false);
 
-  React.useEffect(() => {
-    loadGames();
-  }, []);
-
-  const loadGames = async () => {
+  const loadGames = useCallback(async () => {
     try {
       setLoading(true);
       // This would normally fetch from the database
@@ -81,7 +78,11 @@ export default function EnhancedGameList({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  React.useEffect(() => {
+    loadGames();
+  }, [loadGames]);
 
   const generateSampleGames = (): BaseGame[] => {
     const gameTypes: GameType[] = [

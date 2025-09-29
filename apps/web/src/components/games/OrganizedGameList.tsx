@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -92,13 +92,29 @@ export default function OrganizedGameList() {
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [selectedGrade, setSelectedGrade] = useState<string>('all');
 
+  const organizeGames = useCallback(() => {
+    const organized: OrganizedGames = {};
+
+    games.forEach((game) => {
+      if (!organized[game.subject]) {
+        organized[game.subject] = {};
+      }
+      if (!organized[game.subject][game.grade]) {
+        organized[game.subject][game.grade] = [];
+      }
+      organized[game.subject][game.grade].push(game);
+    });
+
+    setOrganizedGames(organized);
+  }, [games]);
+
   useEffect(() => {
     fetchGames();
   }, []);
 
   useEffect(() => {
     organizeGames();
-  }, [games]);
+  }, [organizeGames]);
 
   const fetchGames = async () => {
     try {
@@ -151,22 +167,6 @@ export default function OrganizedGameList() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const organizeGames = () => {
-    const organized: OrganizedGames = {};
-
-    games.forEach((game) => {
-      if (!organized[game.subject]) {
-        organized[game.subject] = {};
-      }
-      if (!organized[game.subject][game.grade]) {
-        organized[game.subject][game.grade] = [];
-      }
-      organized[game.subject][game.grade].push(game);
-    });
-
-    setOrganizedGames(organized);
   };
 
   const getFilteredGames = () => {

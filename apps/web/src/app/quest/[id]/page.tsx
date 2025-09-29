@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { createSupabaseClient } from '@/lib/supabase/client';
 import QuestGame from '@/components/hooked/QuestGame';
@@ -39,13 +39,7 @@ export default function QuestPage() {
 
   const supabase = createSupabaseClient();
 
-  useEffect(() => {
-    if (params.id) {
-      fetchQuest(params.id as string);
-    }
-  }, [params.id]);
-
-  const fetchQuest = async (questId: string) => {
+  const fetchQuest = useCallback(async (questId: string) => {
     try {
       setLoading(true);
       setError(null);
@@ -73,7 +67,13 @@ export default function QuestPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (params.id) {
+      fetchQuest(params.id as string);
+    }
+  }, [params.id, fetchQuest]);
 
   const handleStartQuest = () => {
     setIsPlaying(true);
