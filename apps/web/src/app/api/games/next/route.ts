@@ -32,19 +32,20 @@ export async function GET(request: NextRequest) {
             questions: [
               {
                 id: 1,
-                question: 'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
+                question:
+                  'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
                 options: ['4', '5', '6', '7'],
                 correct: 1,
-                explanation: '3 + 2 = 5 frutas en total'
-              }
+                explanation: '3 + 2 = 5 frutas en total',
+              },
             ],
             theme: 'colmado',
-            difficulty: 'easy'
+            difficulty: 'easy',
           },
           status: 'ready',
           source: 'seed',
           ready_at: new Date().toISOString(),
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         },
         {
           id: 'mock-2',
@@ -57,19 +58,20 @@ export async function GET(request: NextRequest) {
               {
                 id: 1,
                 title: 'Encuentra la iglesia',
-                description: 'Busca el lugar donde la gente va a rezar los domingos',
+                description:
+                  'Busca el lugar donde la gente va a rezar los domingos',
                 clue: 'Tiene una cruz en el techo',
-                points: 10
-              }
+                points: 10,
+              },
             ],
             theme: 'barrio',
-            difficulty: 'medium'
+            difficulty: 'medium',
           },
           status: 'ready',
           source: 'seed',
           ready_at: new Date().toISOString(),
-          created_at: new Date().toISOString()
-        }
+          created_at: new Date().toISOString(),
+        },
       ];
 
       return NextResponse.json({
@@ -92,19 +94,20 @@ export async function GET(request: NextRequest) {
             questions: [
               {
                 id: 1,
-                question: 'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
+                question:
+                  'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
                 options: ['4', '5', '6', '7'],
                 correct: 1,
-                explanation: '3 + 2 = 5 frutas en total'
-              }
+                explanation: '3 + 2 = 5 frutas en total',
+              },
             ],
             theme: 'colmado',
-            difficulty: 'easy'
+            difficulty: 'easy',
           },
           status: 'ready',
           source: 'seed',
           ready_at: new Date().toISOString(),
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         },
         {
           id: 'mock-2',
@@ -117,19 +120,20 @@ export async function GET(request: NextRequest) {
               {
                 id: 1,
                 title: 'Encuentra la iglesia',
-                description: 'Busca el lugar donde la gente va a rezar los domingos',
+                description:
+                  'Busca el lugar donde la gente va a rezar los domingos',
                 clue: 'Tiene una cruz en el techo',
-                points: 10
-              }
+                points: 10,
+              },
             ],
             theme: 'barrio',
-            difficulty: 'medium'
+            difficulty: 'medium',
           },
           status: 'ready',
           source: 'seed',
           ready_at: new Date().toISOString(),
-          created_at: new Date().toISOString()
-        }
+          created_at: new Date().toISOString(),
+        },
       ];
 
       return NextResponse.json({
@@ -165,19 +169,20 @@ export async function GET(request: NextRequest) {
           questions: [
             {
               id: 1,
-              question: 'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
+              question:
+                'En el colmado, María compró 3 mangos y 2 naranjas. ¿Cuántas frutas compró en total?',
               options: ['4', '5', '6', '7'],
               correct: 1,
-              explanation: '3 + 2 = 5 frutas en total'
-            }
+              explanation: '3 + 2 = 5 frutas en total',
+            },
           ],
           theme: 'colmado',
-          difficulty: 'easy'
+          difficulty: 'easy',
         },
         status: 'ready',
         source: 'seed',
         ready_at: new Date().toISOString(),
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       },
       {
         id: 'mock-2',
@@ -190,19 +195,20 @@ export async function GET(request: NextRequest) {
             {
               id: 1,
               title: 'Encuentra la iglesia',
-              description: 'Busca el lugar donde la gente va a rezar los domingos',
+              description:
+                'Busca el lugar donde la gente va a rezar los domingos',
               clue: 'Tiene una cruz en el techo',
-              points: 10
-            }
+              points: 10,
+            },
           ],
           theme: 'barrio',
-          difficulty: 'medium'
+          difficulty: 'medium',
         },
         status: 'ready',
         source: 'seed',
         ready_at: new Date().toISOString(),
-        created_at: new Date().toISOString()
-      }
+        created_at: new Date().toISOString(),
+      },
     ];
 
     return NextResponse.json({

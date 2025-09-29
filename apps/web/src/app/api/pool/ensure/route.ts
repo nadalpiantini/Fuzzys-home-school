@@ -32,7 +32,9 @@ export async function POST(request: NextRequest) {
 
     // Si necesita generación, activar el proceso (fire-and-forget)
     if (needsGeneration) {
-      console.log(`Pool health: ${ready} ready games, needs generation: ${needsGeneration}`);
+      console.log(
+        `Pool health: ${ready} ready games, needs generation: ${needsGeneration}`,
+      );
       // Aquí podrías activar un proceso de generación de juegos
       // Por ahora solo logueamos la necesidad
     }
