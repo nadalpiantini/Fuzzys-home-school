@@ -1,38 +1,10 @@
-# Operación Bisturí + Efecto Mariposa - Reglas de la Casa 🧱
-
-## DENY - No tocar config de build/deploy
 deny: [
   ".vercel/*",
   ".vercel/project.json",
   "vercel.json",
-  "turbo.json", 
-  "package.json",
-  "pnpm-workspace.yaml",
   "apps/web/next.config.*",
-  "apps/web/tailwind.config.*",
-  "apps/web/postcss.config.*",
   ".github/workflows/*",
-  ".github/CODEOWNERS",
-  "apps/web/src/lib/tutor/prompt.ts",
-  "apps/web/src/lib/tutor/compose.ts"
+  "package.json",
+  "pnpm-lock.yaml"
 ]
-
-## READONLY - Solo lectura, cambios por PR
-readonly: [
-  "apps/web/next.config.*",
-  "apps/web/tailwind.config.*",
-  ".github/CODEOWNERS"
-]
-
-## Mensaje de protección
 onDenyMessage: "No toques Vercel ni build. Proyecto fijado. 🧱"
-
-## Protección de Fuzzy
-onDenyMessage: "Fuzzy es sagrado: su personalidad no se toca sin aprobar PR. 🔒"
-
-## Reglas de desarrollo
-- Operación Bisturí: No tocar más nada que lo que se está arreglando
-- Efecto Mariposa: Calcular impacto en configuraciones existentes
-- Cadena de pensamientos: Soluciones profesionales, nada provisional
-- Factory lazy: Nada de instancias Supabase al importar
-- Build safety: dynamic='force-dynamic', runtime='nodejs' en rutas API

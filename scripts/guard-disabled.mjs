@@ -1,24 +1,11 @@
-// scripts/guard-disabled.mjs
-import fs from "fs";
-import path from "path";
-
-const root = process.cwd();
-const apiDir = path.join(root, "apps/web/src/app/api");
-
-function checkDisabled(dir) {
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      if (item.name === "disabled") {
-        console.error(`🚫 ERROR: Carpeta prohibida detectada: ${fullPath}`);
-        process.exit(1);
-      }
-      checkDisabled(fullPath);
-    }
+import fs from "fs"; import path from "path";
+const apiDir = path.join(process.cwd(), "apps/web/src/app/api");
+function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){
+  const p = path.join(dir,e.name);
+  if(e.isDirectory()){
+    if(e.name==="disabled"){console.error(`🚫 Carpeta prohibida: ${p}`);process.exit(1);}
+    walk(p);
   }
-}
-
-console.log("🧩 Verificando que no existan carpetas 'disabled'...");
-checkDisabled(apiDir);
-console.log("✅ Limpio: No existen carpetas 'disabled'.");
+}}
+console.log("🧩 Verificando 'disabled'..."); walk(apiDir);
+console.log("✅ Sin 'disabled'");

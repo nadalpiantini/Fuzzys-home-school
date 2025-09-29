@@ -36,7 +36,6 @@ yarn-error.log*
 # vercel - Asegura trackear el link del proyecto
 !.vercel/
 !.vercel/project.json
-.vercel/project.json
 
 # typescript
 *.tsbuildinfo
