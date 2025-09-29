@@ -114,10 +114,7 @@
     letter-spacing: 0.5px;
     line-height: 1.2;
     display: inline-block;
-    background: linear-gradient(135deg, var(--cream-50), var(--cream-200));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--barney-green-800) !important;
   }
 
   .fuzzy-title:hover {

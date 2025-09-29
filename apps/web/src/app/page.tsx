@@ -26,7 +26,10 @@ export default function HomePage() {
               priority
             />
           </div>
-          <h1 className="text-8xl font-bold text-barney-green-800 fuzzy-title">
+          <h1
+            className="text-7xl font-bold text-barney-green-800 fuzzy-title"
+            style={{ color: 'var(--barney-green-800)' }}
+          >
             Fuzzy&apos;s Home School
           </h1>
         </div>
@@ -37,15 +40,15 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-16">
-        <div className="glass rounded-3xl p-12 max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+      <section className="container mx-auto px-6 py-8">
+        <div className="glass rounded-3xl p-6 max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-6">
             {/* Text Content */}
             <div className="flex-1 text-center lg:text-left">
-              <h2 className="text-6xl font-bold mb-6 text-cream-50 title-font">
+              <h2 className="text-6xl font-bold mb-4 text-cream-50 title-font">
                 {t('home.tagline')}
               </h2>
-              <p className="text-xl text-cream-100 mb-12 max-w-2xl mx-auto lg:mx-0 body-font">
+              <p className="text-xl text-cream-100 mb-6 max-w-2xl mx-auto lg:mx-0 body-font">
                 {t('home.description')}
               </p>
             </div>
@@ -67,7 +70,7 @@ export default function HomePage() {
         </div>
 
         {/* Role Selection */}
-        <div className="grid md:grid-cols-3 gap-8 mt-16">
+        <div className="grid md:grid-cols-3 gap-8 mt-8">
           <Card className="card-minimal group">
             <Link href="/student">
               <div className="space-y-6">
@@ -128,7 +131,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 py-8">
         <h3 className="text-4xl font-bold text-center mb-12 text-cream-50 title-font">
           {t('features.title')}
         </h3>

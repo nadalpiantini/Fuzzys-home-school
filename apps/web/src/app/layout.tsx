@@ -5,6 +5,22 @@ import { Providers } from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Importar las fuentes personalizadas
+const alanSans = {
+  fontFamily: 'Alan Sans',
+  src: 'url(https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300;400;500;600;700&display=swap)',
+};
+
+const caveatBrush = {
+  fontFamily: 'Caveat Brush',
+  src: 'url(https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap)',
+};
+
+const schoolbell = {
+  fontFamily: 'Schoolbell',
+  src: 'url(https://fonts.googleapis.com/css2?family=Schoolbell&display=swap)',
+};
+
 export const metadata: Metadata = {
   title: "Fuzzy's Home School",
   description: 'Educational platform with AI tutoring and gamified learning',
@@ -26,6 +42,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300;400;500;600;700&family=Caveat+Brush&family=Schoolbell&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

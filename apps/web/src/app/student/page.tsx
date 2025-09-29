@@ -106,7 +106,10 @@ export default function StudentDashboard() {
                   priority
                 />
               </div>
-              <h1 className="text-6xl font-bold text-barney-green-800">
+              <h1
+                className="text-5xl font-bold text-barney-green-800"
+                style={{ color: 'var(--barney-green-800)' }}
+              >
                 {t('student.dashboard')}
               </h1>
             </div>
