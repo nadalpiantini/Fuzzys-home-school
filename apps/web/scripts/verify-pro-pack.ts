@@ -71,14 +71,12 @@ async function verifyProPack() {
     console.log('✅ RLS configurado correctamente para quizzes');
 
     // Verificar que no podemos insertar sin autenticación
-    const { error: insertError } = await supabase
-      .from('quizzes')
-      .insert({
-        title: 'Test Quiz',
-        topic: 'test',
-        level: 'beginner',
-        questions: [],
-      });
+    const { error: insertError } = await supabase.from('quizzes').insert({
+      title: 'Test Quiz',
+      topic: 'test',
+      level: 'beginner',
+      questions: [],
+    });
 
     if (!insertError) {
       console.error(
