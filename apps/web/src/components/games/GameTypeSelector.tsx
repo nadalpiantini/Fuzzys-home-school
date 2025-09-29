@@ -38,10 +38,6 @@ import {
   Zap,
 } from 'lucide-react';
 
-// Helper genérico anti-"never"
-function includesIfNotAll<T extends string>(arr: readonly T[], val: AllOr<T>) {
-  return val === 'all' || arr.includes(val);
-}
 
 interface GameTypeSelectorProps {
   onGameSelect: (gameType: GameType) => void;
@@ -165,16 +161,16 @@ export default function GameTypeSelector({
       selectedCategory === 'all' ||
       normalizeCategory(template.category) === selectedCategory;
     const matchesSubject = includesIfNotAll(
-      template.subjects as readonly Subject[],
       selectedSubject,
+      template.subjects as readonly Subject[],
     );
     const matchesGrade = includesIfNotAll(
-      template.ageRange as readonly GradeLevel[],
       selectedGrade,
+      template.ageRange as readonly GradeLevel[],
     );
     const matchesDifficulty = includesIfNotAll(
-      (template.difficultyTags ?? []) as readonly Difficulty[],
       selectedDifficulty,
+      (template.difficultyTags ?? []) as readonly Difficulty[],
     );
 
     return (
