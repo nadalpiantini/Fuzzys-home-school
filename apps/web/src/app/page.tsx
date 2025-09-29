@@ -8,9 +8,26 @@ import { Card } from '@/components/ui/card';
 import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react';
 import { LanguageToggle } from '@/components/layout/LanguageToggle';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useHookedSystem } from '@/hooks/useHookedSystem';
+import MessageBar from '@/components/hooked/MessageBar';
+import Bell from '@/components/hooked/Bell';
+import OnboardingTour, {
+  useOnboardingTour,
+} from '@/components/hooked/OnboardingTour';
 
 export default function HomePage() {
   const { t, language, setLanguage } = useTranslation();
+  const { todayQuest, messages, loading } = useHookedSystem();
+  const { showTour, completeTour, skipTour } = useOnboardingTour();
+  const [showMessageBar, setShowMessageBar] = useState(false);
+
+  const handleStartQuest = (questId: string) => {
+    window.location.href = `/quest/${questId}`;
+  };
+
+  const handleDismissMessage = () => {
+    setShowMessageBar(false);
+  };
 
   return (
     <div className="min-h-screen">
@@ -33,10 +50,19 @@ export default function HomePage() {
             Fuzzy&apos;s Home School
           </h1>
         </div>
-        <LanguageToggle
-          language={language}
-          onToggle={() => setLanguage(language === 'es' ? 'en' : 'es')}
-        />
+        <div className="flex items-center gap-4">
+          <div id="bell-notification">
+            <Bell
+              hasUnread={messages.some((msg) => !msg.seen_at)}
+              onClick={() => setShowMessageBar(!showMessageBar)}
+              className="text-barney-green-800 hover:text-barney-green-900"
+            />
+          </div>
+          <LanguageToggle
+            language={language}
+            onToggle={() => setLanguage(language === 'es' ? 'en' : 'es')}
+          />
+        </div>
       </header>
 
       {/* Hero Section */}
@@ -71,7 +97,7 @@ export default function HomePage() {
 
         {/* Role Selection */}
         <div className="grid md:grid-cols-3 gap-8 mt-8">
-          <Card className="card-minimal group">
+          <Card className="card-minimal group" id="daily-quest-card">
             <Link href="/student">
               <div className="space-y-6">
                 <div className="w-20 h-20 bg-barney-blue-500/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-barney-blue-500/30 transition-colors">
@@ -90,7 +116,7 @@ export default function HomePage() {
             </Link>
           </Card>
 
-          <Card className="card-minimal group">
+          <Card className="card-minimal group" id="profile-button">
             <Link href="/teacher">
               <div className="space-y-6">
                 <div className="w-20 h-20 bg-barney-red-500/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-barney-red-500/30 transition-colors">
@@ -136,21 +162,27 @@ export default function HomePage() {
           {t('features.title')}
         </h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <FeatureCard
-            icon={<Brain />}
-            title={t('features.aiTutor')}
-            description={t('features.aiTutorDesc')}
-          />
-          <FeatureCard
-            icon={<Gamepad2 />}
-            title={t('features.games')}
-            description={t('features.gamesDesc')}
-          />
-          <FeatureCard
-            icon={<Map />}
-            title={t('features.arRally')}
-            description={t('features.arRallyDesc')}
-          />
+          <div id="tutor-card">
+            <FeatureCard
+              icon={<Brain />}
+              title={t('features.aiTutor')}
+              description={t('features.aiTutorDesc')}
+            />
+          </div>
+          <div id="games-card">
+            <FeatureCard
+              icon={<Gamepad2 />}
+              title={t('features.games')}
+              description={t('features.gamesDesc')}
+            />
+          </div>
+          <div id="library-card">
+            <FeatureCard
+              icon={<Map />}
+              title={t('features.arRally')}
+              description={t('features.arRallyDesc')}
+            />
+          </div>
           <FeatureCard
             icon={<Globe />}
             title={t('features.multiLanguage')}
@@ -185,6 +217,22 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Sistema Hooked */}
+      {todayQuest && showMessageBar && (
+        <MessageBar
+          quest={todayQuest}
+          onDismiss={handleDismissMessage}
+          onStartQuest={handleStartQuest}
+        />
+      )}
+
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        isVisible={showTour}
+        onComplete={completeTour}
+        onSkip={skipTour}
+      />
     </div>
   );
 }

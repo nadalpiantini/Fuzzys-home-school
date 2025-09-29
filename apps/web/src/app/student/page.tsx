@@ -34,16 +34,21 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useChildProfile } from '@/hooks/useChildProfile';
+import { useHookedSystem } from '@/hooks/useHookedSystem';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import Bell from '@/components/hooked/Bell';
+import MessageBar from '@/components/hooked/MessageBar';
 
 export default function StudentDashboard() {
   const { t, language } = useTranslation();
   const { childData } = useChildProfile();
+  const { todayQuest, messages } = useHookedSystem();
   const router = useRouter();
   const [currentStreak, setCurrentStreak] = useState(7);
   const [totalPoints, setTotalPoints] = useState(1250);
   const [level, setLevel] = useState(5);
+  const [showMessageBar, setShowMessageBar] = useState(false);
 
   // Handler functions for different actions
   const handleAskTutor = () => {
@@ -114,6 +119,11 @@ export default function StudentDashboard() {
               </h1>
             </div>
             <div className="flex items-center gap-4">
+              <Bell
+                hasUnread={messages.some((msg) => !msg.seen_at)}
+                onClick={() => setShowMessageBar(!showMessageBar)}
+                className="text-barney-green-800 hover:text-barney-green-900"
+              />
               <Badge
                 variant="secondary"
                 className="bg-barney-yellow-500 text-barney-green-800"
@@ -457,6 +467,15 @@ export default function StudentDashboard() {
           </div>
         </div>
       </footer>
+
+      {/* Sistema Hooked */}
+      {todayQuest && showMessageBar && (
+        <MessageBar
+          quest={todayQuest}
+          onDismiss={() => setShowMessageBar(false)}
+          onStartQuest={(questId) => router.push(`/quest/${questId}`)}
+        />
+      )}
     </div>
   );
 }

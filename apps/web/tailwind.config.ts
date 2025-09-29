@@ -93,6 +93,25 @@ const config: Config = {
     'flex-row',
     'flex-wrap',
     'flex-nowrap',
+    // Mobile touch utilities
+    'touch-target',
+    'no-touch-callout',
+    'touch-manipulation',
+    'touch-pan',
+    'touch-none',
+    'haptic-light',
+    'haptic-medium',
+    'haptic-heavy',
+    'dragging-mobile',
+    'drop-zone-active',
+    'drop-zone-valid',
+    'drop-zone-invalid',
+    // Mobile responsive classes
+    'min-h-[44px]',
+    'min-w-[44px]',
+    'active:scale-95',
+    'active:scale-98',
+    'active:scale-90',
   ],
   theme: {
     extend: {
@@ -120,6 +139,25 @@ const config: Config = {
       boxShadow: {
         glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
         'glass-inset': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+      },
+      // Mobile-specific extensions
+      touchAction: {
+        manipulation: 'manipulation',
+        'pan-x-pan-y': 'pan-x pan-y',
+        none: 'none',
+      },
+      // Minimum touch target sizes for accessibility
+      minHeight: {
+        touch: '44px',
+      },
+      minWidth: {
+        touch: '44px',
+      },
+      // Mobile breakpoints
+      screens: {
+        xs: '475px',
+        touch: { raw: '(hover: none) and (pointer: coarse)' },
+        'no-touch': { raw: '(hover: hover) and (pointer: fine)' },
       },
     },
   },

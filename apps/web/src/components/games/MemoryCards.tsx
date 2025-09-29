@@ -5,6 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Trophy, Timer, RotateCcw } from 'lucide-react';
 import type { MemoryCardsGame } from '@/types/game-types';
+import {
+  useMobileDetection,
+  triggerHapticFeedback,
+} from '@/lib/hooks/useMobileDetection';
+import { useTouchGestures } from '@/lib/hooks/useTouchGestures';
 
 interface MemoryCardsProps {
   game: MemoryCardsGame;
@@ -33,6 +38,7 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   showFeedback = false,
   feedback,
 }) => {
+  const { isTouchDevice, isMobile, hasHapticFeedback } = useMobileDetection();
   const safePairs = useMemo(() => game.pairs ?? [], [game.pairs]);
   const safeGridSize = game.gridSize ?? { cols: 4, rows: 4 };
   const [cards, setCards] = useState<CardItem[]>([]);
@@ -92,6 +98,11 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
     if (cards[index].isFlipped || cards[index].isMatched) return;
     if (flippedCards.length === 2) return;
 
+    // Haptic feedback for card flip
+    if (isTouchDevice && hasHapticFeedback) {
+      triggerHapticFeedback('light');
+    }
+
     const newCards = [...cards];
     newCards[index].isFlipped = true;
     setCards(newCards);
@@ -104,6 +115,28 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
       checkForMatch(newFlippedCards[0], newFlippedCards[1]);
     }
   };
+
+  // Touch gesture handlers
+  const { gestureState, touchHandlers } = useTouchGestures({
+    enableHaptics: true,
+    onTap: (point, event) => {
+      const cardElement = (event.target as Element).closest(
+        '[data-card-index]',
+      );
+      if (cardElement) {
+        const index = parseInt(
+          (cardElement as HTMLElement).dataset.cardIndex || '0',
+        );
+        handleCardClick(index);
+      }
+    },
+    onSwipe: (direction, velocity) => {
+      // Optional: Add swipe gestures for card navigation or game controls
+      if (direction === 'down' && velocity > 0.5) {
+        // Maybe show hint or pause game
+      }
+    },
+  });
 
   const checkForMatch = (index1: number, index2: number) => {
     const card1 = cards[index1];
@@ -181,21 +214,35 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   };
 
   return (
-    <Card className="p-6 max-w-5xl mx-auto">
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">
+    <Card className="p-4 sm:p-6 max-w-5xl mx-auto">
+      <div
+        className="space-y-4"
+        {...(isTouchDevice
+          ? {
+              onTouchStart: (e) => touchHandlers.onTouchStart(e.nativeEvent),
+              onTouchMove: (e) => touchHandlers.onTouchMove(e.nativeEvent),
+              onTouchEnd: (e) => touchHandlers.onTouchEnd(e.nativeEvent),
+              onTouchCancel: (e) => touchHandlers.onTouchCancel(e.nativeEvent),
+            }
+          : {})}
+        style={{ touchAction: 'manipulation' }}
+      >
+        {/* Header - Responsive Layout */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">
             Juego de Memoria
           </h3>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Timer className="w-4 h-4" />
+
+          {/* Stats - Mobile Optimized */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+            <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 px-2 py-1 rounded">
+              <Timer className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="font-mono">{formatTime(elapsedTime)}</span>
             </div>
-            <div className="text-sm">
+            <div className="bg-blue-100 px-2 py-1 rounded">
               Movimientos: <span className="font-bold">{moves}</span>
             </div>
-            <div className="text-sm">
+            <div className="bg-green-100 px-2 py-1 rounded">
               Pares:{' '}
               <span className="font-bold">
                 {matchedPairs}/{safePairs.length}
@@ -206,31 +253,54 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
                 onClick={handleReset}
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 min-h-[32px] text-xs"
               >
-                <RotateCcw className="w-4 h-4" />
-                Reiniciar
+                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
+                {isMobile ? 'Reset' : 'Reiniciar'}
               </Button>
             )}
           </div>
         </div>
 
+        {/* Instructions for mobile */}
+        {isTouchDevice && !isComplete && (
+          <div className="text-xs text-center text-gray-600 bg-blue-50 p-2 rounded">
+            🎯 Toca las cartas para voltearlas y encuentra los pares
+          </div>
+        )}
+
+        {/* Cards Grid - Mobile Responsive */}
         <div
-          className="grid gap-4"
+          className={`grid gap-2 sm:gap-3 lg:gap-4 ${
+            isMobile ? 'max-w-sm mx-auto' : ''
+          }`}
           style={{
-            gridTemplateColumns: `repeat(${safeGridSize.cols}, minmax(0, 1fr))`,
+            gridTemplateColumns: isMobile
+              ? `repeat(${Math.min(safeGridSize.cols, 4)}, minmax(0, 1fr))`
+              : `repeat(${safeGridSize.cols}, minmax(0, 1fr))`,
             gridTemplateRows: `repeat(${safeGridSize.rows}, minmax(0, 1fr))`,
           }}
         >
           {cards.map((card, index) => (
             <div
               key={index}
-              onClick={() => handleCardClick(index)}
+              data-card-index={index}
+              onClick={isTouchDevice ? undefined : () => handleCardClick(index)}
               className={`
-                relative aspect-square cursor-pointer transition-all duration-300 transform
-                ${card.isFlipped || card.isMatched ? 'rotate-0' : 'hover:scale-105'}
-                ${card.isMatched ? 'opacity-50 cursor-default' : ''}
+                relative aspect-square transition-all duration-300 transform select-none
+                ${
+                  isTouchDevice
+                    ? 'active:scale-95 touch-manipulation'
+                    : 'cursor-pointer hover:scale-105'
+                }
+                ${card.isFlipped || card.isMatched ? 'rotate-0' : ''}
+                ${card.isMatched ? 'opacity-50' : ''}
+                ${flippedCards.includes(index) ? 'ring-2 ring-blue-400' : ''}
               `}
+              style={{
+                minHeight: isMobile ? '60px' : '80px',
+                minWidth: isMobile ? '60px' : '80px',
+              }}
             >
               <Card className="w-full h-full overflow-hidden">
                 {getCardContent(card)}

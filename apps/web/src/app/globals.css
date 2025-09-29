@@ -122,6 +122,127 @@
     transition: all 0.3s ease;
     filter: brightness(1.1);
   }
+
+  /* Mobile-specific optimizations */
+  @media (max-width: 768px) {
+    body {
+      /* Prevent zoom on input focus in iOS */
+      -webkit-text-size-adjust: 100%;
+      /* Prevent horizontal scrolling */
+      overflow-x: hidden;
+    }
+
+    /* Prevent iOS bounce effect */
+    html,
+    body {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #__next {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Optimize tap targets */
+    button,
+    a,
+    [role='button'],
+    .clickable {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Remove default tap highlight on webkit */
+    button,
+    a,
+    input,
+    textarea,
+    select {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Improve touch scrolling performance */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  /* Touch-friendly utilities */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .no-touch-callout {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  .touch-pan {
+    touch-action: pan-x pan-y;
+  }
+
+  .touch-none {
+    touch-action: none;
+  }
+
+  /* Haptic feedback visual cues */
+  .haptic-light:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .haptic-medium:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+
+  .haptic-heavy:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+  }
+
+  /* Drag and drop visual states */
+  .dragging-mobile {
+    transform: scale(1.1);
+    opacity: 0.8;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  .drop-zone-active {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: rgb(59, 130, 246);
+    border-style: dashed;
+    animation: pulse 1s infinite;
+  }
+
+  .drop-zone-valid {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: rgb(34, 197, 94);
+  }
+
+  .drop-zone-invalid {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgb(239, 68, 68);
+  }
 }
 
 @layer components {
