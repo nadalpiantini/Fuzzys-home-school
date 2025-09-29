@@ -12,7 +12,6 @@ export async function GET() {
     await s.from('games').select('id').limit(1);
     return NextResponse.json({ ok: true, ts });
   } catch (e: any) {
-    // 200 para no tumbar monitores; reporta error igualmente
-    return NextResponse.json({ ok: false, ts, err: e?.message?.slice(0, 200) ?? 'db error' });
+    return NextResponse.json({ ok: false, ts, err: String(e?.message ?? 'db error').slice(0,200) });
   }
 }
