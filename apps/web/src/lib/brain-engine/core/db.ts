@@ -1,23 +1,12 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-let _client: ReturnType<typeof createClient> | null = null;
+let _client: ReturnType<typeof getSupabaseServer> | null = null;
 
 // Factory function con lazy loading para brain engine
 export function sb() {
   if (_client) return _client;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url || !key) {
-    throw new Error('Supabase env vars missing at runtime');
-  }
-
-  _client = createClient(url, key, {
-    auth: { persistSession: false },
-  });
+  _client = getSupabaseServer(true); // Usar service role para brain engine
 
   return _client;
 }
