@@ -159,7 +159,7 @@ export default function EnhancedGameList({
   const difficulties = ['all', 'beginner', 'intermediate', 'advanced'];
 
   const getTypeIcon = (type: GameType) => {
-    const icons: Record<GameType, React.ReactNode> = {
+    const icons: Partial<Record<GameType, React.ReactNode>> = {
       'multiple-choice': <Target className="w-5 h-5" />,
       'true-false': <Target className="w-5 h-5" />,
       'fill-blank': <BookOpen className="w-5 h-5" />,
