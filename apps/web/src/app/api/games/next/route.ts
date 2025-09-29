@@ -5,12 +5,12 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const runtime = 'nodejs';
 
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    const supabase = getSupabaseServer(true);
-    const payload = await req.json();
-    // TODO: lógica con supabase
-    return NextResponse.json({ ok: true });
+    const supabase = getSupabaseServer(false);
+    // TODO: reemplaza mock por query real si quieres
+    const data = [{ id: 'mock-1', title: 'Memoria', grade: '3' }];
+    return NextResponse.json({ ok: true, data });
   } catch (e: any) {
     return NextResponse.json(
       { ok: false, error: e?.message ?? 'Server error' },
