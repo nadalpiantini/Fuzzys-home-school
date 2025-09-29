@@ -17,6 +17,9 @@ export async function POST(req: Request) {
   } catch (e: any) {
     // crea instancia también en el catch si la necesitas
     // const supabase = getSupabaseServer(true);
-    return NextResponse.json({ ok: false, error: e?.message ?? 'Server error' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: e?.message ?? 'Server error' },
+      { status: 500 },
+    );
   }
 }

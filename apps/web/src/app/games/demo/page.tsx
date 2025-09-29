@@ -14,8 +14,8 @@ export default function DemoPage() {
       question: 'What is 2 + 2?',
       options: ['3', '4', '5', '6'],
       correctAnswer: 1,
-      explanation: '2 + 2 equals 4'
-    }
+      explanation: '2 + 2 equals 4',
+    },
   });
 
   return (

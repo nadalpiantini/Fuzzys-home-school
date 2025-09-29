@@ -8,6 +8,12 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export const runtime = 'nodejs';
 
+// Evitar ejecución durante build
+if (process.env.NODE_ENV === 'production' && process.env.VERCEL && !process.env.VERCEL_ENV) {
+  // Build time - no ejecutar
+  process.exit(0);
+}
+
 // Opcional: pequeño guard para permitir solo POST
 export async function POST(req: Request) {
   try {

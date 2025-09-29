@@ -248,14 +248,11 @@ export class CulturalContextService {
   ): Promise<string> {
     try {
       const supabase = getSupabaseServer();
-      const { data, error } = await supabase.rpc(
-        'generate_cultural_prompt',
-        {
-          p_context_id: contextId,
-          p_subject: subject,
-          p_grade: grade,
-        },
-      );
+      const { data, error } = await supabase.rpc('generate_cultural_prompt', {
+        p_context_id: contextId,
+        p_subject: subject,
+        p_grade: grade,
+      });
 
       if (error) {
         console.error('Error generating cultural prompt:', error);
@@ -286,7 +283,7 @@ export class CulturalContextService {
       ) {
         // Usuario eligió contexto específico
         const supabase = getSupabaseServer();
-      const { data, error } = await supabase
+        const { data, error } = await supabase
           .from('cultural_contexts')
           .select('*')
           .eq('id', preferences.preferred_context_id)
