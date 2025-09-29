@@ -212,12 +212,19 @@ export default function GameTypeSelector({
     const matchesSearch =
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
-    const matchesSubject = includesIfNotAll(template.subjects as readonly Subject[], selectedSubject);
-    const matchesGrade = includesIfNotAll(template.ageRange as readonly GradeLevel[], selectedGrade);
+    const matchesCategory =
+      selectedCategory === 'all' || template.category === selectedCategory;
+    const matchesSubject = includesIfNotAll(
+      template.subjects as readonly Subject[],
+      selectedSubject,
+    );
+    const matchesGrade = includesIfNotAll(
+      template.ageRange as readonly GradeLevel[],
+      selectedGrade,
+    );
     const matchesDifficulty = includesIfNotAll(
       (template.difficultyTags ?? []) as readonly Difficulty[],
-      selectedDifficulty
+      selectedDifficulty,
     );
 
     return (

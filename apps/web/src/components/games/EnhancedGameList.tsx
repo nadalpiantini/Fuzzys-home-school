@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,18 +43,18 @@ export default function EnhancedGameList({
   onGameSelect,
   onCreateGame,
 }: EnhancedGameListProps) {
-  const [games, setGames] = useState<BaseGame[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [games, setGames] = React.useState<BaseGame[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] =
-    useState<AllOr<Category>>('all');
-  const [selectedSubject, setSelectedSubject] = useState<AllOr<Subject>>('all');
-  const [selectedGrade, setSelectedGrade] = useState<AllOr<GradeLevel>>('all');
+    React.useState<AllOr<Category>>('all');
+  const [selectedSubject, setSelectedSubject] = React.useState<AllOr<Subject>>('all');
+  const [selectedGrade, setSelectedGrade] = React.useState<AllOr<GradeLevel>>('all');
   const [selectedDifficulty, setSelectedDifficulty] =
-    useState<AllOr<Difficulty>>('all');
-  const [showGameTypeSelector, setShowGameTypeSelector] = useState(false);
+    React.useState<AllOr<Difficulty>>('all');
+  const [showGameTypeSelector, setShowGameTypeSelector] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadGames();
   }, []);
 

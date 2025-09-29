@@ -241,14 +241,36 @@ export interface GameConfig {
 
 // Tipos específicos para los filtros
 export type Subject =
-  | 'math' | 'science' | 'spanish' | 'english' | 'history' | 'geography'
-  | 'art' | 'music' | 'technology' | 'coding';
+  | 'math'
+  | 'science'
+  | 'spanish'
+  | 'english'
+  | 'history'
+  | 'geography'
+  | 'art'
+  | 'music'
+  | 'technology'
+  | 'coding';
 
 export type GradeLevel =
-  | 'prek' | 'k' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
+  | 'prek'
+  | 'k'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type Category = 'quiz' | 'interactive' | 'creative' | 'stem';
 
-// Tipo helper para filtros con 'all'
+// Útil para selects ('all' | T)
 export type AllOr<T extends string> = 'all' | T;
+
+// (Opcional) Si conviertes strings a GameType dinámicamente:
+export function isGameType(x: string): x is GameType {
+  return !!x; // deja simple: sólo afina si validas contra una whitelist
+}

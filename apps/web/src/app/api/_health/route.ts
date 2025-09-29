@@ -14,6 +14,9 @@ export async function GET() {
       err: error?.message ?? null,
     });
   } catch (err: any) {
-    return NextResponse.json({ ok: false, ts: new Date().toISOString(), err: String(err) }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, ts: new Date().toISOString(), err: String(err) },
+      { status: 500 },
+    );
   }
 }

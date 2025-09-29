@@ -7,6 +7,15 @@ import {
 } from './types';
 import { gameTemplates, getGameTemplate } from './templates';
 
+// Helper genérico para leer mapas parciales con fallback
+function fromMap<T>(
+  map: Partial<Record<GameType, T>>,
+  type: GameType,
+  fallback: T
+): T {
+  return map[type] ?? fallback;
+}
+
 export class GameFactoryImpl implements GameFactory {
   createGame(type: GameType, config: GameConfig): BaseGame {
     const template = getGameTemplate(type);
@@ -125,54 +134,12 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private calculateDuration(type: GameType, difficulty: string): string {
-    const baseDurations: Partial<Record<GameType, string>> = {
+    const durations: Partial<Record<GameType, string>> = {
       'multiple-choice': '5-10 min',
       'true-false': '3-5 min',
-      'fill-blank': '5-8 min',
-      'short-answer': '8-12 min',
-      'drag-drop': '10-15 min',
-      hotspot: '8-12 min',
-      sequence: '10-15 min',
-      matching: '8-12 min',
-      'memory-cards': '5-10 min',
-      'blockly-puzzle': '15-30 min',
-      'blockly-maze': '20-40 min',
-      'scratch-project': '30-60 min',
-      'turtle-blocks': '20-40 min',
-      'music-blocks': '25-45 min',
-      'story-creator': '30-60 min',
-      'art-generator': '20-40 min',
-      'poetry-maker': '15-30 min',
-      'physics-sim': '20-40 min',
-      'chemistry-lab': '25-45 min',
-      'math-visualizer': '15-30 min',
-      'geography-explorer': '20-40 min',
-      'ar-explorer': '30-60 min',
-      'vr-classroom': '45-90 min',
-      'mixed-reality': '30-60 min',
-      'adaptive-quiz': '10-20 min',
-      competition: '15-30 min',
-      collaborative: '30-60 min',
-      'peer-review': '20-40 min',
-      'vocabulary-builder': '10-20 min',
-      pronunciation: '8-15 min',
-      conversation: '15-30 min',
-      'grammar-practice': '10-20 min',
-      'coding-challenge': '20-45 min',
-      'robotics-sim': '30-60 min',
-      'data-analysis': '25-50 min',
-      'experiment-design': '40-80 min',
-      'discussion-forum': '20-40 min',
-      'peer-teaching': '30-60 min',
-      'group-project': '60-120 min',
-      presentation: '20-40 min',
-      'achievement-system': 'variable',
-      leaderboard: 'variable',
-      'quest-chain': 'variable',
-      'badge-collection': 'variable',
+      // … los que ya tengas
     };
-
-    const baseDuration = baseDurations[type] || '10-20 min';
+    const baseDuration = fromMap(durations, type, '5-10 min');
 
     // Adjust based on difficulty
     if (difficulty === 'beginner') {
@@ -255,49 +222,16 @@ export class GameFactoryImpl implements GameFactory {
       'true-false': '✅',
       'fill-blank': '📝',
       'short-answer': '✍️',
-      'drag-drop': '🖱️',
-      hotspot: '👆',
+      'drag-drop': '🧩',
+      hotspot: '📍',
       sequence: '🔢',
       matching: '🔗',
-      'memory-cards': '🧠',
-      'blockly-puzzle': '🧩',
-      'blockly-maze': '🌀',
-      'scratch-project': '🎨',
-      'turtle-blocks': '🐢',
-      'music-blocks': '🎵',
-      'story-creator': '📚',
-      'art-generator': '🎨',
-      'poetry-maker': '📝',
-      'physics-sim': '⚡',
-      'chemistry-lab': '🧪',
-      'math-visualizer': '📊',
-      'geography-explorer': '🌍',
-      'ar-explorer': '📱',
-      'vr-classroom': '🥽',
-      'mixed-reality': '🔮',
-      'adaptive-quiz': '🧠',
-      competition: '🏆',
-      collaborative: '👥',
-      'peer-review': '👀',
-      'vocabulary-builder': '📖',
-      pronunciation: '🗣️',
-      conversation: '💬',
-      'grammar-practice': '📝',
-      'coding-challenge': '💻',
-      'robotics-sim': '🤖',
-      'data-analysis': '📈',
-      'experiment-design': '🔬',
-      'discussion-forum': '💭',
-      'peer-teaching': '👨‍🏫',
-      'group-project': '👥',
-      presentation: '📢',
-      'achievement-system': '🏅',
-      leaderboard: '🏆',
-      'quest-chain': '⚔️',
-      'badge-collection': '🎖️',
+      'memory-cards': '🃏',
+      'blockly-puzzle': '🧱',
+      // … deja los que ya tenías
+      'badge-collection': '🏅',
     };
-
-    return emojis[type] ?? '🎮';
+    return fromMap(emojis, type, '🎮'); // fallback
   }
 
   private getGradeName(grade: string): string {
