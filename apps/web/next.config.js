@@ -29,8 +29,8 @@ const nextConfig = {
     defaultLocale: 'es',
     localeDetection: false,
   },
-  // Cloudflare Pages optimization
-  output: 'standalone',
+  // Vercel optimization
+  // output: 'standalone', // Disabled for Vercel compatibility
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
