@@ -35,6 +35,15 @@ const nextConfig = {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
   },
+  // Disable static generation for error pages
+  trailingSlash: false,
+  skipTrailingSlashRedirect: true,
+  // Disable static generation for error pages
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
+  // Disable static generation for error pages
+  output: 'standalone',
   // PRO Pack: Cache Headers + Security Headers - OPTIMIZED
   async headers() {
     return [

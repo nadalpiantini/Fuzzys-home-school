@@ -48,14 +48,51 @@ interface Badge {
 
 export function useHookedSystem() {
   const { user } = useUser();
-  const [todayQuest, setTodayQuest] = useState<Quest | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [streak, setStreak] = useState<Streak | null>(null);
-  const [badges, setBadges] = useState<Badge[]>([]);
+  const [showMessageBar, setShowMessageBar] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('hooked-message-bar-visible') === 'true';
+    }
+    return false;
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const supabase = createSupabaseClient();
+
+  // Guardar estado de MessageBar en localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('hooked-message-bar-visible', showMessageBar.toString());
+    }
+  }, [showMessageBar]);
+
+  // Estados para almacenar datos con cache simple
+  const [todayQuest, setTodayQuest] = useState<Quest | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [streak, setStreak] = useState<Streak | null>(null);
+  const [badges, setBadges] = useState<Badge[]>([]);
+
+  // Implementación de retry con exponential backoff
+  const fetchWithRetry = useCallback(async (
+    fetchFn: () => Promise<any>,
+    maxRetries = 3,
+    delay = 1000
+  ): Promise<any> => {
+    let lastError;
+    
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await fetchFn();
+      } catch (error) {
+        lastError = error;
+        if (i < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+        }
+      }
+    }
+    
+    throw lastError;
+  }, []);
 
   const loadHookedData = useCallback(async () => {
     if (!user) return;
@@ -64,90 +101,155 @@ export function useHookedSystem() {
       setLoading(true);
       setError(null);
 
-      // Cargar reto del día
+      // Cargar reto del día con retry
       const today = new Date().toISOString().slice(0, 10);
-      const { data: quest, error: questError } = await supabase
-        .from('quests')
-        .select('*')
-        .eq('available_on', today)
-        .eq('is_active', true)
-        .single();
+      const questData = await fetchWithRetry(async () => {
+        const { data: quest, error: questError } = await supabase
+          .from('quests')
+          .select('*')
+          .eq('available_on', today)
+          .eq('is_active', true)
+          .single();
 
-      if (questError && questError.code !== 'PGRST116') {
-        console.error('Error loading quest:', questError);
-      }
+        if (questError && questError.code !== 'PGRST116') {
+          console.error('Error loading quest:', questError);
+          throw questError;
+        }
+        return quest;
+      });
 
-      // Cargar mensajes
-      const { data: messagesData, error: messagesError } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_active', true)
-        .order('created_at', { ascending: false })
-        .limit(10);
+      // Cargar mensajes con retry
+      const messagesData = await fetchWithRetry(async () => {
+        const { data, error: messagesError } = await supabase
+          .from('messages')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .order('created_at', { ascending: false })
+          .limit(10);
 
-      if (messagesError) {
-        console.error('Error loading messages:', messagesError);
-      }
+        if (messagesError) {
+          console.error('Error loading messages:', messagesError);
+          throw messagesError;
+        }
+        return data;
+      });
 
-      // Cargar streak
-      const { data: streakData, error: streakError } = await supabase
-        .from('streaks')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      // Cargar streak con retry
+      const streakData = await fetchWithRetry(async () => {
+        const { data, error: streakError } = await supabase
+          .from('streaks')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
 
-      if (streakError && streakError.code !== 'PGRST116') {
-        console.error('Error loading streak:', streakError);
-      }
+        if (streakError && streakError.code !== 'PGRST116') {
+          console.error('Error loading streak:', streakError);
+          throw streakError;
+        }
+        return data;
+      });
 
-      // Cargar badges del usuario
-      const { data: badgesData, error: badgesError } = await supabase
-        .from('user_badges')
-        .select(
-          `
-          badge_id,
-          earned_at,
-          badges (
-            id,
-            code,
-            name,
-            description,
-            icon,
-            category,
-            points,
-            rarity
+      // Cargar badges del usuario con retry
+      const badgesData = await fetchWithRetry(async () => {
+        const { data, error: badgesError } = await supabase
+          .from('user_badges')
+          .select(
+            `
+            badge_id,
+            earned_at,
+            badges (
+              id,
+              code,
+              name,
+              description,
+              icon,
+              category,
+              points,
+              rarity
+            )
+          `,
           )
-        `,
-        )
-        .eq('user_id', user.id)
-        .order('earned_at', { ascending: false });
+          .eq('user_id', user.id)
+          .order('earned_at', { ascending: false });
 
-      if (badgesError) {
-        console.error('Error loading badges:', badgesError);
-      }
+        if (badgesError) {
+          console.error('Error loading badges:', badgesError);
+          throw badgesError;
+        }
+        return data;
+      });
 
-      setTodayQuest(quest);
+      setTodayQuest(questData);
       setMessages(messagesData || []);
       setStreak(streakData);
-      setBadges(badgesData?.flatMap((ub) => ub.badges).filter(Boolean) || []);
+      setBadges(badgesData?.flatMap((ub: any) => ub.badges).filter(Boolean) || []);
     } catch (err) {
       console.error('Error loading hooked data:', err);
-      setError('Error al cargar los datos');
+      setError('Error al cargar los datos. Por favor, intenta de nuevo.');
     } finally {
       setLoading(false);
     }
-  }, [user, supabase]);
+  }, [user, supabase, fetchWithRetry]);
 
-  // Cargar datos del sistema Hooked
+  // Cargar datos del sistema Hooked con cache simple
   useEffect(() => {
     if (user) {
-      loadHookedData();
+      // Verificar si hay datos en caché de sessionStorage
+      const cachedData = sessionStorage.getItem(`hooked-data-${user.id}`);
+      const cacheTimestamp = sessionStorage.getItem(`hooked-timestamp-${user.id}`);
+      
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+      const isCacheValid = cacheTimestamp && 
+        (Date.now() - parseInt(cacheTimestamp)) < CACHE_DURATION;
+
+      if (cachedData && isCacheValid) {
+        try {
+          const parsed = JSON.parse(cachedData);
+          setTodayQuest(parsed.todayQuest);
+          setMessages(parsed.messages || []);
+          setStreak(parsed.streak);
+          setBadges(parsed.badges || []);
+          setLoading(false);
+          
+          // Cargar datos frescos en background
+          loadHookedData().then(() => {
+            // Guardar en caché
+            const dataToCache = {
+              todayQuest,
+              messages,
+              streak,
+              badges
+            };
+            sessionStorage.setItem(`hooked-data-${user.id}`, JSON.stringify(dataToCache));
+            sessionStorage.setItem(`hooked-timestamp-${user.id}`, Date.now().toString());
+          });
+        } catch (e) {
+          console.error('Error parsing cached data:', e);
+          loadHookedData();
+        }
+      } else {
+        loadHookedData();
+      }
     }
-  }, [user, loadHookedData]);
+  }, [user]);
+
+  // Guardar datos en caché cuando cambien
+  useEffect(() => {
+    if (user && !loading) {
+      const dataToCache = {
+        todayQuest,
+        messages,
+        streak,
+        badges
+      };
+      sessionStorage.setItem(`hooked-data-${user.id}`, JSON.stringify(dataToCache));
+      sessionStorage.setItem(`hooked-timestamp-${user.id}`, Date.now().toString());
+    }
+  }, [user, todayQuest, messages, streak, badges, loading]);
 
   // Verificar si el reto de hoy está completado
-  const isTodayQuestCompleted = async (): Promise<boolean> => {
+  const isTodayQuestCompleted = useCallback(async (): Promise<boolean> => {
     if (!user || !todayQuest) return false;
 
     try {
@@ -169,10 +271,19 @@ export function useHookedSystem() {
       console.error('Error checking quest completion:', err);
       return false;
     }
-  };
+  }, [user, todayQuest, supabase]);
 
-  // Marcar mensaje como leído
-  const markMessageAsRead = async (messageId: string) => {
+  // Marcar mensaje como leído con optimistic update
+  const markMessageAsRead = useCallback(async (messageId: string) => {
+    // Actualización optimista
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === messageId
+          ? { ...msg, seen_at: new Date().toISOString() }
+          : msg,
+      ),
+    );
+
     try {
       const { error } = await supabase
         .from('messages')
@@ -181,34 +292,99 @@ export function useHookedSystem() {
 
       if (error) {
         console.error('Error marking message as read:', error);
+        // Revertir actualización optimista
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId
+              ? { ...msg, seen_at: undefined }
+              : msg,
+          ),
+        );
         return false;
       }
-
-      // Actualizar estado local
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === messageId
-            ? { ...msg, seen_at: new Date().toISOString() }
-            : msg,
-        ),
-      );
 
       return true;
     } catch (err) {
       console.error('Error marking message as read:', err);
+      // Revertir actualización optimista
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === messageId
+            ? { ...msg, seen_at: undefined }
+            : msg,
+        ),
+      );
       return false;
     }
-  };
+  }, [supabase]);
 
   // Obtener mensajes no leídos
-  const getUnreadMessagesCount = () => {
+  const getUnreadMessagesCount = useCallback(() => {
     return messages.filter((msg) => !msg.seen_at).length;
-  };
+  }, [messages]);
 
-  // Refrescar datos
-  const refreshData = () => {
-    loadHookedData();
-  };
+  // Refrescar datos con indicador de loading
+  const refreshData = useCallback(async () => {
+    if (!user) return;
+    
+    // Limpiar caché
+    sessionStorage.removeItem(`hooked-data-${user.id}`);
+    sessionStorage.removeItem(`hooked-timestamp-${user.id}`);
+    
+    await loadHookedData();
+  }, [loadHookedData, user]);
+
+  // Toggle MessageBar visibility
+  const toggleMessageBar = useCallback(() => {
+    setShowMessageBar(prev => !prev);
+  }, []);
+
+  // Hide MessageBar
+  const hideMessageBar = useCallback(() => {
+    setShowMessageBar(false);
+  }, []);
+
+  // Setup realtime subscriptions
+  useEffect(() => {
+    if (!user) return;
+
+    // Suscribirse a cambios en tiempo real
+    const messagesChannel = supabase
+      .channel('messages-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'messages',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          loadHookedData();
+        }
+      )
+      .subscribe();
+
+    const questsChannel = supabase
+      .channel('quests-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'quests',
+        },
+        () => {
+          loadHookedData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      messagesChannel.unsubscribe();
+      questsChannel.unsubscribe();
+    };
+  }, [user, supabase, loadHookedData]);
 
   return {
     // Estado
@@ -218,11 +394,14 @@ export function useHookedSystem() {
     badges,
     loading,
     error,
+    showMessageBar,
 
     // Métodos
     isTodayQuestCompleted,
     markMessageAsRead,
     getUnreadMessagesCount,
     refreshData,
+    toggleMessageBar,
+    hideMessageBar,
   };
 }

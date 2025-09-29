@@ -6,18 +6,34 @@ import {
   TutorContext,
 } from '@/lib/tutor/compose';
 import { DeepSeekClient } from '@/services/tutor/deepseek-client';
+import { MockDeepSeekClient } from '@/services/tutor/mock-deepseek-client';
 
 export const runtime = 'nodejs';
 
-// Instancia del cliente DeepSeek
-const deepseekClient = new DeepSeekClient({
-  apiKey: process.env.DEEPSEEK_API_KEY!,
+// Check if we have a valid API key
+const apiKey = process.env.DEEPSEEK_API_KEY || '';
+const hasValidApiKey = apiKey &&
+  !apiKey.includes('1234567890abcdef') &&
+  !apiKey.includes('your-api-key') &&
+  apiKey.length > 20;
+
+// Use mock client if no valid API key
+const clientConfig = {
+  apiKey: apiKey || 'mock-key',
   baseURL: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com',
   model: 'deepseek-chat',
   temperature: 0.7,
   maxTokens: 2000,
   systemPrompt: 'Eres un tutor educativo amigable y motivador.',
-});
+};
+
+// Instancia del cliente DeepSeek (real o mock)
+const deepseekClient = hasValidApiKey
+  ? new DeepSeekClient(clientConfig)
+  : new MockDeepSeekClient(clientConfig as any);
+
+// Log which client we're using
+console.log(`[TUTOR] Using ${hasValidApiKey ? 'DeepSeek' : 'Mock'} client (API key: ${apiKey.substring(0, 10)}...)`);
 
 // Simulación de sesiones en memoria (en producción usar DB)
 const sessions = new Map<

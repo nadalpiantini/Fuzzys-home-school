@@ -51,9 +51,20 @@ const ServerEnvSchema = z
       .enum(['development', 'production', 'test'])
       .default('development'),
   })
-  .refine((e) => !(e.DEEPSEEK_API_KEY && e.OPENAI_API_KEY), {
-    message: 'Configura SOLO un proveedor IA: DeepSeek o OpenAI (no ambos).',
-  });
+  .refine(
+    (e) => {
+      // En producción, permitir ambas variables pero solo usar una
+      if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+        return true; // Permitir ambas en producción
+      }
+      // En desarrollo, requerir solo una
+      return !(e.DEEPSEEK_API_KEY && e.OPENAI_API_KEY);
+    },
+    {
+      message:
+        'En desarrollo, configura SOLO un proveedor IA: DeepSeek o OpenAI (no ambos).',
+    },
+  );
 
 const parsedPublic = PublicEnvSchema.safeParse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

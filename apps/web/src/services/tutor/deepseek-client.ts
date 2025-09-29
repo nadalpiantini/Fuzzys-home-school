@@ -45,8 +45,13 @@ export class DeepSeekClient {
       // Prepare system prompt with context
       const systemPrompt = this.buildSystemPrompt(context);
 
+      // DeepSeek uses OpenAI-compatible API
+      const url = this.config.baseURL.includes('/v1')
+        ? `${this.config.baseURL}/chat/completions`
+        : `${this.config.baseURL}/v1/chat/completions`;
+
       const response = await fetch(
-        `${this.config.baseURL}/v1/chat/completions`,
+        url,
         {
           method: 'POST',
           headers: {
