@@ -7,13 +7,10 @@ export const runtime = 'nodejs';
 
 export async function POST() {
   try {
-    const supabase = getSupabaseServer(true); // si necesitas admin, si no, false
-    // TODO: chequeos mínimos
+    const supabase = getSupabaseServer(true); // si no usas admin, cambia a false
+    // TODO: chequeo mínimo de tabla si quieres
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    return NextResponse.json(
-      { ok: false, error: e?.message ?? 'Server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ ok: false, error: e?.message ?? 'Server error' }, { status: 500 });
   }
 }

@@ -2,9 +2,9 @@ import { withSentryConfig } from '@sentry/nextjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ⚠️ temporal para shippear - quitar después
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
+  // IMPORTANT: en Vercel no pongas output:'standalone' (eso es para Docker).
+  typescript: { ignoreBuildErrors: false },
+  eslint: { ignoreDuringBuilds: false },
   reactStrictMode: true,
   swcMinify: true,
   transpilePackages: [

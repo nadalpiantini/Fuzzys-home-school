@@ -8,13 +8,10 @@ export const runtime = 'nodejs';
 export async function GET() {
   try {
     const supabase = getSupabaseServer(false);
-    // TODO: reemplaza mock por query real si quieres
-    const data = [{ id: 'mock-1', title: 'Memoria', grade: '3' }];
+    // TODO: query real; por ahora mock estable
+    const data = [{ id: 'mock-1', title: 'Memoria', grade: '3', tags: ['tradicional'] }];
     return NextResponse.json({ ok: true, data });
   } catch (e: any) {
-    return NextResponse.json(
-      { ok: false, error: e?.message ?? 'Server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ ok: false, error: e?.message ?? 'Server error' }, { status: 500 });
   }
 }

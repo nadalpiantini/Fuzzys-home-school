@@ -10,8 +10,8 @@
   "scripts": {
     "prebuild": "node scripts/verify-env.mjs && node scripts/guard-antipatterns.mjs",
     "build": "next build",
-    "preview": "vercel deploy --cwd apps/web --confirm",
-    "ship": "vercel deploy --cwd apps/web --prod --confirm",
+    "preview": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --confirm",
+    "ship": "node scripts/guard-cwd.mjs && vercel --cwd apps/web --prod --confirm",
     "status": "vercel ls --cwd apps/web | head -n 15",
     "rollback": "vercel rollback --cwd apps/web"
   },
