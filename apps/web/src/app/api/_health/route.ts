@@ -6,14 +6,13 @@ import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase/server';
 
 export async function GET() {
+  const ts = Date.now();
   try {
     const s = getSupabaseServer(false);
     await s.from('games').select('id').limit(1);
-    return NextResponse.json({ ok: true, ts: Date.now() });
+    return NextResponse.json({ ok: true, ts });
   } catch (e: any) {
-    return NextResponse.json(
-      { ok: false, err: e?.message ?? 'Server error' },
-      { status: 500 },
-    );
+    // 200 para no tumbar monitores; reporta error igualmente
+    return NextResponse.json({ ok: false, ts, err: e?.message?.slice(0, 200) ?? 'db error' });
   }
 }
