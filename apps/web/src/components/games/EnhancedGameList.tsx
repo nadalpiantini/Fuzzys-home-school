@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { gameFactory } from '@/lib/game-factory/factory';
 import { aiGameGenerator } from '@/lib/game-factory/ai-generator';
-import { BaseGame, GameType } from '@/lib/game-factory/types';
+import { BaseGame, GameType, Subject, GradeLevel, Difficulty, Category, AllOr } from '@/lib/game-factory/types';
 import GameTypeSelector from './GameTypeSelector';
 
 interface EnhancedGameListProps {
@@ -38,10 +38,10 @@ export default function EnhancedGameList({
   const [games, setGames] = useState<BaseGame[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSubject, setSelectedSubject] = useState('all');
-  const [selectedGrade, setSelectedGrade] = useState('all');
-  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<AllOr<Category>>('all');
+  const [selectedSubject, setSelectedSubject] = useState<AllOr<Subject>>('all');
+  const [selectedGrade, setSelectedGrade] = useState<AllOr<GradeLevel>>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<AllOr<Difficulty>>('all');
   const [showGameTypeSelector, setShowGameTypeSelector] = useState(false);
 
   useEffect(() => {
@@ -303,7 +303,7 @@ export default function EnhancedGameList({
                     selectedCategory === category.id ? 'default' : 'outline'
                   }
                   size="sm"
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => setSelectedCategory(category.id as AllOr<Category>)}
                   className="flex items-center gap-2"
                 >
                   {category.icon}
@@ -321,7 +321,7 @@ export default function EnhancedGameList({
               <select
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
+                onChange={(e) => setSelectedSubject(e.target.value as AllOr<Subject>)}
               >
                 {subjects.map((subject) => (
                   <option key={subject} value={subject}>
@@ -338,7 +338,7 @@ export default function EnhancedGameList({
               <select
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 value={selectedGrade}
-                onChange={(e) => setSelectedGrade(e.target.value)}
+                onChange={(e) => setSelectedGrade(e.target.value as AllOr<GradeLevel>)}
               >
                 {grades.map((grade) => (
                   <option key={grade} value={grade}>
@@ -355,7 +355,7 @@ export default function EnhancedGameList({
               <select
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                onChange={(e) => setSelectedDifficulty(e.target.value as AllOr<Difficulty>)}
               >
                 {difficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
