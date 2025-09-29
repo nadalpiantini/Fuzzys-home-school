@@ -250,7 +250,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private getEmoji(type: GameType): string {
-    const emojis: Record<GameType, string> = {
+    const emojis = {
       'multiple-choice': '❓',
       'true-false': '✅',
       'fill-blank': '📝',
@@ -297,7 +297,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': '🎖️',
     };
 
-    return emojis[type] || '🎮';
+    return emojis[type] ?? '🎮';
   }
 
   private getGradeName(grade: string): string {
@@ -321,7 +321,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private calculateTimeLimit(type: GameType, difficulty: string): number {
-    const baseTimeLimits: Record<GameType, number> = {
+    const baseTimeLimits = {
       'multiple-choice': 30,
       'true-false': 15,
       'fill-blank': 45,
@@ -368,7 +368,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': 0,
     };
 
-    const baseTime = baseTimeLimits[type] || 300;
+    const baseTime = baseTimeLimits[type] ?? 300;
 
     // Adjust based on difficulty
     if (difficulty === 'beginner') {
@@ -381,7 +381,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private calculateAttempts(type: GameType, difficulty: string): number {
-    const baseAttempts: Record<GameType, number> = {
+    const baseAttempts = {
       'multiple-choice': 3,
       'true-false': 2,
       'fill-blank': 3,
@@ -428,7 +428,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': 0,
     };
 
-    const attempts = baseAttempts[type] || 3;
+    const attempts = baseAttempts[type] ?? 3;
 
     // Adjust based on difficulty
     if (difficulty === 'beginner') {

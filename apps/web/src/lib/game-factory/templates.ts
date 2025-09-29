@@ -1,7 +1,7 @@
 import { GameTemplate, GameContent, GameType } from './types';
 
 // Game Templates based on the educational repositories mentioned
-export const gameTemplates: Record<GameType, GameTemplate> = {
+export const gameTemplates = {
   // Traditional Quiz Types
   'multiple-choice': {
     type: 'multiple-choice',
@@ -697,10 +697,24 @@ export const gameTemplates: Record<GameType, GameTemplate> = {
       ],
     }),
   },
-};
+} as const satisfies Partial<Record<GameType, GameTemplate>>;
 
 export function getGameTemplate(type: GameType): GameTemplate {
-  return gameTemplates[type];
+  return gameTemplates[type] ?? {
+    type: 'multiple-choice',
+    name: 'Juego Genérico',
+    description: 'Juego educativo genérico',
+    category: 'General',
+    ageRange: '6-18',
+    subjects: ['general'],
+    features: ['scoring'],
+    template: () => ({
+      type: 'multiple-choice',
+      theme: 'quiz',
+      difficulty: 'medium',
+      questions: [],
+    }),
+  };
 }
 
 export function getAllTemplates(): GameTemplate[] {
