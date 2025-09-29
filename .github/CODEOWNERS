@@ -1,0 +1,12 @@
+# CODEOWNERS - Operación Bisturí & Mariposa
+# Archivos críticos de configuración requieren aprobación
+
+/vercel.json                         @nadalpiantini
+/turbo.json                          @nadalpiantini
+/package.json                        @nadalpiantini
+/pnpm-workspace.yaml                 @nadalpiantini
+/apps/web/next.config.*              @nadalpiantini
+/apps/web/tailwind.config.*          @nadalpiantini
+/apps/web/postcss.config.*           @nadalpiantini
+/.github/workflows/*                 @nadalpiantini
+/.github/CODEOWNERS                  @nadalpiantini

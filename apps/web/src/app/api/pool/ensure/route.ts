@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 const MIN_READY = parseInt(process.env.NEXT_PUBLIC_POOL_MIN_READY || '8', 10);
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     // Contar juegos 'ready' disponibles
     const { count, error: countError } = await supabase
       .from('games_pool')

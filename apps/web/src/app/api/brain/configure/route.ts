@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 import { sb } from '@/lib/brain-engine/core/db';
+
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {

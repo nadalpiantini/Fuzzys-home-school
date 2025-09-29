@@ -165,7 +165,7 @@ const traditionalGames: ExternalGame[] = [
     duration: '10-20 min',
     players: '1',
     type: 'traditional',
-    url: '/games/demo?game=math-solver',
+    url: '/games/math-solver',
     tags: ['Matemáticas', 'Álgebra', 'Paso a paso'],
     rating: 4.6,
     plays: 12340,
@@ -182,7 +182,7 @@ const traditionalGames: ExternalGame[] = [
     duration: '15-45 min',
     players: '1',
     type: 'traditional',
-    url: '/games/demo?game=code-challenge',
+    url: '/games/code-challenge',
     tags: ['Programación', 'Algoritmos', 'Python'],
     rating: 4.5,
     plays: 8765,
@@ -199,12 +199,30 @@ export default function ExternalGamesPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
 
   const type = searchParams.get('type');
+  const game = searchParams.get('game');
 
   useEffect(() => {
     if (type) {
       setSelectedType(type);
     }
   }, [type]);
+
+  // Handle specific game requests
+  useEffect(() => {
+    if (game) {
+      // Redirect to appropriate demo or external game
+      if (game === 'puzzle' && type === 'blockly') {
+        // Redirect to Blockly puzzle game
+        router.push('/games/blockly-puzzle');
+      } else if (game === 'memory-cards') {
+        router.push('/games/memory-cards');
+      } else if (game === 'flashcards') {
+        router.push('/games/flashcards');
+      } else if (game === 'drag-drop') {
+        router.push('/games/drag-drop');
+      }
+    }
+  }, [game, type, router]);
 
   const allGames = [...externalGames, ...curriculumGames, ...traditionalGames];
 

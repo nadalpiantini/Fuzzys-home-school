@@ -422,12 +422,12 @@ export class QuizGenerator {
 
   private generateExplanation(question: string, answer: string | string[], bloomLevel: BloomLevel): string {
     const explanationTemplates = {
-      'remember': `La respuesta correcta es ${answer} porque es un hecho fundamental.`,
-      'understand': `${answer} es correcto porque demuestra comprensión del concepto.`,
-      'apply': `${answer} es la aplicación correcta del principio en esta situación.`,
-      'analyze': `${answer} muestra el análisis correcto de los componentes del problema.`,
-      'evaluate': `${answer} representa la evaluación más apropiada basada en los criterios.`,
-      'create': `${answer} demuestra la síntesis creativa de los elementos aprendidos.`
+      'remember': `La respuesta correcta es ${answer}. Es algo que debemos recordar.`,
+      'understand': `${answer} es correcto. Esto significa que entiendes el concepto.`,
+      'apply': `${answer} es la respuesta correcta porque aplicas bien lo que sabes.`,
+      'analyze': `${answer} es correcto porque analizaste bien el problema.`,
+      'evaluate': `${answer} es la mejor opción basada en lo que sabemos.`,
+      'create': `${answer} es correcto porque usaste tu creatividad y conocimiento.`
     };
 
     return explanationTemplates[bloomLevel];
@@ -435,9 +435,9 @@ export class QuizGenerator {
 
   private generateHints(question: string, answer: string | string[]): string[] {
     return [
-      'Piensa en los conceptos clave de la pregunta.',
-      'Considera el contexto específico del tema.',
-      'Recuerda los principios fundamentales.'
+      'Piensa en lo que ya sabes sobre este tema.',
+      'Mira bien la pregunta y busca pistas.',
+      'Recuerda lo que has aprendido antes.'
     ];
   }
 

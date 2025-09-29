@@ -1,9 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+import { getSupabaseServer } from '@/lib/supabase/server';
 
 export interface CulturalContext {
   id: string;
@@ -76,6 +71,7 @@ export class CulturalContextService {
     countryCode: string,
   ): Promise<CulturalContext | null> {
     try {
+      const supabase = getSupabaseServer(true); // useServiceRole = true
       const { data, error } = await supabase
         .from('cultural_contexts')
         .select('*')
@@ -119,6 +115,8 @@ export class CulturalContextService {
    * Obtiene contexto por defecto
    */
   async getDefaultContext(): Promise<CulturalContext> {
+    const supabase = getSupabaseServer(true); // useServiceRole = true
+
     try {
       const { data, error } = await supabase
         .from('cultural_contexts')
@@ -151,6 +149,7 @@ export class CulturalContextService {
         return this.userPreferences.get(userId)!;
       }
 
+      const supabase = getSupabaseServer(true); // useServiceRole = true
       const { data, error } = await supabase
         .from('user_cultural_preferences')
         .select('*')

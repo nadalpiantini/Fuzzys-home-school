@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { culturalContextService } from '@/lib/cultural-context/CulturalContextService';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Función para llamar a DeepSeek y generar juegos por demanda
 async function callDeepSeekForDemand(
@@ -111,6 +111,8 @@ async function callDeepSeekForDemand(
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(true); // useServiceRole = true
+
     // Obtener jobs de generación por demanda pendientes
     const { data: jobs, error: jobsError } = await supabase
       .from('demand_generation_jobs')
@@ -262,6 +264,7 @@ export async function POST(request: NextRequest) {
 // Endpoint para obtener estadísticas de generación por demanda
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(true); // useServiceRole = true
     const url = new URL(request.url);
     const userCategory = url.searchParams.get('category');
 

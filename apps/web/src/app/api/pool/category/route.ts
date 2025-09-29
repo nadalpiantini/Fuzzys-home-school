@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // GET: Obtener juegos por categoría de usuario
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     const url = new URL(request.url);
     const userCategory = url.searchParams.get('category');
     const limit = parseInt(url.searchParams.get('limit') || '2', 10);
@@ -115,6 +117,8 @@ export async function GET(request: NextRequest) {
 // POST: Obtener juegos personalizados por preferencias de usuario
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     const body = await request.json();
     const { user_id, preferred_subjects, preferred_grades, limit = 2 } = body;
 

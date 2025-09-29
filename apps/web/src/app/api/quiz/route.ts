@@ -4,6 +4,11 @@ import { supabaseServer } from '@/lib/supabase/server';
 import { getUserAndClient, isAdmin } from '@/lib/auth/server-auth';
 import * as Sentry from '@sentry/nextjs';
 
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 type Op =
   | 'status'
   | 'list' // lista de quizzes (lectura pública/anon)

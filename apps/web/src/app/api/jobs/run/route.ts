@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Función para llamar a DeepSeek y generar juegos
 async function callDeepSeek(prompt: string): Promise<any> {
@@ -65,6 +65,8 @@ async function callDeepSeek(prompt: string): Promise<any> {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(true); // useServiceRole = true
+
     // Tomar un job pendiente usando la función RPC
     const { data: job, error: jobError } = await supabase.rpc('take_one_job');
 
@@ -159,6 +161,7 @@ export async function POST(request: NextRequest) {
 
     // Marcar job como fallido si hay error
     try {
+      const supabase = getSupabaseServer(true); // useServiceRole = true
       await supabase
         .from('generation_jobs')
         .update({

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { z } from 'zod';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
 
 // Schema para tracking de uso de juegos
 const GameUsageSchema = z.object({
@@ -29,6 +29,8 @@ function getUserCategory(grade: number): string {
 // POST: Registrar inicio de juego
 export async function POST(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     const body = await request.json();
     const { game_id, user_id, user_grade, score, time_spent, completed } =
       GameUsageSchema.parse(body);
@@ -89,6 +91,8 @@ export async function POST(request: NextRequest) {
 // GET: Obtener estadísticas de uso
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     const url = new URL(request.url);
     const userId = url.searchParams.get('user_id');
     const category = url.searchParams.get('category');
@@ -167,6 +171,8 @@ export async function GET(request: NextRequest) {
 // PUT: Actualizar progreso de juego
 export async function PUT(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(false); // useServiceRole = false
+
     const body = await request.json();
     const { game_id, user_id, score, time_spent, completed } = body;
 

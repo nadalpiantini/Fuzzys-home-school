@@ -3,6 +3,11 @@ import { TutorEngine } from '@/services/tutor/tutor-engine';
 import { DeepSeekClient } from '@/services/tutor/deepseek-client';
 import { z } from 'zod';
 
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 // Initialize tutor engine
 const deepseekClient = new DeepSeekClient({
   apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || '',

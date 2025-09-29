@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { InstantGameSelector } from '@/components/games/InstantGameSelector';
+import OrganizedGameList from '@/components/games/OrganizedGameList';
 import {
   Gamepad2,
   BookOpen,
@@ -118,7 +119,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '10-15 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=memory-cards',
+        url: '/games/memory-cards',
         tags: ['Animales', 'Memoria', 'Parejas'],
         rating: 4.6,
         plays: 12340,
@@ -136,7 +137,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '5-10 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=flashcards',
+        url: '/games/flashcards',
         tags: ['Colores', 'Números', 'Básico'],
         rating: 4.5,
         plays: 9876,
@@ -154,7 +155,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '8-12 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=drag-drop',
+        url: '/games/drag-drop',
         tags: ['Formas', 'Colores', 'Arrastrar'],
         rating: 4.7,
         plays: 15600,
@@ -254,7 +255,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=drag-drop',
+        url: '/games/drag-drop',
         tags: ['Números', 'Clasificación', 'Interactivo'],
         rating: 4.6,
         plays: 11200,
@@ -272,7 +273,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '10-20 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=word-search',
+        url: '/games/word-search',
         tags: ['Palabras', 'Ciencias', 'Búsqueda'],
         rating: 4.5,
         plays: 8750,
@@ -290,7 +291,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=crossword',
+        url: '/games/crossword',
         tags: ['Crucigrama', 'Ciencias', 'Puzzle'],
         rating: 4.6,
         plays: 7200,
@@ -308,7 +309,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '10-15 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=gap-fill',
+        url: '/games/gap-fill',
         tags: ['Historias', 'Lenguaje', 'Completar'],
         rating: 4.4,
         plays: 6800,
@@ -354,7 +355,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=math-solver',
+        url: '/games/math-solver',
         tags: ['Matemáticas', 'Problemas', 'Soluciones'],
         rating: 4.6,
         plays: 12340,
@@ -372,7 +373,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '20-30 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=crossword',
+        url: '/games/crossword',
         tags: ['Ciencias', 'Vocabulario', 'Puzzle'],
         rating: 4.7,
         plays: 9450,
@@ -390,7 +391,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=hotspot',
+        url: '/games/hotspot',
         tags: ['Biología', 'Cuerpo', 'Interactivo'],
         rating: 4.8,
         plays: 11200,
@@ -408,7 +409,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '20-30 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=timeline',
+        url: '/games/timeline',
         tags: ['Historia', 'Tiempo', 'Orden'],
         rating: 4.6,
         plays: 7800,
@@ -426,7 +427,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '10-20 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=image-sequence',
+        url: '/games/image-sequence',
         tags: ['Imágenes', 'Secuencia', 'Lógica'],
         rating: 4.5,
         plays: 6500,
@@ -444,7 +445,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=short-answer',
+        url: '/games/short-answer',
         tags: ['IA', 'Preguntas', 'Respuestas'],
         rating: 4.7,
         plays: 8900,
@@ -526,7 +527,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '20-45 min',
         players: '1',
         type: 'traditional',
-        url: '/games/demo?game=code-challenge',
+        url: '/games/code-challenge',
         tags: ['Programación', 'Algoritmos', 'Desafío'],
         rating: 4.5,
         plays: 8765,
@@ -544,7 +545,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '30-45 min',
         players: '1-4',
         type: 'traditional',
-        url: '/games/demo?game=branching-scenario',
+        url: '/games/branching-scenario',
         tags: ['Aventura', 'Decisiones', 'Narrativa'],
         rating: 4.6,
         plays: 7200,
@@ -562,7 +563,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '25-40 min',
         players: '1-3',
         type: 'traditional',
-        url: '/games/demo?game=mind-map',
+        url: '/games/mind-map',
         tags: ['Conceptos', 'Visualización', 'Creatividad'],
         rating: 4.7,
         plays: 6500,
@@ -580,7 +581,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-30 min',
         players: '2-50',
         type: 'traditional',
-        url: '/games/demo?game=live-quiz',
+        url: '/games/live-quiz',
         tags: ['Competencia', 'Tiempo Real', 'Diversión'],
         rating: 4.9,
         plays: 15200,
@@ -598,7 +599,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '45-60 min',
         players: '3-8',
         type: 'traditional',
-        url: '/games/demo?game=team-challenge',
+        url: '/games/team-challenge',
         tags: ['Colaboración', 'Liderazgo', 'Equipo'],
         rating: 4.8,
         plays: 8900,
@@ -616,7 +617,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '20-30 min',
         players: '1-2',
         type: 'traditional',
-        url: '/games/demo?game=match',
+        url: '/games/match',
         tags: ['Conceptos', 'Conexiones', 'Lógica'],
         rating: 4.6,
         plays: 7200,
@@ -634,7 +635,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '15-25 min',
         players: '1-4',
         type: 'traditional',
-        url: '/games/demo?game=true-false',
+        url: '/games/true-false',
         tags: ['Conocimientos', 'Verdadero/Falso', 'Desafío'],
         rating: 4.5,
         plays: 6800,
@@ -680,7 +681,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '45-90 min',
         players: '1-3',
         type: 'traditional',
-        url: '/games/demo?game=research-methods',
+        url: '/games/research-methods',
         tags: ['Investigación', 'Ciencia', 'Metodología'],
         rating: 4.7,
         plays: 5600,
@@ -698,7 +699,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '30-60 min',
         players: '1-6',
         type: 'traditional',
-        url: '/games/demo?game=critical-thinking',
+        url: '/games/critical-thinking',
         tags: ['Lógica', 'Análisis', 'Evaluación'],
         rating: 4.6,
         plays: 7200,
@@ -716,7 +717,7 @@ const gradeLevels: DifficultyLevel[] = [
         duration: '60-90 min',
         players: '3-8',
         type: 'traditional',
-        url: '/games/demo?game=leadership',
+        url: '/games/leadership',
         tags: ['Liderazgo', 'Gestión', 'Equipo'],
         rating: 4.9,
         plays: 4500,
@@ -733,6 +734,7 @@ export default function GamesPage() {
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
   const [showInstantGames, setShowInstantGames] = useState(true);
+  const [showOrganizedView, setShowOrganizedView] = useState(false);
 
   const allGames = gradeLevels.flatMap((level) => level.games);
 
@@ -745,9 +747,7 @@ export default function GamesPage() {
     // Aquí puedes manejar la selección del juego
     console.log('Game selected:', game);
     // Por ahora, redirigir a una página de juego demo
-    router.push(
-      `/games/demo?game=${game.content?.type || 'quiz'}&id=${game.id}`,
-    );
+    router.push(`/games/${game.content?.type || 'quiz'}&id=${game.id}`);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -844,8 +844,29 @@ export default function GamesPage() {
         </div>
       </header>
 
+      {/* Toggle between views */}
+      <section className="container mx-auto px-6 py-4">
+        <div className="flex justify-center">
+          <div className="bg-white rounded-lg p-1 shadow-sm">
+            <Button
+              variant={!showOrganizedView ? 'default' : 'ghost'}
+              onClick={() => setShowOrganizedView(false)}
+              className="mr-1"
+            >
+              Vista por Grados
+            </Button>
+            <Button
+              variant={showOrganizedView ? 'default' : 'ghost'}
+              onClick={() => setShowOrganizedView(true)}
+            >
+              Vista Organizada
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Juegos Instantáneos - Nueva Sección */}
-      {showInstantGames && (
+      {showInstantGames && !showOrganizedView && (
         <section className="container mx-auto px-6 py-6">
           <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
             <div className="flex items-center justify-between mb-6">
@@ -873,6 +894,31 @@ export default function GamesPage() {
               </Button>
             </div>
             <InstantGameSelector onGameSelect={handleGameSelect} />
+          </div>
+        </section>
+      )}
+
+      {/* Vista Organizada */}
+      {showOrganizedView && (
+        <section className="container mx-auto px-6 py-6">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-200">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  📚 Juegos Organizados
+                  <Badge
+                    variant="secondary"
+                    className="bg-purple-100 text-purple-800"
+                  >
+                    Corregido
+                  </Badge>
+                </h2>
+                <p className="text-gray-600">
+                  Juegos organizados por materia y grado, con contenido validado
+                </p>
+              </div>
+            </div>
+            <OrganizedGameList />
           </div>
         </section>
       )}

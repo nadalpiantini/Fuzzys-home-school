@@ -1,20 +1,7 @@
 {
-  "crons": [
-    {
-      "path": "/api/jobs/run",
-      "schedule": "*/5 * * * *"
-    },
-    {
-      "path": "/api/jobs/demand",
-      "schedule": "*/3 * * * *"
-    }
-  ],
-  "functions": {
-    "apps/web/src/app/api/jobs/run/route.ts": {
-      "maxDuration": 60
-    },
-    "apps/web/src/app/api/jobs/demand/route.ts": {
-      "maxDuration": 120
-    }
-  }
+  "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next"
 }

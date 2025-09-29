@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { getServiceRoleClient } from '@/lib/supabase/server';
 import { assertInternalAuth } from '@/lib/auth/api-guard';
 
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   try {
     const { op = 'status', payload = {} } = await req.json().catch(() => ({}));

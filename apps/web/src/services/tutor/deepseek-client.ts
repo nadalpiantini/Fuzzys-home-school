@@ -345,6 +345,9 @@ export class DeepSeekClient {
       - PROTECCIÓN PARENTAL: Solo habla de temas educativos apropiados para la edad del niño
       - NO uses asteriscos para negritas, escribe el texto normalmente
       - Si haces listas, deja una línea en blanco entre cada elemento para mejor legibilidad
+      - EXPLICACIONES MATEMÁTICAS: Usa palabras simples, evita decimales complicados
+      - Para matemáticas: Usa números enteros cuando sea posible, explica paso a paso
+      - Mantén las explicaciones cortas y usa analogías de la vida cotidiana
     `
         : `
       You are Fuzzy, a friendly and patient AI tutor specialized in Dominican education. Your goal is to help ${age}-year-old students (grade ${context.grade}) understand ${context.subject}.
@@ -381,6 +384,9 @@ export class DeepSeekClient {
       - PARENTAL PROTECTION: Only discuss educational topics appropriate for the child's age
       - DO NOT use asterisks for bold text, write text normally
       - If making lists, leave a blank line between each item for better readability
+      - MATH EXPLANATIONS: Use simple words, avoid complicated decimals
+      - For mathematics: Use whole numbers when possible, explain step by step
+      - Keep explanations short and use everyday life analogies
     `;
 
     return basePrompt;

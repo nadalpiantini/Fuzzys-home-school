@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { brain } from '@/lib/brain-engine/core/BrainEngine';
 
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 const GameGenerationRequestSchema = z.object({
   subject: z.string().min(1),
   grade: z.number().int().min(1).max(12),
@@ -110,6 +115,10 @@ async function generateEducationalGame({
     - Incluya ejemplos reales y aplicables
     - Promueva el pensamiento crítico
     - Sea culturalmente relevante para estudiantes hispanohablantes
+    - Las explicaciones deben ser SIMPLES y CLARAS, usando palabras que los niños entiendan
+    - Evita términos técnicos complejos y decimales complicados
+    - Usa analogías y ejemplos de la vida cotidiana
+    - Mantén las explicaciones cortas y directas
     
     Responde SOLO con JSON válido, sin texto adicional.`
       : `You are an education expert creating high-quality educational content for ${grade}th grade students in ${subject}.
@@ -120,6 +129,10 @@ async function generateEducationalGame({
     - Includes real and applicable examples
     - Promotes critical thinking
     - Is culturally relevant for Spanish-speaking students
+    - Explanations must be SIMPLE and CLEAR, using words children understand
+    - Avoid complex technical terms and complicated decimals
+    - Use analogies and everyday life examples
+    - Keep explanations short and direct
     
     Respond ONLY with valid JSON, no additional text.`;
 
@@ -183,7 +196,7 @@ function buildGamePrompt(
               "question": "Pregunta clara y específica",
               "options": ["Opción A", "Opción B", "Opción C", "Opción D"],
               "correct": 0,
-              "explanation": "Explicación educativa detallada",
+              "explanation": "Explicación simple y clara para niños",
               "difficulty": "${difficulty}"
             }
           ],
@@ -206,7 +219,7 @@ function buildGamePrompt(
               "question": "Clear and specific question",
               "options": ["Option A", "Option B", "Option C", "Option D"],
               "correct": 0,
-              "explanation": "Detailed educational explanation",
+              "explanation": "Simple and clear explanation for children",
               "difficulty": "${difficulty}"
             }
           ],
@@ -231,7 +244,7 @@ function buildGamePrompt(
               "id": "q1",
               "statement": "Afirmación clara y específica",
               "correct": true,
-              "explanation": "Explicación detallada del por qué es verdadero/falso",
+              "explanation": "Explicación simple del por qué es verdadero o falso",
               "difficulty": "${difficulty}"
             }
           ],
@@ -252,7 +265,7 @@ function buildGamePrompt(
               "id": "q1",
               "statement": "Clear and specific statement",
               "correct": true,
-              "explanation": "Detailed explanation of why it's true/false",
+              "explanation": "Simple explanation of why it's true or false",
               "difficulty": "${difficulty}"
             }
           ],
@@ -277,7 +290,7 @@ function buildGamePrompt(
               "id": "item1",
               "text": "Elemento a clasificar",
               "correctCategory": 0,
-              "explanation": "Por qué pertenece a esta categoría"
+              "explanation": "Explicación simple de por qué va aquí"
             }
           ],
           "metadata": {
@@ -298,7 +311,7 @@ function buildGamePrompt(
               "id": "item1",
               "text": "Item to classify",
               "correctCategory": 0,
-              "explanation": "Why it belongs to this category"
+              "explanation": "Simple explanation of why it goes here"
             }
           ],
           "metadata": {
@@ -325,7 +338,7 @@ function buildGamePrompt(
               "width": 15,
               "height": 20,
               "label": "Parte identificada",
-              "explanation": "Explicación de esta parte",
+              "explanation": "Explicación simple de esta parte",
               "correct": true
             }
           ],
@@ -350,7 +363,7 @@ function buildGamePrompt(
               "width": 15,
               "height": 20,
               "label": "Identified part",
-              "explanation": "Explanation of this part",
+              "explanation": "Simple explanation of this part",
               "correct": true
             }
           ],
@@ -380,7 +393,7 @@ function buildGamePrompt(
               "startRow": 0,
               "startCol": 0,
               "direction": "across",
-              "explanation": "Explicación del término"
+              "explanation": "Explicación simple del término"
             }
           ],
           "metadata": {
@@ -406,7 +419,7 @@ function buildGamePrompt(
               "startRow": 0,
               "startCol": 0,
               "direction": "across",
-              "explanation": "Term explanation"
+              "explanation": "Simple term explanation"
             }
           ],
           "metadata": {
@@ -428,7 +441,7 @@ function buildGamePrompt(
             {
               "id": "card1",
               "front": "Término o concepto",
-              "back": "Definición o explicación",
+              "back": "Definición simple",
               "pairId": "pair1"
             }
           ],
@@ -448,7 +461,7 @@ function buildGamePrompt(
             {
               "id": "card1",
               "front": "Term or concept",
-              "back": "Definition or explanation",
+              "back": "Simple definition",
               "pairId": "pair1"
             }
           ],
@@ -474,7 +487,7 @@ function buildGamePrompt(
               "description": "Descripción del evento",
               "date": "Año o fecha",
               "order": 1,
-              "explanation": "Importancia del evento"
+              "explanation": "Por qué es importante este evento"
             }
           ],
           "metadata": {
@@ -496,7 +509,7 @@ function buildGamePrompt(
               "description": "Event description",
               "date": "Year or date",
               "order": 1,
-              "explanation": "Event importance"
+              "explanation": "Why this event is important"
             }
           ],
           "metadata": {

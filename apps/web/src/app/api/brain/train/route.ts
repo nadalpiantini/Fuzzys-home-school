@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { brain } from '@/lib/brain-engine/core/BrainEngine';
 
+// Evitar ejecución en build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

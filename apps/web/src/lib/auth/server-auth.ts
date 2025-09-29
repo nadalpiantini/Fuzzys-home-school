@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { ENV } from '@/lib/env';
 
 /**
@@ -6,17 +6,7 @@ import { ENV } from '@/lib/env';
  * La autenticación se maneja a través de RLS en la base de datos
  */
 export async function getUserAndClient() {
-  const supabase = createClient(
-    ENV.NEXT_PUBLIC_SUPABASE_URL,
-    ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-      },
-    },
-  );
+  const supabase = getSupabaseServer(false); // useServiceRole = false
 
   // En el servidor, la autenticación se maneja a través de RLS
   // El usuario se autentica en el cliente y las cookies se envían automáticamente
