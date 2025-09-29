@@ -10,6 +10,8 @@ import {
   Difficulty,
   Category,
   AllOr,
+  SUBJECTS,
+  SUBJECT_LABELS,
 } from '@/lib/game-factory/types';
 import {
   Search,
@@ -60,30 +62,8 @@ export default function GameTypeSelector({
 
   const templates = gameFactory.getTemplates();
 
-  // Opciones tipadas con as const para inferencia de literales
-  const SUBJECT_OPTIONS = [
-    'math',
-    'science',
-    'language',
-    'history',
-    'geography',
-    'art',
-    'music',
-    'programming',
-    'literature',
-    'grammar',
-    'creativity',
-    'physics',
-    'chemistry',
-    'anatomy',
-    'logic',
-    'spatial',
-    'geometry',
-    'vocabulary',
-    'computer-science',
-    'philosophy',
-    'general',
-  ] as const satisfies readonly Subject[];
+  // Usar la lista canónica de subjects
+  const SUBJECT_OPTIONS = SUBJECTS;
 
   const GRADE_OPTIONS = [
     'prek',

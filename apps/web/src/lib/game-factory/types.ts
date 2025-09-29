@@ -239,7 +239,7 @@ export interface GameConfig {
   aiGenerated?: boolean;
 }
 
-// Tipos específicos para los filtros
+// === Subjects ===============================
 export type Subject =
   | 'math'
   | 'science'
@@ -249,8 +249,77 @@ export type Subject =
   | 'geography'
   | 'art'
   | 'music'
-  | 'technology'
-  | 'coding';
+  | 'coding'
+  | 'robotics'
+  | 'reading'
+  | 'writing'
+  | 'civics'
+  | 'economics'
+  | 'biology'
+  | 'chemistry'
+  | 'physics'
+  | 'astronomy'
+  | 'language'; // <- incluye "language" para compatibilidad
+
+// Lista canónica para selects / filtros
+export const SUBJECTS = [
+  'math',
+  'science',
+  'spanish',
+  'english',
+  'history',
+  'geography',
+  'art',
+  'music',
+  'coding',
+  'robotics',
+  'reading',
+  'writing',
+  'civics',
+  'economics',
+  'biology',
+  'chemistry',
+  'physics',
+  'astronomy',
+  'language',
+] as const satisfies readonly Subject[];
+
+// Etiquetas en ES
+export const SUBJECT_LABELS: Record<Subject, string> = {
+  math: 'Matemáticas',
+  science: 'Ciencias',
+  spanish: 'Español',
+  english: 'Inglés',
+  history: 'Historia',
+  geography: 'Geografía',
+  art: 'Arte',
+  music: 'Música',
+  coding: 'Programación',
+  robotics: 'Robótica',
+  reading: 'Lectura',
+  writing: 'Escritura',
+  civics: 'Cívica',
+  economics: 'Economía',
+  biology: 'Biología',
+  chemistry: 'Química',
+  physics: 'Física',
+  astronomy: 'Astronomía',
+  language: 'Lenguaje', // genérico
+};
+
+// Utilidad por si te llega algo no canónico y quieres mapearlo
+export function normalizeSubject(s: string): Subject | null {
+  const m = s.toLowerCase();
+  const alias: Record<string, Subject> = {
+    lang: 'language',
+    languages: 'language',
+    lengua: 'language',
+    'language-arts': 'language',
+  };
+  if ((SUBJECTS as readonly string[]).includes(m)) return m as Subject;
+  if (alias[m]) return alias[m];
+  return null;
+}
 
 export type GradeLevel =
   | 'prek'

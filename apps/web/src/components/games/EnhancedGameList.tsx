@@ -32,6 +32,8 @@ import {
   Difficulty,
   Category,
   AllOr,
+  SUBJECTS,
+  SUBJECT_LABELS,
 } from '@/lib/game-factory/types';
 import GameTypeSelector from './GameTypeSelector';
 
@@ -120,7 +122,8 @@ export default function EnhancedGameList({
     const matchesDifficulty =
       selectedDifficulty === 'all'
         ? true
-        : normalizeDifficulty(game.difficulty as Difficulty) === normalizeDifficulty(selectedDifficulty);
+        : normalizeDifficulty(game.difficulty as Difficulty) ===
+          normalizeDifficulty(selectedDifficulty);
 
     return (
       matchesSearch &&
@@ -160,16 +163,7 @@ export default function EnhancedGameList({
     { id: 'Social', name: 'Social', icon: <Users className="w-4 h-4" /> },
   ];
 
-  const subjects = [
-    'all',
-    'math',
-    'science',
-    'language',
-    'history',
-    'geography',
-    'art',
-    'music',
-  ];
+  const subjects = ['all', ...SUBJECTS];
   const grades = ['all', 'K-2', '3-5', '6-8', '9-12'];
   const difficulties = ['all', 'beginner', 'intermediate', 'advanced'];
 
@@ -349,7 +343,7 @@ export default function EnhancedGameList({
               >
                 {subjects.map((subject) => (
                   <option key={subject} value={subject}>
-                    {subject === 'all' ? 'Todas' : subject}
+                    {subject === 'all' ? 'Todas' : SUBJECT_LABELS[subject as Subject]}
                   </option>
                 ))}
               </select>
