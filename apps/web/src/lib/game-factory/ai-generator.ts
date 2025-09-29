@@ -171,7 +171,7 @@ export class AIGameGenerator {
   }
 
   private getAlternativeTypes(currentType: GameType): GameType[] {
-    const alternatives: Record<GameType, GameType[]> = {
+    const alternatives: Partial<Record<GameType, GameType[]>> = {
       'multiple-choice': ['true-false', 'short-answer', 'adaptive-quiz'],
       'true-false': ['multiple-choice', 'short-answer', 'competition'],
       'fill-blank': ['short-answer', 'matching', 'vocabulary-builder'],
