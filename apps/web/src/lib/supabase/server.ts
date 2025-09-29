@@ -1,9 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY } from './env';
+import {
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  SUPABASE_SERVICE_ROLE_KEY,
+} from './env';
 
-function required(name: string, v: string){ if(!v) throw new Error(`Missing env: ${name}`); return v; }
+function required(name: string, v: string) {
+  if (!v) throw new Error(`Missing env: ${name}`);
+  return v;
+}
 
-export function getSupabaseServer(useServiceRole=false){
+export function getSupabaseServer(useServiceRole = false) {
   const url = required('SUPABASE_URL', SUPABASE_URL);
   const key = useServiceRole
     ? required('SUPABASE_SERVICE_ROLE_KEY', SUPABASE_SERVICE_ROLE_KEY)

@@ -125,7 +125,7 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private calculateDuration(type: GameType, difficulty: string): string {
-    const baseDurations: Record<GameType, string> = {
+    const baseDurations: Partial<Record<GameType, string>> = {
       'multiple-choice': '5-10 min',
       'true-false': '3-5 min',
       'fill-blank': '5-8 min',
