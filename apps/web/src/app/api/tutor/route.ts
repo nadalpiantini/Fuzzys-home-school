@@ -13,6 +13,10 @@ export const runtime = 'nodejs';
 const deepseekClient = new DeepSeekClient({
   apiKey: process.env.DEEPSEEK_API_KEY!,
   baseURL: process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com',
+  model: 'deepseek-chat',
+  temperature: 0.7,
+  maxTokens: 2000,
+  systemPrompt: 'Eres un tutor educativo amigable y motivador.',
 });
 
 // Simulación de sesiones en memoria (en producción usar DB)
