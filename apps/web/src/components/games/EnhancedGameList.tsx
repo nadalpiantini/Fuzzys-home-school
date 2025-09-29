@@ -34,6 +34,8 @@ import {
   AllOr,
   SUBJECTS,
   SUBJECT_LABELS,
+  GRADE_LEVELS,
+  GRADE_LABELS,
 } from '@/lib/game-factory/types';
 import GameTypeSelector from './GameTypeSelector';
 
@@ -164,7 +166,7 @@ export default function EnhancedGameList({
   ];
 
   const subjects = ['all', ...SUBJECTS];
-  const grades = ['all', 'K-2', '3-5', '6-8', '9-12'];
+  const grades = ['all', ...GRADE_LEVELS];
   const difficulties = ['all', 'beginner', 'intermediate', 'advanced'];
 
   const getTypeIcon = (type: GameType) => {
@@ -343,7 +345,9 @@ export default function EnhancedGameList({
               >
                 {subjects.map((subject) => (
                   <option key={subject} value={subject}>
-                    {subject === 'all' ? 'Todas' : SUBJECT_LABELS[subject as Subject]}
+                    {subject === 'all'
+                      ? 'Todas'
+                      : SUBJECT_LABELS[subject as Subject]}
                   </option>
                 ))}
               </select>
@@ -362,7 +366,7 @@ export default function EnhancedGameList({
               >
                 {grades.map((grade) => (
                   <option key={grade} value={grade}>
-                    {grade === 'all' ? 'Todos' : grade}
+                    {grade === 'all' ? 'Todos' : GRADE_LABELS[grade as GradeLevel]}
                   </option>
                 ))}
               </select>

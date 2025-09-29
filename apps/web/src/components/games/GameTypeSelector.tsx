@@ -12,6 +12,8 @@ import {
   AllOr,
   SUBJECTS,
   SUBJECT_LABELS,
+  GRADE_LEVELS,
+  GRADE_LABELS,
 } from '@/lib/game-factory/types';
 import {
   Search,
@@ -65,22 +67,8 @@ export default function GameTypeSelector({
   // Usar la lista canónica de subjects
   const SUBJECT_OPTIONS = SUBJECTS;
 
-  const GRADE_OPTIONS = [
-    'prek',
-    'k',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-  ] as const satisfies readonly GradeLevel[];
+  // Usar la lista canónica de grados
+  const GRADE_OPTIONS = GRADE_LEVELS;
 
   const DIFFICULTY_OPTIONS = [
     'easy',

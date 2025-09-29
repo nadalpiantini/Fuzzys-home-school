@@ -321,17 +321,59 @@ export function normalizeSubject(s: string): Subject | null {
   return null;
 }
 
+// Grados escolares canónicos
 export type GradeLevel =
-  | 'prek'
+  | 'pre-k'
   | 'k'
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8';
+  | '1' | '2' | '3' | '4' | '5'
+  | '6' | '7' | '8' | '9' | '10' | '11' | '12';
+
+// Lista canónica para selects / filtros
+export const GRADE_LEVELS = [
+  'pre-k','k',
+  '1','2','3','4','5',
+  '6','7','8','9','10','11','12',
+] as const satisfies readonly GradeLevel[];
+
+// Labels en ES
+export const GRADE_LABELS: Record<GradeLevel, string> = {
+  'pre-k': 'Pre-K',
+  k: 'Kínder',
+  '1': '1.º', '2': '2.º', '3': '3.º', '4': '4.º', '5': '5.º',
+  '6': '6.º', '7': '7.º', '8': '8.º', '9': '9.º',
+  '10': '10.º', '11': '11.º', '12': '12.º',
+};
+
+// Normalizador por si llegan aliases
+export function normalizeGrade(g: string): GradeLevel | null {
+  const m = g.toLowerCase().replace(/\s+/g, '');
+  const alias: Record<string, GradeLevel> = {
+    pk: 'pre-k',
+    prek: 'pre-k',
+    prekindergarten: 'pre-k',
+    kinder: 'k',
+    kindergarten: 'k',
+    primero: '1',
+    segundo: '2',
+    tercero: '3',
+    cuarto: '4',
+    quinto: '5',
+    sexto: '6',
+    septimo: '7',
+    séptimo: '7',
+    octavo: '8',
+    noveno: '9',
+    decimo: '10',
+    décimo: '10',
+    undecimo: '11',
+    undécimo: '11',
+    duodecimo: '12',
+    duodécimo: '12',
+  };
+  if ((GRADE_LEVELS as readonly string[]).includes(m)) return m as GradeLevel;
+  if (alias[m]) return alias[m];
+  return null;
+}
 
 // Tipos de dificultad unificados
 export type DifficultyStd = 'easy' | 'medium' | 'hard';
