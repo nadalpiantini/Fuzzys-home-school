@@ -23,6 +23,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useState } from 'react';
 
 const resources = [
   {
@@ -123,6 +124,38 @@ const getTypeIcon = (type: string) => {
 export default function LibraryPage() {
   const { t, language } = useTranslation();
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+
+  // Handlers for navigation and interactions
+  const handleResourceOpen = (resourceId: string, itemName: string) => {
+    // Navigate to specific resource or show modal
+    console.log(`Opening ${itemName} from ${resourceId}`);
+    // For now, show a toast or navigate to a generic resource page
+    router.push(
+      `/library/resource/${resourceId}/${encodeURIComponent(itemName)}`,
+    );
+  };
+
+  const handleViewAllResources = (subjectId: string) => {
+    // Navigate to subject-specific page
+    router.push(`/library/subject/${subjectId}`);
+  };
+
+  const handleFilterClick = () => {
+    // Toggle filter panel or show filter options
+    console.log('Filter clicked');
+    // For now, just show a message
+    alert(
+      language === 'es'
+        ? 'Funcionalidad de filtros próximamente'
+        : 'Filter functionality coming soon',
+    );
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -170,10 +203,16 @@ export default function LibraryPage() {
                     ? 'Buscar recursos...'
                     : 'Search resources...'
                 }
+                value={searchTerm}
+                onChange={handleSearchChange}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fuzzy-purple focus:border-transparent"
               />
             </div>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={handleFilterClick}
+            >
               <Filter className="w-4 h-4" />
               {language === 'es' ? 'Filtrar' : 'Filter'}
             </Button>
@@ -218,13 +257,23 @@ export default function LibraryPage() {
                           {item.level && <span>• {item.level}</span>}
                         </div>
                       </div>
-                      <Button size="sm" variant="outline">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          handleResourceOpen(resource.id, item.name)
+                        }
+                      >
                         {language === 'es' ? 'Abrir' : 'Open'}
                       </Button>
                     </div>
                   ))}
                 </div>
-                <Button className="w-full mt-4" variant="outline">
+                <Button
+                  className="w-full mt-4"
+                  variant="outline"
+                  onClick={() => handleViewAllResources(resource.id)}
+                >
                   {language === 'es'
                     ? 'Ver todos los recursos'
                     : 'View all resources'}
