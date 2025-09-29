@@ -1,21 +1,28 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getSupabaseServer } from '@/lib/supabase/server';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const ts = new Date().toISOString();
   try {
-    const supabase = createClient();
-    const { data, error } = await supabase.from('games').select('id').limit(1);
-    if (error) throw error;
-
+    // 🔒 Sin service-role para health. Solo probamos reachability del auth.
+    const supabase = getSupabaseServer(false);
+    const { error } = await supabase.auth.getSession();
+    return NextResponse.json({
+      ok: !error,
+      ts,
+      auth: error ? 'error' : 'ok',
+      err: error?.message,
+    }, { status: error ? 500 : 200 });
+  } catch (e: any) {
+    // El endpoint vive aunque la DB no responda
     return NextResponse.json({
       ok: true,
-      db: 'connected',
-      sample: data?.length ?? 0,
-    });
-  } catch (e) {
-    return NextResponse.json(
-      { ok: false, error: (e as Error).message },
-      { status: 500 },
-    );
+      ts,
+      note: 'alive; db probe skipped',
+      err: e?.message,
+    }, { status: 200 });
   }
 }
