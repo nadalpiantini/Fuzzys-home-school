@@ -325,23 +325,53 @@ export function normalizeSubject(s: string): Subject | null {
 export type GradeLevel =
   | 'pre-k'
   | 'k'
-  | '1' | '2' | '3' | '4' | '5'
-  | '6' | '7' | '8' | '9' | '10' | '11' | '12';
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | '11'
+  | '12';
 
 // Lista canónica para selects / filtros
 export const GRADE_LEVELS = [
-  'pre-k','k',
-  '1','2','3','4','5',
-  '6','7','8','9','10','11','12',
+  'pre-k',
+  'k',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
 ] as const satisfies readonly GradeLevel[];
 
 // Labels en ES
 export const GRADE_LABELS: Record<GradeLevel, string> = {
   'pre-k': 'Pre-K',
   k: 'Kínder',
-  '1': '1.º', '2': '2.º', '3': '3.º', '4': '4.º', '5': '5.º',
-  '6': '6.º', '7': '7.º', '8': '8.º', '9': '9.º',
-  '10': '10.º', '11': '11.º', '12': '12.º',
+  '1': '1.º',
+  '2': '2.º',
+  '3': '3.º',
+  '4': '4.º',
+  '5': '5.º',
+  '6': '6.º',
+  '7': '7.º',
+  '8': '8.º',
+  '9': '9.º',
+  '10': '10.º',
+  '11': '11.º',
+  '12': '12.º',
 };
 
 // Normalizador por si llegan aliases
@@ -380,7 +410,59 @@ export type DifficultyStd = 'easy' | 'medium' | 'hard';
 export type DifficultyAlt = 'beginner' | 'intermediate' | 'advanced';
 export type Difficulty = DifficultyStd | DifficultyAlt;
 
-export type Category = 'quiz' | 'interactive' | 'creative' | 'stem';
+// Categorías canónicas
+export type Category =
+  | 'assessment'
+  | 'interactive'
+  | 'programming'
+  | 'creative'
+  | 'simulation'
+  | 'ar-vr'
+  | 'language'
+  | 'stem'
+  | 'social'
+  | 'gamification';
+
+// Lista canónica (para selects / filtros)
+export const CATEGORIES = [
+  'assessment',
+  'interactive',
+  'programming',
+  'creative',
+  'simulation',
+  'ar-vr',
+  'language',
+  'stem',
+  'social',
+  'gamification',
+] as const satisfies readonly Category[];
+
+// Labels en ES (o EN si prefieres)
+export const CATEGORY_LABELS: Record<Category, string> = {
+  assessment:   'Evaluación',
+  interactive:  'Interactivo',
+  programming:  'Programación',
+  creative:     'Creativo',
+  simulation:   'Simulación',
+  'ar-vr':      'AR/VR',
+  language:     'Lenguaje',
+  stem:         'STEM',
+  social:       'Aprendizaje Social',
+  gamification: 'Gamificación',
+};
+
+// Normalizador (acepta "Assessment", "ASSESSMENT", "Ar Vr", etc.)
+export function normalizeCategory(c: string): Category | null {
+  const key = c.toLowerCase().replace(/\s+/g, '-');
+  const alias: Record<string, Category> = {
+    'arvr': 'ar-vr',
+    'ar-vr': 'ar-vr',
+    'ar/vr': 'ar-vr',
+  };
+  if ((CATEGORIES as readonly string[]).includes(key)) return key as Category;
+  if (alias[key]) return alias[key];
+  return null;
+}
 
 // Útil para selects ('all' | T)
 export type AllOr<T extends string> = 'all' | T;

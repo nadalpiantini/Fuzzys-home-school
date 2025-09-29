@@ -14,6 +14,8 @@ import {
   SUBJECT_LABELS,
   GRADE_LEVELS,
   GRADE_LABELS,
+  CATEGORIES,
+  CATEGORY_LABELS,
 } from '@/lib/game-factory/types';
 import {
   Search,
@@ -79,52 +81,33 @@ export default function GameTypeSelector({
     'advanced',
   ] as const satisfies readonly Difficulty[];
 
-  const CATEGORY_OPTIONS = [
-    'Assessment',
-    'Interactive',
-    'Programming',
-    'Creative',
-    'Simulation',
-    'AR/VR',
-    'Language',
-    'STEM',
-    'Social',
-    'Gamification',
-  ] as const satisfies readonly Category[];
+  // Usar la lista canónica de categorías
+  const CATEGORY_OPTIONS = CATEGORIES;
 
   const categories = [
     { id: 'all', name: 'Todos', icon: <Gamepad2 className="w-4 h-4" /> },
-    {
-      id: 'Assessment',
-      name: 'Evaluación',
-      icon: <Target className="w-4 h-4" />,
-    },
-    {
-      id: 'Interactive',
-      name: 'Interactivo',
-      icon: <Zap className="w-4 h-4" />,
-    },
-    {
-      id: 'Programming',
-      name: 'Programación',
-      icon: <Code className="w-4 h-4" />,
-    },
-    { id: 'Creative', name: 'Creativo', icon: <Music className="w-4 h-4" /> },
-    {
-      id: 'Simulation',
-      name: 'Simulación',
-      icon: <Beaker className="w-4 h-4" />,
-    },
-    { id: 'AR/VR', name: 'AR/VR', icon: <Camera className="w-4 h-4" /> },
-    { id: 'Language', name: 'Idiomas', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'STEM', name: 'STEM', icon: <Brain className="w-4 h-4" /> },
-    { id: 'Social', name: 'Social', icon: <Users className="w-4 h-4" /> },
-    {
-      id: 'Gamification',
-      name: 'Gamificación',
-      icon: <Star className="w-4 h-4" />,
-    },
+    ...CATEGORIES.map((category) => ({
+      id: category,
+      name: CATEGORY_LABELS[category],
+      icon: getCategoryIcon(category),
+    })),
   ];
+
+  function getCategoryIcon(category: Category) {
+    const icons: Record<Category, React.ReactNode> = {
+      assessment: <Target className="w-4 h-4" />,
+      interactive: <Zap className="w-4 h-4" />,
+      programming: <Code className="w-4 h-4" />,
+      creative: <Music className="w-4 h-4" />,
+      simulation: <Beaker className="w-4 h-4" />,
+      'ar-vr': <Camera className="w-4 h-4" />,
+      language: <BookOpen className="w-4 h-4" />,
+      stem: <Brain className="w-4 h-4" />,
+      social: <Users className="w-4 h-4" />,
+      gamification: <Star className="w-4 h-4" />,
+    };
+    return icons[category];
+  }
 
   const getTypeIcon = (type: GameType) => {
     const icons: Partial<Record<GameType, React.ReactNode>> = {
