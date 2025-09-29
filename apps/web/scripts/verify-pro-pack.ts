@@ -32,8 +32,8 @@ async function verifyProPack() {
   console.log('\n2️⃣ Verificando conexión a Supabase...');
   try {
     const supabase = createClient(
-      ENV.NEXT_PUBLIC_SUPABASE_URL,
-      ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      ENV.NEXT_PUBLIC_SUPABASE_URL!,
+      ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
 
     const { data, error } = await supabase
@@ -54,8 +54,8 @@ async function verifyProPack() {
   console.log('\n3️⃣ Verificando RLS en tablas...');
   try {
     const supabase = createClient(
-      ENV.NEXT_PUBLIC_SUPABASE_URL,
-      ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      ENV.NEXT_PUBLIC_SUPABASE_URL!,
+      ENV.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
 
     // Verificar que podemos leer quizzes (debería funcionar con RLS)
