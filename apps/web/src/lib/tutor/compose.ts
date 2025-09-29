@@ -1,4 +1,4 @@
-import { FUZZY_PROMPT_ES, FUZZY_PROMPT_EN } from "./prompt";
+import { FUZZY_PROMPT_ES, FUZZY_PROMPT_EN } from './prompt';
 
 export interface TutorContext {
   materia: string;
@@ -10,15 +10,15 @@ export interface TutorContext {
 
 export function buildSystemPrompt(context: TutorContext): string {
   const { materia, idioma = 'es' } = context;
-  
+
   const basePrompt = idioma === 'es' ? FUZZY_PROMPT_ES : FUZZY_PROMPT_EN;
-  
-  return basePrompt.replace("{{materia}}", materia || "clase");
+
+  return basePrompt.replace('{{materia}}', materia || 'clase');
 }
 
 export function buildWelcomeMessage(context: TutorContext): string {
   const { materia, idioma = 'es' } = context;
-  
+
   if (idioma === 'es') {
     return `¡Hola! Soy Fuzzy, tu tutor personal de ${materia}. Estoy aquí para ayudarte a entender cualquier tema paso a paso. ¿En qué puedo ayudarte hoy?`;
   } else {
