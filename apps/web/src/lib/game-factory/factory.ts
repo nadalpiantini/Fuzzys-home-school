@@ -205,7 +205,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': '1',
     };
 
-    return playerCounts[type] || '1';
+    return (playerCounts as any)[type] || '1';
   }
 
   private generateTags(type: GameType, config: GameConfig): string[] {
@@ -219,15 +219,31 @@ export class GameFactoryImpl implements GameFactory {
   }
 
   private getEmoji(type: GameType): string {
-    const EMOJIS = expectCompleteMap(GAME_TYPES, {
-      'multiple-choice':'❓','true-false':'✅','fill-blank':'📝','short-answer':'✍️',
-      'drag-drop':'🧩','hotspot':'📍','sequence':'🔢','matching':'🔗','memory-cards':'🃏',
-      'blockly-puzzle':'🧱','flashcards':'💡','essay':'🧾','timeline':'🕰️',
-      'live-quiz':'📡','mind-map':'🧠','branching-scenario':'🌿','team-challenge':'🤝',
-      'code-challenge':'💻','research-methods':'🔬','critical-thinking':'🧩',
-      'leadership':'⭐','badge-collection':'🏅',
-    });
-    return EMOJIS[type];
+    const EMOJIS = ({
+      'multiple-choice': '❓',
+      'true-false': '✅',
+      'fill-blank': '📝',
+      'short-answer': '✍️',
+      'drag-drop': '🧩',
+      hotspot: '📍',
+      sequence: '🔢',
+      matching: '🔗',
+      'memory-cards': '🃏',
+      'blockly-puzzle': '🧱',
+      flashcards: '💡',
+      essay: '🧾',
+      timeline: '🕰️',
+      'live-quiz': '📡',
+      'mind-map': '🧠',
+      'branching-scenario': '🌿',
+      'team-challenge': '🤝',
+      'code-challenge': '💻',
+      'research-methods': '🔬',
+      'critical-thinking': '🧩',
+      leadership: '⭐',
+      'badge-collection': '🏅',
+    } as any);
+    return EMOJIS[type] ?? '🎮';
   }
 
   private getGradeName(grade: string): string {
@@ -298,7 +314,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': 0,
     };
 
-    const baseTime = baseTimeLimits[type] ?? 300;
+    const baseTime = (baseTimeLimits as any)[type] ?? 300;
 
     // Adjust based on difficulty
     if (difficulty === 'beginner') {
@@ -358,7 +374,7 @@ export class GameFactoryImpl implements GameFactory {
       'badge-collection': 0,
     };
 
-    const attempts = baseAttempts[type] ?? 3;
+    const attempts = (baseAttempts as any)[type] ?? 3;
 
     // Adjust based on difficulty
     if (difficulty === 'beginner') {

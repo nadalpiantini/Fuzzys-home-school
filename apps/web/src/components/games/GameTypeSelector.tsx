@@ -38,7 +38,6 @@ import {
   Zap,
 } from 'lucide-react';
 
-
 interface GameTypeSelectorProps {
   onGameSelect: (gameType: GameType) => void;
   selectedCategory: AllOr<Category>;
@@ -162,15 +161,15 @@ export default function GameTypeSelector({
       normalizeCategory(template.category) === selectedCategory;
     const matchesSubject = includesIfNotAll(
       selectedSubject,
-      template.subjects as readonly Subject[],
+      template.subjects,
     );
     const matchesGrade = includesIfNotAll(
       selectedGrade,
-      template.ageRange as readonly GradeLevel[],
+      template.ageRange,
     );
     const matchesDifficulty = includesIfNotAll(
       selectedDifficulty,
-      (template.difficultyTags ?? []) as readonly Difficulty[],
+      ('difficultyTags' in template ? template.difficultyTags : undefined) ?? [],
     );
 
     return (

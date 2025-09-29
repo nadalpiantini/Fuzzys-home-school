@@ -122,10 +122,9 @@ export default function EnhancedGameList({
     const matchesCategory =
       selectedCategory === 'all' ||
       normalizeCategory(game.type) === selectedCategory;
-    const matchesSubject = includesIfNotAll(
-      selectedSubject,
-      [game.subject] as readonly Subject[]
-    );
+    const matchesSubject = includesIfNotAll(selectedSubject, [
+      game.subject,
+    ] as readonly Subject[]);
     const matchesGrade =
       selectedGrade === 'all' || game.grade === selectedGrade;
     const matchesDifficulty =

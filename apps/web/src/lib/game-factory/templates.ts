@@ -7,9 +7,10 @@ export const gameTemplates = {
     type: 'multiple-choice',
     name: 'Opción Múltiple',
     description: 'Preguntas con múltiples opciones de respuesta',
-    category: 'Assessment',
-    ageRange: '6-18',
+    category: 'assessment',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'language', 'history', 'geography'],
+    difficultyTags: ['easy', 'medium', 'hard'],
     features: ['scoring', 'explanation', 'difficulty-levels'],
     template: () => ({
       type: 'multiple-choice',
@@ -35,9 +36,10 @@ export const gameTemplates = {
     type: 'true-false',
     name: 'Verdadero o Falso',
     description: 'Preguntas de verdadero o falso',
-    category: 'Assessment',
-    ageRange: '6-18',
+    category: 'assessment',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'language', 'history'],
+    difficultyTags: ['easy', 'medium', 'hard'],
     features: ['quick-assessment', 'binary-choice'],
     template: () => ({
       type: 'true-false',
@@ -62,8 +64,8 @@ export const gameTemplates = {
     type: 'fill-blank',
     name: 'Completar Espacios',
     description: 'Completar espacios en blanco en textos',
-    category: 'Language',
-    ageRange: '8-18',
+    category: 'language',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['language', 'literature', 'grammar'],
     features: ['text-completion', 'context-learning'],
     template: () => ({
@@ -89,9 +91,10 @@ export const gameTemplates = {
     type: 'short-answer',
     name: 'Respuesta Corta',
     description: 'Preguntas que requieren respuestas cortas',
-    category: 'Assessment',
-    ageRange: '8-18',
+    category: 'assessment',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'language', 'history'],
+    difficultyTags: ['easy', 'medium', 'hard'],
     features: ['open-ended', 'creative-thinking'],
     template: () => ({
       type: 'short-answer',
@@ -119,8 +122,8 @@ export const gameTemplates = {
     type: 'drag-drop',
     name: 'Arrastrar y Soltar',
     description: 'Clasificar elementos arrastrándolos a categorías',
-    category: 'Interactive',
-    ageRange: '4-16',
+    category: 'interactive',
+    ageRange: ['pre-k', 'k', '1', '2', '3', '4', '5', '6', '7', '8'],
     subjects: ['math', 'science', 'language', 'art'],
     features: ['visual-learning', 'categorization', 'motor-skills'],
     template: () => ({
@@ -140,8 +143,8 @@ export const gameTemplates = {
     type: 'hotspot',
     name: 'Zonas Interactivas',
     description: 'Hacer clic en áreas específicas de una imagen',
-    category: 'Interactive',
-    ageRange: '6-18',
+    category: 'interactive',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['science', 'geography', 'history', 'anatomy'],
     features: ['visual-identification', 'spatial-learning'],
     template: () => ({
@@ -165,8 +168,8 @@ export const gameTemplates = {
     type: 'sequence',
     name: 'Ordenar Secuencias',
     description: 'Ordenar elementos en secuencia lógica',
-    category: 'Logic',
-    ageRange: '6-18',
+    category: 'interactive',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'history', 'language'],
     features: ['logical-thinking', 'chronology', 'process-understanding'],
     template: () => ({
@@ -186,8 +189,8 @@ export const gameTemplates = {
     type: 'matching',
     name: 'Emparejar',
     description: 'Conectar elementos relacionados',
-    category: 'Interactive',
-    ageRange: '6-18',
+    category: 'interactive',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['language', 'math', 'science', 'history'],
     features: ['association', 'pattern-recognition'],
     template: () => ({
@@ -206,8 +209,8 @@ export const gameTemplates = {
     type: 'memory-cards',
     name: 'Memoria',
     description: 'Juego de memoria con tarjetas',
-    category: 'Memory',
-    ageRange: '4-16',
+    category: 'interactive',
+    ageRange: ['pre-k', 'k', '1', '2', '3', '4', '5', '6', '7', '8'],
     subjects: ['language', 'math', 'science', 'art'],
     features: ['memory-training', 'visual-recognition'],
     template: () => ({
@@ -228,8 +231,8 @@ export const gameTemplates = {
     type: 'blockly-puzzle',
     name: 'Rompecabezas de Bloques',
     description: 'Resolver puzzles usando bloques de programación',
-    category: 'Programming',
-    ageRange: '6-16',
+    category: 'programming',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8'],
     subjects: ['programming', 'logic', 'math'],
     features: ['visual-programming', 'problem-solving', 'algorithmic-thinking'],
     template: () => ({
@@ -248,8 +251,8 @@ export const gameTemplates = {
     type: 'blockly-maze',
     name: 'Laberinto de Bloques',
     description: 'Navegar por un laberinto usando bloques',
-    category: 'Programming',
-    ageRange: '6-16',
+    category: 'programming',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8'],
     subjects: ['programming', 'logic', 'spatial'],
     features: ['spatial-reasoning', 'algorithmic-thinking'],
     template: () => ({
@@ -268,8 +271,8 @@ export const gameTemplates = {
     type: 'scratch-project',
     name: 'Proyecto Scratch',
     description: 'Crear animaciones y juegos con Scratch',
-    category: 'Programming',
-    ageRange: '8-18',
+    category: 'programming',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['programming', 'art', 'math', 'science'],
     features: ['creative-programming', 'multimedia', 'storytelling'],
     template: () => ({
@@ -288,8 +291,8 @@ export const gameTemplates = {
     type: 'turtle-blocks',
     name: 'Bloques de Tortuga',
     description: 'Dibujar con programación de tortuga',
-    category: 'Programming',
-    ageRange: '6-16',
+    category: 'programming',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8'],
     subjects: ['programming', 'art', 'math', 'geometry'],
     features: ['geometric-programming', 'artistic-expression'],
     template: () => ({
@@ -309,8 +312,8 @@ export const gameTemplates = {
     type: 'music-blocks',
     name: 'Bloques Musicales',
     description: 'Crear música con bloques de programación',
-    category: 'Creative',
-    ageRange: '8-18',
+    category: 'creative',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['music', 'programming', 'math'],
     features: ['musical-creation', 'rhythm-learning', 'mathematical-patterns'],
     template: () => ({
@@ -329,8 +332,8 @@ export const gameTemplates = {
     type: 'story-creator',
     name: 'Creador de Historias',
     description: 'Crear historias interactivas',
-    category: 'Creative',
-    ageRange: '8-18',
+    category: 'creative',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['language', 'literature', 'creativity'],
     features: ['storytelling', 'creative-writing', 'narrative-structure'],
     template: () => ({
@@ -379,8 +382,8 @@ export const gameTemplates = {
     type: 'physics-sim',
     name: 'Simulación de Física',
     description: 'Experimentar con conceptos de física',
-    category: 'Simulation',
-    ageRange: '10-18',
+    category: 'simulation',
+    ageRange: ['5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['physics', 'science', 'math'],
     features: [
       'interactive-experiments',
@@ -424,8 +427,8 @@ export const gameTemplates = {
     type: 'chemistry-lab',
     name: 'Laboratorio de Química',
     description: 'Experimentar con reacciones químicas',
-    category: 'Simulation',
-    ageRange: '12-18',
+    category: 'simulation',
+    ageRange: ['7', '8', '9', '10', '11', '12'],
     subjects: ['chemistry', 'science'],
     features: ['safe-experimentation', 'reaction-visualization'],
     template: () => ({
@@ -466,8 +469,8 @@ export const gameTemplates = {
     type: 'ar-explorer',
     name: 'Explorador AR',
     description: 'Explorar el mundo con realidad aumentada',
-    category: 'AR/VR',
-    ageRange: '8-18',
+    category: 'ar-vr',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['geography', 'history', 'science', 'art'],
     features: [
       'immersive-learning',
@@ -512,9 +515,10 @@ export const gameTemplates = {
     type: 'adaptive-quiz',
     name: 'Quiz Adaptativo',
     description: 'Quiz que se adapta al nivel del estudiante',
-    category: 'Assessment',
-    ageRange: '8-18',
+    category: 'assessment',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'language', 'history'],
+    difficultyTags: ['easy', 'medium', 'hard'],
     features: [
       'adaptive-difficulty',
       'personalized-learning',
@@ -544,9 +548,10 @@ export const gameTemplates = {
     type: 'competition',
     name: 'Competencia en Vivo',
     description: 'Competir con otros estudiantes en tiempo real',
-    category: 'Social',
-    ageRange: '8-18',
+    category: 'social',
+    ageRange: ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['math', 'science', 'language', 'history'],
+    difficultyTags: ['easy', 'medium', 'hard'],
     features: ['real-time-competition', 'leaderboards', 'social-learning'],
     template: () => ({
       type: 'competition',
@@ -573,8 +578,8 @@ export const gameTemplates = {
     type: 'vocabulary-builder',
     name: 'Constructor de Vocabulario',
     description: 'Aprender vocabulario de manera interactiva',
-    category: 'Language',
-    ageRange: '6-18',
+    category: 'language',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['language', 'vocabulary'],
     features: ['spaced-repetition', 'visual-learning', 'audio-support'],
     template: () => ({
@@ -605,8 +610,8 @@ export const gameTemplates = {
     type: 'coding-challenge',
     name: 'Desafío de Programación',
     description: 'Resolver problemas de programación',
-    category: 'STEM',
-    ageRange: '10-18',
+    category: 'stem',
+    ageRange: ['5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['programming', 'computer-science', 'logic'],
     features: ['problem-solving', 'algorithmic-thinking', 'code-execution'],
     template: () => ({
@@ -633,8 +638,8 @@ export const gameTemplates = {
     type: 'discussion-forum',
     name: 'Foro de Discusión',
     description: 'Participar en discusiones educativas',
-    category: 'Social',
-    ageRange: '12-18',
+    category: 'social',
+    ageRange: ['7', '8', '9', '10', '11', '12'],
     subjects: ['language', 'history', 'science', 'philosophy'],
     features: ['collaborative-learning', 'critical-thinking', 'communication'],
     template: () => ({
@@ -675,8 +680,8 @@ export const gameTemplates = {
     type: 'achievement-system',
     name: 'Sistema de Logros',
     description: 'Ganar logros por completar actividades',
-    category: 'Gamification',
-    ageRange: '6-18',
+    category: 'gamification',
+    ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     subjects: ['all'],
     features: ['motivation', 'progress-tracking', 'recognition'],
     template: () => ({
@@ -701,12 +706,12 @@ export const gameTemplates = {
 
 export function getGameTemplate(type: GameType): GameTemplate {
   return (
-    gameTemplates[type] ?? {
+    (gameTemplates as any)[type] ?? {
       type: 'multiple-choice',
       name: 'Juego Genérico',
       description: 'Juego educativo genérico',
-      category: 'General',
-      ageRange: '6-18',
+      category: 'interactive',
+      ageRange: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
       subjects: ['general'],
       features: ['scoring'],
       template: () => ({
@@ -731,6 +736,6 @@ export function getTemplatesByCategory(category: string): GameTemplate[] {
 
 export function getTemplatesBySubject(subject: string): GameTemplate[] {
   return Object.values(gameTemplates).filter((template) =>
-    template.subjects.includes(subject),
+    (template.subjects as string[]).includes(subject),
   );
 }

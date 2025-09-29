@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 
 // usar sólo en server components o rutas que necesiten cookies/sesión
 export function getSupabaseSSR(opts: {
-  cookies: {
+  cookies: () => {
     get(n: string): { name: string; value: string } | undefined;
     set: Function;
     delete: Function;

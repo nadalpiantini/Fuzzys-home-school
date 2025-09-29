@@ -96,7 +96,16 @@ export type GameType =
   | 'adventure'
   | 'progressive-learning'
   | 'gamification'
-  | 'recognition';
+  | 'recognition'
+  // Additional from second definition
+  | 'live-quiz'
+  | 'mind-map'
+  | 'branching-scenario'
+  | 'team-challenge'
+  | 'code-challenge'
+  | 'research-methods'
+  | 'critical-thinking'
+  | 'leadership';
 
 export interface GameContent {
   type: GameType;
@@ -146,7 +155,7 @@ export interface Card {
 export interface Item {
   id: string;
   name: string;
-  type: string;
+  type?: string;
   category?: string;
   properties?: Record<string, any>;
   position?: { x: number; y: number };
@@ -215,9 +224,10 @@ export interface GameTemplate {
   type: GameType;
   name: string;
   description: string;
-  category: string;
-  ageRange: string;
-  subjects: string[];
+  category: Category;
+  ageRange: GradeLevel[];
+  subjects: Subject[];
+  difficultyTags?: Difficulty[];
   features: string[];
   template: () => GameContent;
 }
@@ -241,67 +251,271 @@ export interface GameConfig {
 
 // === Subjects ===============================
 export type Subject =
-  | 'math' | 'science' | 'language' | 'history' | 'geography'
-  | 'art'  | 'music'   | 'technology' | 'coding' | 'reading' | 'writing';
+  | 'math'
+  | 'science'
+  | 'language'
+  | 'literature'
+  | 'grammar'
+  | 'history'
+  | 'geography'
+  | 'art'
+  | 'music'
+  | 'technology'
+  | 'coding'
+  | 'reading'
+  | 'writing'
+  | 'anatomy'
+  | 'programming'
+  | 'logic'
+  | 'spatial'
+  | 'geometry'
+  | 'creativity'
+  | 'physics'
+  | 'chemistry'
+  | 'vocabulary'
+  | 'computer-science'
+  | 'philosophy'
+  | 'all'
+  | 'general';
 
 export const SUBJECTS = [
-  'math','science','language','history','geography',
-  'art','music','technology','coding','reading','writing',
+  'math',
+  'science',
+  'language',
+  'literature',
+  'grammar',
+  'history',
+  'geography',
+  'art',
+  'music',
+  'technology',
+  'coding',
+  'reading',
+  'writing',
+  'anatomy',
+  'programming',
+  'logic',
+  'spatial',
+  'geometry',
+  'creativity',
+  'physics',
+  'chemistry',
+  'vocabulary',
+  'computer-science',
+  'philosophy',
+  'all',
+  'general',
 ] as const satisfies readonly Subject[];
 
-export const SUBJECT_LABELS: Record<Subject,string> = {
-  math:'Matemáticas', science:'Ciencias', language:'Lenguaje',
-  history:'Historia', geography:'Geografía', art:'Arte', music:'Música',
-  technology:'Tecnología', coding:'Programación', reading:'Lectura', writing:'Escritura',
+export const SUBJECT_LABELS: Record<Subject, string> = {
+  math: 'Matemáticas',
+  science: 'Ciencias',
+  language: 'Lenguaje',
+  literature: 'Literatura',
+  grammar: 'Gramática',
+  history: 'Historia',
+  geography: 'Geografía',
+  art: 'Arte',
+  music: 'Música',
+  technology: 'Tecnología',
+  coding: 'Programación',
+  reading: 'Lectura',
+  writing: 'Escritura',
+  anatomy: 'Anatomía',
+  programming: 'Programación',
+  logic: 'Lógica',
+  spatial: 'Espacial',
+  geometry: 'Geometría',
+  creativity: 'Creatividad',
+  physics: 'Física',
+  chemistry: 'Química',
+  vocabulary: 'Vocabulario',
+  'computer-science': 'Informática',
+  philosophy: 'Filosofía',
+  all: 'Todas',
+  general: 'General',
 };
 
 // Grados (1–12 + pre-k/kinder si aplica)
-export type GradeLevel = 'pre-k'|'k'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'10'|'11'|'12';
+export type GradeLevel =
+  | 'pre-k'
+  | 'k'
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | '11'
+  | '12';
 
 export const GRADE_LEVELS = [
-  'pre-k','k','1','2','3','4','5','6','7','8','9','10','11','12',
+  'pre-k',
+  'k',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
 ] as const satisfies readonly GradeLevel[];
 
-export const GRADE_LABELS: Record<GradeLevel,string> = {
-  'pre-k':'Pre-K', k:'Kinder', '1':'1.º','2':'2.º','3':'3.º','4':'4.º','5':'5.º','6':'6.º',
-  '7':'7.º','8':'8.º','9':'9.º','10':'10.º','11':'11.º','12':'12.º',
+export const GRADE_LABELS: Record<GradeLevel, string> = {
+  'pre-k': 'Pre-K',
+  k: 'Kinder',
+  '1': '1.º',
+  '2': '2.º',
+  '3': '3.º',
+  '4': '4.º',
+  '5': '5.º',
+  '6': '6.º',
+  '7': '7.º',
+  '8': '8.º',
+  '9': '9.º',
+  '10': '10.º',
+  '11': '11.º',
+  '12': '12.º',
 };
 
-export type Difficulty = 'easy'|'medium'|'hard';
-export const DIFFICULTIES = ['easy','medium','hard'] as const satisfies readonly Difficulty[];
-export const DIFFICULTY_LABELS: Record<Difficulty,string> = { easy:'Fácil', medium:'Media', hard:'Difícil' };
+export type Difficulty = 'easy' | 'medium' | 'hard';
+export const DIFFICULTIES = [
+  'easy',
+  'medium',
+  'hard',
+] as const satisfies readonly Difficulty[];
+export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  easy: 'Fácil',
+  medium: 'Media',
+  hard: 'Difícil',
+};
 
 export type Category =
-  | 'assessment' | 'interactive' | 'programming' | 'creative'
-  | 'simulation' | 'ar-vr' | 'language' | 'stem' | 'social' | 'gamification';
+  | 'assessment'
+  | 'interactive'
+  | 'programming'
+  | 'creative'
+  | 'simulation'
+  | 'ar-vr'
+  | 'language'
+  | 'stem'
+  | 'social'
+  | 'gamification';
 
 export const CATEGORIES = [
-  'assessment','interactive','programming','creative','simulation',
-  'ar-vr','language','stem','social','gamification',
+  'assessment',
+  'interactive',
+  'programming',
+  'creative',
+  'simulation',
+  'ar-vr',
+  'language',
+  'stem',
+  'social',
+  'gamification',
 ] as const satisfies readonly Category[];
 
-export const CATEGORY_LABELS: Record<Category,string> = {
-  assessment:'Evaluación', interactive:'Interactivo', programming:'Programación',
-  creative:'Creativo', simulation:'Simulación', 'ar-vr':'AR/VR', language:'Lenguaje',
-  stem:'STEM', social:'Aprendizaje Social', gamification:'Gamificación',
+export const CATEGORY_LABELS: Record<Category, string> = {
+  assessment: 'Evaluación',
+  interactive: 'Interactivo',
+  programming: 'Programación',
+  creative: 'Creativo',
+  simulation: 'Simulación',
+  'ar-vr': 'AR/VR',
+  language: 'Lenguaje',
+  stem: 'STEM',
+  social: 'Aprendizaje Social',
+  gamification: 'Gamificación',
 };
 
-// GameType: deja solo los que realmente renderices hoy (agrega luego)
-export type GameType =
-  | 'multiple-choice' | 'true-false' | 'fill-blank' | 'short-answer'
-  | 'drag-drop' | 'hotspot' | 'sequence' | 'matching' | 'memory-cards'
-  | 'blockly-puzzle' | 'flashcards' | 'essay' | 'timeline' | 'live-quiz'
-  | 'mind-map' | 'branching-scenario' | 'team-challenge' | 'code-challenge'
-  | 'research-methods' | 'critical-thinking' | 'leadership'
-  | 'badge-collection';
 
 export const GAME_TYPES = [
-  'multiple-choice','true-false','fill-blank','short-answer',
-  'drag-drop','hotspot','sequence','matching','memory-cards',
-  'blockly-puzzle','flashcards','essay','timeline','live-quiz',
-  'mind-map','branching-scenario','team-challenge','code-challenge',
-  'research-methods','critical-thinking','leadership',
+  'multiple-choice',
+  'true-false',
+  'fill-blank',
+  'short-answer',
+  'drag-drop',
+  'hotspot',
+  'sequence',
+  'matching',
+  'memory-cards',
+  'blockly-puzzle',
+  'blockly-maze',
+  'scratch-project',
+  'turtle-blocks',
+  'music-blocks',
+  'story-creator',
+  'art-generator',
+  'poetry-maker',
+  'physics-sim',
+  'chemistry-lab',
+  'math-visualizer',
+  'geography-explorer',
+  'ar-explorer',
+  'vr-classroom',
+  'mixed-reality',
+  'adaptive-quiz',
+  'competition',
+  'collaborative',
+  'peer-review',
+  'vocabulary-builder',
+  'pronunciation',
+  'conversation',
+  'grammar-practice',
+  'coding-challenge',
+  'robotics-sim',
+  'data-analysis',
+  'experiment-design',
+  'discussion-forum',
+  'peer-teaching',
+  'group-project',
+  'presentation',
+  'achievement-system',
+  'leaderboard',
+  'quest-chain',
   'badge-collection',
+  'essay',
+  'timeline',
+  'flashcards',
+  'creative-writing',
+  'language-arts',
+  'field-trip',
+  'immersive-learning',
+  'personalized-learning',
+  'language-learning',
+  'language-exchange',
+  'writing-practice',
+  'programming',
+  'engineering',
+  'statistics',
+  'scientific-method',
+  'debate',
+  'knowledge-sharing',
+  'teamwork',
+  'public-speaking',
+  'ranking',
+  'adventure',
+  'progressive-learning',
+  'gamification',
+  'recognition',
+  // Additional from second definition
+  'live-quiz',
+  'mind-map',
+  'branching-scenario',
+  'team-challenge',
+  'code-challenge',
+  'research-methods',
+  'critical-thinking',
+  'leadership',
 ] as const satisfies readonly GameType[];
 
 export type AllOr<T extends string> = 'all' | T;
