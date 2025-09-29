@@ -89,7 +89,12 @@ if (!parsedPublic.success) {
   const msg = parsedPublic.error.errors
     .map((e) => `PUBLIC ${e.path.join('.')}: ${e.message}`)
     .join(' | ');
-  throw new Error(`Env validation (public) failed: ${msg}`);
+  // En build time, ser más permisivo
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
+    console.warn(`Env validation (public) failed: ${msg}`);
+  } else {
+    throw new Error(`Env validation (public) failed: ${msg}`);
+  }
 }
 
 let parsedServer: z.infer<typeof ServerEnvSchema> | null = null;

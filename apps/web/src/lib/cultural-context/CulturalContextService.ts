@@ -115,10 +115,8 @@ export class CulturalContextService {
    * Obtiene contexto por defecto
    */
   async getDefaultContext(): Promise<CulturalContext> {
-    const supabase = getSupabaseServer(true); // useServiceRole = true
-
     try {
-      const supabase = getSupabaseServer();
+      const supabase = getSupabaseServer(true); // useServiceRole = true
       const { data, error } = await supabase
         .from('cultural_contexts')
         .select('*')
