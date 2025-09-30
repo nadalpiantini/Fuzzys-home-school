@@ -402,33 +402,20 @@ function ExternalGamesContent() {
   // Handle specific game requests
   useEffect(() => {
     if (isClient && game) {
-      // Handle Blockly games - redirect to actual Blockly URLs
+      // Handle Blockly games - redirect to dedicated Fuzzy-themed pages!
       if (type === 'blockly') {
-        let blocklyUrl = '';
-        switch (game) {
-          case 'puzzle':
-            blocklyUrl = 'https://blockly.games/puzzle?lang=es';
-            break;
-          case 'maze':
-            blocklyUrl = 'https://blockly.games/maze?lang=es';
-            break;
-          case 'bird':
-            blocklyUrl = 'https://blockly.games/bird?lang=es';
-            break;
-          case 'turtle':
-            blocklyUrl = 'https://blockly.games/turtle?lang=es';
-            break;
-          case 'movie':
-            blocklyUrl = 'https://blockly.games/movie?lang=es';
-            break;
-          case 'music':
-            blocklyUrl = 'https://blockly.games/music?lang=es';
-            break;
-          default:
-            blocklyUrl = 'https://blockly.games/?lang=es';
+        const blocklyGames: { [key: string]: string } = {
+          'maze': '/games/blockly-maze',
+          'turtle': '/games/blockly-turtle',
+          'bird': '/games/blockly-bird',
+          'pond': '/games/blockly-pond',
+        };
+
+        if (blocklyGames[game]) {
+          console.log(`🎮 Redirecting to dedicated Blockly page: ${game} with Fuzzy!`);
+          router.push(blocklyGames[game]);
+          return;
         }
-        window.location.href = blocklyUrl;
-        return;
       }
 
       // Handle PhET simulations
