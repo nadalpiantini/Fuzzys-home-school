@@ -61,10 +61,10 @@ export const GAME_CONFIGS: Record<string, ExternalGameConfig> = {
   'blockly-maze': {
     source: 'blockly',
     gameId: 'maze',
-    title: 'Laberinto Blockly',
-    description: 'Programa al personaje para encontrar la salida del laberinto',
-    url: 'https://blockly.games/maze?lang=es',
-    allowedOrigins: ['https://blockly.games'],
+    title: '🧩 Laberinto con Fuzzy',
+    description: '¡Ayuda a Fuzzy a salir del laberinto programando sus movimientos!',
+    url: '/games/blockly/maze.html?lang=es',
+    allowedOrigins: [], // Ya no necesario (mismo origen)
     trackingEnabled: true,
     ageRange: [8, 16],
     subjects: ['Programación', 'Lógica'],
@@ -72,16 +72,16 @@ export const GAME_CONFIGS: Record<string, ExternalGameConfig> = {
     objectives: [
       {
         id: 'complete-level-1',
-        title: 'Completar nivel 1',
-        description: 'Resolver el primer laberinto',
+        title: '¡Fuzzy escapó del nivel 1!',
+        description: 'Guía a Fuzzy hacia la salida',
         required: true,
         points: 5,
         completionCriteria: { action: 'level-completed', level: 1 },
       },
       {
         id: 'complete-level-5',
-        title: 'Completar nivel 5',
-        description: 'Resolver 5 laberintos consecutivos',
+        title: '¡Fuzzy es un maestro del laberinto!',
+        description: 'Completa 5 niveles consecutivos',
         required: false,
         points: 25,
         completionCriteria: { action: 'level-completed', level: 5 },
@@ -92,10 +92,10 @@ export const GAME_CONFIGS: Record<string, ExternalGameConfig> = {
   'blockly-turtle': {
     source: 'blockly',
     gameId: 'turtle',
-    title: 'Tortuga Gráfica',
-    description: 'Crea arte y formas geométricas programando una tortuga',
-    url: 'https://blockly.games/turtle?lang=es',
-    allowedOrigins: ['https://blockly.games'],
+    title: '🎨 Arte con Fuzzy',
+    description: '¡Crea arte increíble programando a Fuzzy!',
+    url: '/games/blockly/turtle.html?lang=es',
+    allowedOrigins: [], // Ya no necesario (mismo origen)
     trackingEnabled: true,
     ageRange: [8, 16],
     subjects: ['Programación', 'Arte', 'Geometría'],
@@ -103,16 +103,16 @@ export const GAME_CONFIGS: Record<string, ExternalGameConfig> = {
     objectives: [
       {
         id: 'draw-square',
-        title: 'Dibujar un cuadrado',
-        description: 'Programar la tortuga para dibujar un cuadrado perfecto',
+        title: '¡Fuzzy dibujó un cuadrado!',
+        description: 'Programa a Fuzzy para dibujar un cuadrado perfecto',
         required: true,
         points: 10,
         completionCriteria: { action: 'shape-drawn', shape: 'square' },
       },
       {
         id: 'draw-star',
-        title: 'Dibujar una estrella',
-        description: 'Crear una estrella de 5 puntas',
+        title: '¡Fuzzy es un artista!',
+        description: 'Crea una estrella de 5 puntas',
         required: false,
         points: 20,
         completionCriteria: { action: 'shape-drawn', shape: 'star' },
