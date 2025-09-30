@@ -17,7 +17,8 @@ import {
   Brain,
   RefreshCw,
 } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+// TODO: Replace with proper i18n implementation
+// import { useTranslation } from 'next-i18next';
 import { cn } from '@/lib/utils';
 import { TutorEngine } from '@/services/tutor/tutor-engine';
 import { DeepSeekClient } from '@/services/tutor/deepseek-client';
@@ -46,7 +47,8 @@ export function AITutorChat({
   className,
   onSessionEnd,
 }: AITutorChatProps) {
-  const { t } = useTranslation('common');
+  // const { t } = useTranslation('common');
+  const t = (key: string) => key; // Temporary placeholder
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
