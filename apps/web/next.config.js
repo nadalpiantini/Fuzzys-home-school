@@ -60,6 +60,11 @@ const nextConfig = {
   generateBuildId: async () => {
     return 'build-' + Date.now();
   },
+  // Skip static optimization for error pages to avoid styled-jsx issues
+  experimental: {
+    workerThreads: false,
+    cpus: 1,
+  },
   // Output mode for deployment (standalone for Docker, comment for Vercel)
   // output: 'standalone', // Commented out for Vercel deployment
   // PRO Pack: Cache Headers + Security Headers - OPTIMIZED
