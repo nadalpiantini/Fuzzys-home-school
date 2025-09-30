@@ -29,11 +29,12 @@ const nextConfig = {
     unoptimized: true, // For Cloudflare Pages
   },
   productionBrowserSourceMaps: true, // subir sourcemaps
-  i18n: {
-    locales: ['es', 'en'],
-    defaultLocale: 'es',
-    localeDetection: false,
-  },
+  // Temporarily disabled i18n to fix Vercel build issue with styled-jsx
+  // i18n: {
+  //   locales: ['es', 'en'],
+  //   defaultLocale: 'es',
+  //   localeDetection: false,
+  // },
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
@@ -43,14 +44,13 @@ const nextConfig = {
     // Note: styled-jsx is handled via webpack config below
   },
   webpack: (config, { isServer }) => {
-    // Completely disable styled-jsx for SSR to prevent React context errors
-    if (isServer) {
-      // Replace styled-jsx with a no-op during SSR
-      config.resolve = config.resolve || {};
-      config.resolve.alias = config.resolve.alias || {};
-      config.resolve.alias['styled-jsx'] = path.resolve(__dirname, './styled-jsx-mock.js');
-      config.resolve.alias['styled-jsx/style'] = path.resolve(__dirname, './styled-jsx-mock.js');
-    }
+    // Disable styled-jsx completely to prevent React context errors during build
+    // This applies to both server and client builds
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+    config.resolve.alias['styled-jsx'] = path.resolve(__dirname, './styled-jsx-mock.js');
+    config.resolve.alias['styled-jsx/style'] = path.resolve(__dirname, './styled-jsx-mock.js');
+    config.resolve.alias['styled-jsx/css'] = path.resolve(__dirname, './styled-jsx-mock.js');
 
     return config;
   },
@@ -61,7 +61,7 @@ const nextConfig = {
     return 'build-' + Date.now();
   },
   // Output mode for deployment (standalone for Docker, comment for Vercel)
-  output: 'standalone',
+  // output: 'standalone', // Commented out for Vercel deployment
   // PRO Pack: Cache Headers + Security Headers - OPTIMIZED
   async headers() {
     return [
