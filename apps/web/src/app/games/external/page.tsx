@@ -402,23 +402,83 @@ export default function ExternalGamesPage() {
   // Handle specific game requests
   useEffect(() => {
     if (isClient && game) {
-      // Redirect to appropriate demo or external game
-      if (game === 'puzzle' && type === 'blockly') {
-        // Redirect to Blockly puzzle game
-        router.push('/games/blockly-puzzle');
-      } else if (game === 'memory-cards') {
-        router.push('/games/memory-cards');
-      } else if (game === 'flashcards') {
-        router.push('/games/flashcards');
-      } else if (game === 'drag-drop') {
-        router.push('/games/drag-drop');
-      } else if (game === 'music' && type === 'blockly') {
-        // Show Blockly Music games
-        setSelectedType('programming');
-      } else if (game === 'movie' && type === 'blockly') {
-        // Show Blockly Movie games
-        setSelectedType('programming');
+      // Handle Blockly games - redirect to actual Blockly URLs
+      if (type === 'blockly') {
+        let blocklyUrl = '';
+        switch (game) {
+          case 'puzzle':
+            blocklyUrl = 'https://blockly.games/puzzle?lang=es';
+            break;
+          case 'maze':
+            blocklyUrl = 'https://blockly.games/maze?lang=es';
+            break;
+          case 'bird':
+            blocklyUrl = 'https://blockly.games/bird?lang=es';
+            break;
+          case 'turtle':
+            blocklyUrl = 'https://blockly.games/turtle?lang=es';
+            break;
+          case 'movie':
+            blocklyUrl = 'https://blockly.games/movie?lang=es';
+            break;
+          case 'music':
+            blocklyUrl = 'https://blockly.games/music?lang=es';
+            break;
+          default:
+            blocklyUrl = 'https://blockly.games/?lang=es';
+        }
+        window.location.href = blocklyUrl;
+        return;
       }
+
+      // Handle PhET simulations
+      if (type === 'phet') {
+        let phetUrl = 'https://phet.colorado.edu/es/simulations';
+        if (game) {
+          phetUrl = `https://phet.colorado.edu/es/simulations/filter?subjects=physics,chemistry,math,earth-science,biology`;
+        }
+        window.location.href = phetUrl;
+        return;
+      }
+
+      // Handle internal game redirects
+      const internalGames: { [key: string]: string } = {
+        'memory-cards': '/games/memory-cards',
+        'flashcards': '/games/flashcards',
+        'drag-drop': '/games/drag-drop',
+        'crossword': '/games/crossword',
+        'word-search': '/games/word-search',
+        'gap-fill': '/games/gap-fill',
+        'hotspot': '/games/hotspot',
+        'timeline': '/games/timeline',
+        'image-sequence': '/games/image-sequence',
+        'short-answer': '/games/short-answer',
+        'math-solver': '/games/math-solver',
+        'code-challenge': '/games/code-challenge',
+        'branching-scenario': '/games/branching-scenario',
+        'mind-map': '/games/mind-map',
+        'live-quiz': '/games/live-quiz',
+        'team-challenge': '/games/team-challenge',
+        'match': '/games/match',
+        'true-false': '/games/true-false',
+        'research-methods': '/games/research-methods',
+        'critical-thinking': '/games/critical-thinking',
+        'leadership': '/games/leadership',
+      };
+
+      if (internalGames[game]) {
+        router.push(internalGames[game]);
+        return;
+      }
+
+      // Handle AR games
+      if (type === 'ar') {
+        router.push('/colonial-rally');
+        return;
+      }
+
+      // Default behavior - filter by type
+      setSelectedType(type || 'all');
     }
   }, [game, type, router, isClient]);
 
