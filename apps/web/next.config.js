@@ -1,4 +1,9 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,7 +17,7 @@ const nextConfig = {
     '@fuzzy/creative-tools',
     '@fuzzy/external-games',
     '@fuzzy/game-engine',
-    // '@fuzzy/h5p-adapter', // Temporarily disabled due to build issues
+    '@fuzzy/h5p-adapter',
     '@fuzzy/quiz-generator',
     '@fuzzy/sandbox-connector',
     '@fuzzy/schemas',
@@ -29,20 +34,33 @@ const nextConfig = {
     defaultLocale: 'es',
     localeDetection: false,
   },
-  // Vercel optimization
-  // output: 'standalone', // Disabled for Vercel compatibility
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
   },
+  compiler: {
+    styledComponents: false,  // Disable styled-components to prevent SSR issues
+    // Note: styled-jsx is handled via webpack config below
+  },
+  webpack: (config, { isServer }) => {
+    // Completely disable styled-jsx for SSR to prevent React context errors
+    if (isServer) {
+      // Replace styled-jsx with a no-op during SSR
+      config.resolve = config.resolve || {};
+      config.resolve.alias = config.resolve.alias || {};
+      config.resolve.alias['styled-jsx'] = path.resolve(__dirname, './styled-jsx-mock.js');
+      config.resolve.alias['styled-jsx/style'] = path.resolve(__dirname, './styled-jsx-mock.js');
+    }
+
+    return config;
+  },
   // Disable static generation for error pages
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
-  // Disable static generation for error pages
   generateBuildId: async () => {
     return 'build-' + Date.now();
   },
-  // Disable static generation for error pages
+  // Output mode for deployment (standalone for Docker, comment for Vercel)
   output: 'standalone',
   // PRO Pack: Cache Headers + Security Headers - OPTIMIZED
   async headers() {

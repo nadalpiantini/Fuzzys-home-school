@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+'use client';
 
 export default function NotFound() {
   return (
@@ -68,7 +68,11 @@ export default function NotFound() {
             🏠 Ir al Inicio
           </a>
           <a
-            href="javascript:history.back()"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.back();
+            }}
             style={{
               display: 'inline-block',
               padding: '0.75rem 1.5rem',

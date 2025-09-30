@@ -128,16 +128,29 @@ export default function ContentPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" onClick={handleBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              {language === 'es' ? 'Volver' : 'Back'}
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleBack}
+              className="touch-target"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">
+                {language === 'es' ? 'Volver' : 'Back'}
+              </span>
+              <span className="sm:hidden">{language === 'es' ? '←' : '←'}</span>
             </Button>
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-8 h-8 text-fuzzy-purple" />
-              <h1 className="text-2xl font-bold">
-                {language === 'es' ? 'Crear Contenido' : 'Create Content'}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-fuzzy-purple" />
+              <h1 className="text-lg sm:text-2xl font-bold">
+                <span className="hidden sm:inline">
+                  {language === 'es' ? 'Crear Contenido' : 'Create Content'}
+                </span>
+                <span className="sm:hidden">
+                  {language === 'es' ? 'Crear' : 'Create'}
+                </span>
               </h1>
             </div>
           </div>
@@ -145,16 +158,16 @@ export default function ContentPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Actions Bar */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
           <div>
-            <h2 className="text-3xl font-bold mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">
               {language === 'es'
                 ? 'Gestiona tu Contenido'
                 : 'Manage Your Content'}
             </h2>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               {language === 'es'
                 ? 'Crea lecciones, quizzes y juegos educativos'
                 : 'Create lessons, quizzes and educational games'}
@@ -163,7 +176,7 @@ export default function ContentPage() {
         </div>
 
         {/* Create Content Options */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card
             className="card-hover cursor-pointer"
             onClick={() => handleCreateContent('lesson')}

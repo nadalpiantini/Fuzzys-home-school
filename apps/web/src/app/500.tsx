@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+'use client';
 
 export default function ServerError() {
   return (
@@ -69,7 +69,11 @@ export default function ServerError() {
             🏠 Ir al Inicio
           </a>
           <a
-            href="javascript:location.reload()"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.reload();
+            }}
             style={{
               display: 'inline-block',
               padding: '0.75rem 1.5rem',
@@ -85,7 +89,11 @@ export default function ServerError() {
             🔄 Intentar de Nuevo
           </a>
           <a
-            href="javascript:history.back()"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.history.back();
+            }}
             style={{
               display: 'inline-block',
               padding: '0.75rem 1.5rem',

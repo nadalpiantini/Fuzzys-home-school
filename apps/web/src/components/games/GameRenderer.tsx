@@ -79,20 +79,20 @@ export default function GameRenderer({
 
   const renderMultipleChoice = () => (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 px-4 sm:px-0">
         {game.content.questions?.[0]?.question ||
           'Selecciona la respuesta correcta'}
       </h3>
-      <div className="grid gap-3">
+      <div className="grid gap-2 sm:gap-3">
         {game.content.questions?.[0]?.options?.map(
           (option: string, index: number) => (
             <Button
               key={index}
               variant="outline"
-              className="w-full p-4 text-left justify-start hover:bg-purple-50"
+              className="w-full p-3 sm:p-4 text-left justify-start hover:bg-purple-50 touch-target text-sm sm:text-base"
               onClick={() => handleAnswer(index)}
             >
-              <span className="font-medium mr-3">
+              <span className="font-medium mr-2 sm:mr-3">
                 {String.fromCharCode(65 + index)}.
               </span>
               {option}
@@ -105,20 +105,20 @@ export default function GameRenderer({
 
   const renderTrueFalse = () => (
     <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 px-4 sm:px-0">
         {game.content.questions?.[0]?.question || 'Verdadero o Falso'}
       </h3>
-      <div className="flex gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
         <Button
           size="lg"
-          className="bg-green-600 hover:bg-green-700 text-white px-8 py-4"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-3 sm:py-4 touch-target text-sm sm:text-base"
           onClick={() => handleAnswer(true)}
         >
           ✅ Verdadero
         </Button>
         <Button
           size="lg"
-          className="bg-red-600 hover:bg-red-700 text-white px-8 py-4"
+          className="bg-red-600 hover:bg-red-700 text-white px-6 sm:px-8 py-3 sm:py-4 touch-target text-sm sm:text-base"
           onClick={() => handleAnswer(false)}
         >
           ❌ Falso
@@ -128,21 +128,21 @@ export default function GameRenderer({
   );
 
   const renderFillBlank = () => (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+    <div className="space-y-4 px-4 sm:px-0">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
         {game.content.questions?.[0]?.question ||
           'Completa el espacio en blanco'}
       </h3>
       <div className="space-y-4">
         <input
           type="text"
-          className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg"
+          className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-base sm:text-lg touch-target"
           placeholder="Escribe tu respuesta aquí..."
           onChange={(e) => setUserAnswer(e.target.value)}
         />
         <Button
           onClick={() => handleAnswer(userAnswer)}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 touch-target w-full sm:w-auto"
         >
           <Play className="w-4 h-4 mr-2" />
           Verificar
@@ -152,20 +152,20 @@ export default function GameRenderer({
   );
 
   const renderShortAnswer = () => (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+    <div className="space-y-4 px-4 sm:px-0">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
         {game.content.questions?.[0]?.question ||
           'Responde con tus propias palabras'}
       </h3>
       <div className="space-y-4">
         <textarea
-          className="w-full p-4 border-2 border-gray-200 rounded-lg text-lg min-h-[120px]"
+          className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-base sm:text-lg min-h-[100px] sm:min-h-[120px] touch-target"
           placeholder="Escribe tu respuesta aquí..."
           onChange={(e) => setUserAnswer(e.target.value)}
         />
         <Button
           onClick={() => handleAnswer(userAnswer)}
-          className="bg-purple-600 hover:bg-purple-700"
+          className="bg-purple-600 hover:bg-purple-700 touch-target w-full sm:w-auto"
         >
           <Play className="w-4 h-4 mr-2" />
           Enviar Respuesta
@@ -175,41 +175,41 @@ export default function GameRenderer({
   );
 
   const renderDragDrop = () => (
-    <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-gray-800 mb-6">
+    <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
+      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
         ¡Clasifica los elementos arrastrándolos a sus categorías!
       </h3>
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {game.content.categories?.map((category: string) => (
           <div
             key={category}
-            className="p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50"
+            className="p-3 sm:p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 min-h-[80px] sm:min-h-[100px] flex items-center justify-center"
           >
-            <h4 className="font-semibold text-gray-700 capitalize text-center">
+            <h4 className="font-semibold text-gray-700 capitalize text-center text-sm sm:text-base">
               {category}
             </h4>
           </div>
         ))}
       </div>
-      <div className="flex justify-center gap-4 mb-6">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
         {game.content.items?.map((item: any) => (
           <Button
             key={item.id}
-            className="p-4 bg-white border-2 border-gray-200 rounded-lg hover:bg-gray-50"
+            className="p-3 sm:p-4 bg-white border-2 border-gray-200 rounded-lg hover:bg-gray-50 touch-target"
             onClick={() => handleItemClick(item)}
           >
-            <div className="text-2xl">
+            <div className="text-xl sm:text-2xl">
               {item.shape === 'circle' && '⭕'}
               {item.shape === 'square' && '⬜'}
               {item.shape === 'triangle' && '🔺'}
             </div>
-            <div className="text-sm mt-1">{item.name}</div>
+            <div className="text-xs sm:text-sm mt-1">{item.name}</div>
           </Button>
         ))}
       </div>
       <Button
         onClick={onComplete}
-        className="bg-orange-600 hover:bg-orange-700"
+        className="bg-orange-600 hover:bg-orange-700 touch-target w-full sm:w-auto"
       >
         <Play className="w-4 h-4 mr-2" />
         Completar Juego

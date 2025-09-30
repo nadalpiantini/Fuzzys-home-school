@@ -33,14 +33,18 @@ export const useMobileDetection = (): MobileDetectionResult => {
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      // Device type detection
+      // Device type detection - improved logic
       const isMobile =
         width < 768 ||
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           userAgent,
         );
       const isTablet =
-        (width >= 768 && width < 1024) || /iPad/i.test(userAgent);
+        (width >= 768 && width < 1024) ||
+        /iPad/i.test(userAgent) ||
+        (width >= 768 &&
+          /Android/i.test(userAgent) &&
+          !/Mobile/i.test(userAgent));
       const isDesktop = width >= 1024 && !isMobile && !isTablet;
 
       // Touch support detection

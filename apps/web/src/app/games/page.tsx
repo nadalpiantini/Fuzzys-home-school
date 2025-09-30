@@ -814,30 +814,38 @@ export default function GamesPage() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200">
       {/* Header */}
       <header className="bg-white/70 backdrop-blur-md shadow-sm border-b border-white/20 sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-6">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Sparkles className="w-8 h-8 text-pink-500" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
                 🎮 Mundo de Juegos Educativos
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-sm sm:text-base text-gray-600 mt-2">
                 ¡Más de 30 juegos divertidos organizados por edad!
               </p>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 sm:gap-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-pink-600">4</div>
-                <div className="text-sm text-gray-600">Niveles</div>
+                <div className="text-xl sm:text-2xl font-bold text-pink-600">
+                  4
+                </div>
+                <div className="text-xs sm:text-sm text-gray-600">Niveles</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">30+</div>
-                <div className="text-sm text-gray-600">Juegos</div>
+                <div className="text-xl sm:text-2xl font-bold text-purple-600">
+                  30+
+                </div>
+                <div className="text-xs sm:text-sm text-gray-600">Juegos</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">4.8★</div>
-                <div className="text-sm text-gray-600">Calificación</div>
+                <div className="text-xl sm:text-2xl font-bold text-blue-600">
+                  4.8★
+                </div>
+                <div className="text-xs sm:text-sm text-gray-600">
+                  Calificación
+                </div>
               </div>
             </div>
           </div>
@@ -845,21 +853,24 @@ export default function GamesPage() {
       </header>
 
       {/* Toggle between views */}
-      <section className="container mx-auto px-6 py-4">
+      <section className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-center">
-          <div className="bg-white rounded-lg p-1 shadow-sm">
+          <div className="bg-white rounded-lg p-1 shadow-sm w-full max-w-md">
             <Button
               variant={!showOrganizedView ? 'default' : 'ghost'}
               onClick={() => setShowOrganizedView(false)}
-              className="mr-1"
+              className="mr-1 flex-1 text-xs sm:text-sm touch-target"
             >
-              Vista por Grados
+              <span className="hidden sm:inline">Vista por Grados</span>
+              <span className="sm:hidden">Grados</span>
             </Button>
             <Button
               variant={showOrganizedView ? 'default' : 'ghost'}
               onClick={() => setShowOrganizedView(true)}
+              className="ml-1 flex-1 text-xs sm:text-sm touch-target"
             >
-              Vista Organizada
+              <span className="hidden sm:inline">Vista Organizada</span>
+              <span className="sm:hidden">Organizada</span>
             </Button>
           </div>
         </div>

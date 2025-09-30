@@ -99,10 +99,10 @@ export default function StudentDashboard() {
     <div className="min-h-screen">
       {/* Header */}
       <header className="bg-sky-400 backdrop-blur-sm border-b border-sky-500">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <div className="relative w-36 h-36 md:w-48 md:h-48">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-48 lg:h-48">
                 <Image
                   src="/fuzzy.png"
                   alt="Fuzzy Logo"
@@ -112,45 +112,47 @@ export default function StudentDashboard() {
                 />
               </div>
               <h1
-                className="text-5xl font-bold text-barney-green-800"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-barney-green-800"
                 style={{ color: 'var(--barney-green-800)' }}
               >
                 {t('student.dashboard')}
               </h1>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Bell
                 hasUnread={messages.some((msg) => !msg.seen_at)}
                 onClick={() => setShowMessageBar(!showMessageBar)}
-                className="text-barney-green-800 hover:text-barney-green-900"
+                className="text-barney-green-800 hover:text-barney-green-900 touch-target"
               />
-              <Badge
-                variant="secondary"
-                className="bg-barney-yellow-500 text-barney-green-800"
-              >
-                <Trophy className="w-4 h-4 mr-1" />
-                Nivel {level}
-              </Badge>
-              <Badge
-                variant="outline"
-                className="border-barney-green-600 text-barney-green-700"
-              >
-                <Zap className="w-4 h-4 mr-1" />
-                {totalPoints} pts
-              </Badge>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Badge
+                  variant="secondary"
+                  className="bg-barney-yellow-500 text-barney-green-800 text-xs sm:text-sm"
+                >
+                  <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                  Nivel {level}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className="border-barney-green-600 text-barney-green-700 text-xs sm:text-sm"
+                >
+                  <Zap className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                  {totalPoints} pts
+                </Badge>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2 text-cream-50 title-font">
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-cream-50 title-font">
             ¡Hola, {childData?.name || 'Explorador'}! 👋
           </h2>
-          <p className="text-cream-100 body-font">
+          <p className="text-sm sm:text-base text-cream-100 body-font">
             {language === 'es'
               ? '¡Es hora de aprender y divertirse!'
               : "It's time to learn and have fun!"}
@@ -158,18 +160,18 @@ export default function StudentDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Card className="card-minimal bg-barney-yellow-500/20 border-barney-yellow-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-barney-yellow-500/30 rounded-full">
-                  <Trophy className="w-6 h-6 text-barney-yellow-700" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-barney-yellow-500/30 rounded-full">
+                  <Trophy className="w-4 h-4 sm:w-6 sm:h-6 text-barney-yellow-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-barney-green-700 body-font">
+                  <p className="text-xs sm:text-sm text-barney-green-700 body-font">
                     Racha
                   </p>
-                  <p className="text-2xl font-bold text-barney-green-800 body-font">
+                  <p className="text-lg sm:text-2xl font-bold text-barney-green-800 body-font">
                     {currentStreak} días
                   </p>
                 </div>
@@ -178,16 +180,16 @@ export default function StudentDashboard() {
           </Card>
 
           <Card className="card-minimal bg-barney-blue-500/20 border-barney-blue-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-barney-blue-500/30 rounded-full">
-                  <Star className="w-6 h-6 text-barney-blue-700" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-barney-blue-500/30 rounded-full">
+                  <Star className="w-4 h-4 sm:w-6 sm:h-6 text-barney-blue-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-barney-green-700 body-font">
+                  <p className="text-xs sm:text-sm text-barney-green-700 body-font">
                     Puntos
                   </p>
-                  <p className="text-2xl font-bold text-barney-green-800 body-font">
+                  <p className="text-lg sm:text-2xl font-bold text-barney-green-800 body-font">
                     {totalPoints}
                   </p>
                 </div>
@@ -196,16 +198,16 @@ export default function StudentDashboard() {
           </Card>
 
           <Card className="card-minimal bg-barney-red-500/20 border-barney-red-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-barney-red-500/30 rounded-full">
-                  <Target className="w-6 h-6 text-barney-red-700" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-barney-red-500/30 rounded-full">
+                  <Target className="w-4 h-4 sm:w-6 sm:h-6 text-barney-red-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-barney-green-700 body-font">
+                  <p className="text-xs sm:text-sm text-barney-green-700 body-font">
                     Objetivos
                   </p>
-                  <p className="text-2xl font-bold text-barney-green-800 body-font">
+                  <p className="text-lg sm:text-2xl font-bold text-barney-green-800 body-font">
                     3/5
                   </p>
                 </div>
@@ -214,16 +216,16 @@ export default function StudentDashboard() {
           </Card>
 
           <Card className="card-minimal bg-barney-orange-500/20 border-barney-orange-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-barney-orange-500/30 rounded-full">
-                  <Clock className="w-6 h-6 text-barney-orange-700" />
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-barney-orange-500/30 rounded-full">
+                  <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-barney-orange-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-barney-green-700 body-font">
+                  <p className="text-xs sm:text-sm text-barney-green-700 body-font">
                     Tiempo
                   </p>
-                  <p className="text-2xl font-bold text-barney-green-800 body-font">
+                  <p className="text-lg sm:text-2xl font-bold text-barney-green-800 body-font">
                     45 min
                   </p>
                 </div>
@@ -233,24 +235,24 @@ export default function StudentDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card
-            className="card-minimal group cursor-pointer"
+            className="card-minimal group cursor-pointer touch-target"
             onClick={handleAskTutor}
           >
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-barney-green-800 title-font">
-                <MessageCircle className="w-6 h-6 text-barney-blue-700" />
+            <CardHeader className="p-4 sm:p-6">
+              <CardTitle className="flex items-center gap-2 text-barney-green-800 title-font text-base sm:text-lg">
+                <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-barney-blue-700" />
                 {t('student.askTutor')}
               </CardTitle>
-              <CardDescription className="text-barney-green-700 body-font">
+              <CardDescription className="text-barney-green-700 body-font text-sm">
                 {language === 'es'
                   ? 'Pregunta lo que quieras'
                   : 'Ask anything you want'}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Button className="btn-cream w-full">
+            <CardContent className="p-4 sm:p-6 pt-0">
+              <Button className="btn-cream w-full touch-target">
                 <Play className="w-4 h-4 mr-2" />
                 {language === 'es' ? 'Comenzar' : 'Start'}
               </Button>

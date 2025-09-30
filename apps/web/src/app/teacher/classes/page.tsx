@@ -22,65 +22,117 @@ import {
   UserPlus,
   Edit,
   Trash2,
+  Loader2,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
+import { trpc } from '@/lib/trpc/client';
 
 export default function ClassesPage() {
   const { t, language } = useTranslation();
   const router = useRouter();
-  const [classes] = useState([
-    {
-      id: 1,
-      name: 'Matemáticas 5to Grado',
-      students: 24,
-      active: true,
-      lastActivity: 'Hace 2 horas',
-      progress: 78,
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Fetch classes using tRPC
+  const {
+    data: classes,
+    isLoading,
+    refetch,
+  } = trpc.classes.getByTeacher.useQuery({});
+
+  // Create class mutation
+  const createClassMutation = trpc.classes.create.useMutation({
+    onSuccess: () => {
+      toast.success(
+        language === 'es'
+          ? 'Clase creada exitosamente'
+          : 'Class created successfully',
+      );
+      refetch();
+      setIsCreating(false);
     },
-    {
-      id: 2,
-      name: 'Ciencias Naturales 4to',
-      students: 22,
-      active: true,
-      lastActivity: 'Hace 1 día',
-      progress: 65,
+    onError: (error) => {
+      toast.error(error.message);
+      setIsCreating(false);
     },
-    {
-      id: 3,
-      name: 'Historia Dominicana 6to',
-      students: 26,
-      active: false,
-      lastActivity: 'Hace 3 días',
-      progress: 45,
+  });
+
+  // Delete class mutation
+  const deleteClassMutation = trpc.classes.delete.useMutation({
+    onSuccess: () => {
+      toast.success(language === 'es' ? 'Clase eliminada' : 'Class deleted');
+      refetch();
     },
-  ]);
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  // Toggle active status mutation
+  const toggleActiveMutation = trpc.classes.toggleActive.useMutation({
+    onSuccess: () => {
+      toast.success(
+        language === 'es' ? 'Estado actualizado' : 'Status updated',
+      );
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const handleBack = () => {
     router.push('/teacher');
   };
 
   const handleCreateClass = () => {
-    toast.info(
-      language === 'es' ? 'Creando nueva clase...' : 'Creating new class...',
-    );
-    // TODO: Implement class creation
+    setIsCreating(true);
+    // For now, create a sample class - in real implementation, this would open a form
+    createClassMutation.mutate({
+      name: `Nueva Clase ${Date.now()}`,
+      description: 'Descripción de la nueva clase',
+      subjectId: '00000000-0000-0000-0000-000000000000', // Default subject ID
+      gradeLevel: 5,
+      maxStudents: 30,
+    });
   };
 
-  const handleViewClass = (classId: number) => {
-    toast.info(language === 'es' ? 'Abriendo clase...' : 'Opening class...');
+  const handleViewClass = (classId: string) => {
     router.push(`/teacher/classes/${classId}`);
   };
 
-  const handleEditClass = (classId: number) => {
-    toast.info(language === 'es' ? 'Editando clase...' : 'Editing class...');
-    // TODO: Implement class editing
+  const handleEditClass = (classId: string) => {
+    router.push(`/teacher/classes/${classId}/edit`);
   };
 
-  const handleDeleteClass = (classId: number) => {
-    toast.info(language === 'es' ? 'Eliminando clase...' : 'Deleting class...');
-    // TODO: Implement class deletion
+  const handleDeleteClass = (classId: string) => {
+    if (
+      confirm(
+        language === 'es'
+          ? '¿Estás seguro de eliminar esta clase?'
+          : 'Are you sure you want to delete this class?',
+      )
+    ) {
+      deleteClassMutation.mutate({ classId });
+    }
   };
+
+  const handleToggleActive = (classId: string, isActive: boolean) => {
+    toggleActiveMutation.mutate({ classId, isActive: !isActive });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50 flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>
+            {language === 'es' ? 'Cargando clases...' : 'Loading classes...'}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
@@ -129,127 +181,195 @@ export default function ClassesPage() {
 
         {/* Classes Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {classes.map((classItem) => (
-            <Card key={classItem.id} className="card-hover">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-lg">{classItem.name}</CardTitle>
-                    <CardDescription>
-                      {classItem.students}{' '}
-                      {language === 'es' ? 'estudiantes' : 'students'}
-                    </CardDescription>
+          {classes && classes.length > 0 ? (
+            classes.map((classItem: any) => (
+              <Card key={classItem.id} className="card-hover">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">
+                        {classItem.name}
+                      </CardTitle>
+                      <CardDescription>
+                        {classItem.studentCount || 0}{' '}
+                        {language === 'es' ? 'estudiantes' : 'students'}
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditClass(classItem.id)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteClass(classItem.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditClass(classItem.id)}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteClass(classItem.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">
+                        {language === 'es' ? 'Estado' : 'Status'}
+                      </span>
+                      <Badge
+                        variant={classItem.is_active ? 'default' : 'secondary'}
+                      >
+                        {classItem.is_active
+                          ? language === 'es'
+                            ? 'Activa'
+                            : 'Active'
+                          : language === 'es'
+                            ? 'Inactiva'
+                            : 'Inactive'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">
+                        {language === 'es' ? 'Código' : 'Code'}
+                      </span>
+                      <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                        {classItem.code}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">
+                        {language === 'es' ? 'Grado' : 'Grade'}
+                      </span>
+                      <span className="font-semibold">
+                        {classItem.grade_level}
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          handleToggleActive(classItem.id, classItem.is_active)
+                        }
+                        className="flex-1"
+                      >
+                        {classItem.is_active
+                          ? language === 'es'
+                            ? 'Desactivar'
+                            : 'Deactivate'
+                          : language === 'es'
+                            ? 'Activar'
+                            : 'Activate'}
+                      </Button>
+                      <Button
+                        className="flex-1"
+                        onClick={() => handleViewClass(classItem.id)}
+                      >
+                        {language === 'es' ? 'Ver' : 'View'}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
-                      {language === 'es' ? 'Progreso' : 'Progress'}
-                    </span>
-                    <span className="font-semibold">{classItem.progress}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-fuzzy-green h-2 rounded-full"
-                      style={{ width: `${classItem.progress}%` }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Badge variant={classItem.active ? 'default' : 'secondary'}>
-                      {classItem.active
-                        ? language === 'es'
-                          ? 'Activa'
-                          : 'Active'
-                        : language === 'es'
-                          ? 'Inactiva'
-                          : 'Inactive'}
-                    </Badge>
-                    <span className="text-xs text-gray-500">
-                      {classItem.lastActivity}
-                    </span>
-                  </div>
-                  <Button
-                    className="w-full"
-                    onClick={() => handleViewClass(classItem.id)}
-                  >
-                    {language === 'es' ? 'Ver Clase' : 'View Class'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                {language === 'es' ? 'No tienes clases aún' : 'No classes yet'}
+              </h3>
+              <p className="text-gray-500 mb-6">
+                {language === 'es'
+                  ? 'Crea tu primera clase para comenzar a gestionar estudiantes'
+                  : 'Create your first class to start managing students'}
+              </p>
+              <Button
+                onClick={handleCreateClass}
+                disabled={isCreating}
+                className="bg-fuzzy-green hover:bg-fuzzy-green/90"
+              >
+                {isCreating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {language === 'es' ? 'Creando...' : 'Creating...'}
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4 mr-2" />
+                    {language === 'es'
+                      ? 'Crear Primera Clase'
+                      : 'Create First Class'}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Quick Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-purple/10 rounded-lg flex items-center justify-center">
-                  <Users className="w-6 h-6 text-fuzzy-purple" />
+        {classes && classes.length > 0 && (
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-fuzzy-purple/10 rounded-lg flex items-center justify-center">
+                    <Users className="w-6 h-6 text-fuzzy-purple" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {classes.reduce(
+                        (total, cls) => total + (cls.studentCount || 0),
+                        0,
+                      )}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {language === 'es'
+                        ? 'Total Estudiantes'
+                        : 'Total Students'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">72</p>
-                  <p className="text-sm text-gray-600">
-                    {language === 'es' ? 'Total Estudiantes' : 'Total Students'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-green/10 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-fuzzy-green" />
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-fuzzy-green/10 rounded-lg flex items-center justify-center">
+                    <BookOpen className="w-6 h-6 text-fuzzy-green" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {classes.filter((cls) => cls.is_active).length}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {language === 'es' ? 'Clases Activas' : 'Active Classes'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">3</p>
-                  <p className="text-sm text-gray-600">
-                    {language === 'es' ? 'Clases Activas' : 'Active Classes'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-blue/10 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-fuzzy-blue" />
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-fuzzy-blue/10 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-fuzzy-blue" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{classes.length}</p>
+                    <p className="text-sm text-gray-600">
+                      {language === 'es' ? 'Total Clases' : 'Total Classes'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold">63%</p>
-                  <p className="text-sm text-gray-600">
-                    {language === 'es'
-                      ? 'Promedio Progreso'
-                      : 'Average Progress'}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </main>
     </div>
   );

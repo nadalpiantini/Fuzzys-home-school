@@ -17,7 +17,9 @@ export default function OnboardingTour({
 }: OnboardingTourProps) {
   const [run, setRun] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
-  const [userRole, setUserRole] = useState<'student' | 'teacher' | 'admin'>('student');
+  const [userRole, setUserRole] = useState<'student' | 'teacher' | 'admin'>(
+    'student',
+  );
   const router = useRouter();
 
   // Detectar el rol del usuario basado en la URL actual
@@ -49,11 +51,11 @@ export default function OnboardingTour({
           <div className="text-center">
             <h3 className="text-lg font-bold mb-2">🔔 Notificaciones</h3>
             <p>
-              {userRole === 'teacher' 
+              {userRole === 'teacher'
                 ? 'Recibe avisos sobre el progreso de tus estudiantes y nuevos recursos.'
                 : userRole === 'admin'
-                ? 'Mantente informado sobre la actividad de la plataforma.'
-                : 'La campana te avisa cuando tienes mensajes nuevos de Fuzzy. ¡No te pierdas ningún logro!'}
+                  ? 'Mantente informado sobre la actividad de la plataforma.'
+                  : 'La campana te avisa cuando tienes mensajes nuevos de Fuzzy. ¡No te pierdas ningún logro!'}
             </p>
           </div>
         ),
@@ -64,14 +66,18 @@ export default function OnboardingTour({
         content: (
           <div className="text-center">
             <h3 className="text-lg font-bold mb-2">
-              {userRole === 'teacher' ? '👨‍🏫 Tu Panel' : userRole === 'admin' ? '⚙️ Configuración' : '🏆 Tu Perfil'}
+              {userRole === 'teacher'
+                ? '👨‍🏫 Tu Panel'
+                : userRole === 'admin'
+                  ? '⚙️ Configuración'
+                  : '🏆 Tu Perfil'}
             </h3>
             <p>
               {userRole === 'teacher'
                 ? 'Administra tus clases, contenido y visualiza analytics detallados.'
                 : userRole === 'admin'
-                ? 'Configura usuarios, permisos y supervisa el sistema.'
-                : 'Aquí puedes ver tus badges, racha, diario personal y estadísticas. ¡Tu progreso está aquí!'}
+                  ? 'Configura usuarios, permisos y supervisa el sistema.'
+                  : 'Aquí puedes ver tus badges, racha, diario personal y estadísticas. ¡Tu progreso está aquí!'}
             </p>
           </div>
         ),
@@ -102,8 +108,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">🤖 Tutor IA</h3>
               <p>
-                Fuzzy está aquí para ayudarte 24/7. ¡Pregúntale cualquier cosa sobre
-                tus estudios!
+                Fuzzy está aquí para ayudarte 24/7. ¡Pregúntale cualquier cosa
+                sobre tus estudios!
               </p>
             </div>
           ),
@@ -115,7 +121,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">🎮 Juegos Educativos</h3>
               <p>
-                Más de 30 juegos divertidos te esperan. ¡Aprende jugando con Fuzzy!
+                Más de 30 juegos divertidos te esperan. ¡Aprende jugando con
+                Fuzzy!
               </p>
             </div>
           ),
@@ -127,8 +134,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">📚 Biblioteca</h3>
               <p>
-                Recursos especiales, simulaciones PhET, programación con Blockly y
-                mucho más te esperan aquí.
+                Recursos especiales, simulaciones PhET, programación con Blockly
+                y mucho más te esperan aquí.
               </p>
             </div>
           ),
@@ -143,8 +150,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">🏫 Gestión de Clases</h3>
               <p>
-                Crea y administra tus clases, asigna tareas y monitorea el progreso
-                de cada estudiante.
+                Crea y administra tus clases, asigna tareas y monitorea el
+                progreso de cada estudiante.
               </p>
             </div>
           ),
@@ -158,8 +165,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">📊 Analytics</h3>
               <p>
-                Visualiza el desempeño de tus estudiantes con métricas detalladas
-                y reportes personalizados.
+                Visualiza el desempeño de tus estudiantes con métricas
+                detalladas y reportes personalizados.
               </p>
             </div>
           ),
@@ -169,7 +176,9 @@ export default function OnboardingTour({
           target: '#content-creator-card',
           content: (
             <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">✏️ Creador de Contenido</h3>
+              <h3 className="text-lg font-bold mb-2">
+                ✏️ Creador de Contenido
+              </h3>
               <p>
                 Crea quizzes, actividades y material educativo personalizado
                 para tus clases.
@@ -201,8 +210,8 @@ export default function OnboardingTour({
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">📈 Dashboard</h3>
               <p>
-                Vista general del sistema, métricas de uso y actividad
-                en tiempo real.
+                Vista general del sistema, métricas de uso y actividad en tiempo
+                real.
               </p>
             </div>
           ),
@@ -215,9 +224,7 @@ export default function OnboardingTour({
           content: (
             <div className="text-center">
               <h3 className="text-lg font-bold mb-2">👥 Gestión de Usuarios</h3>
-              <p>
-                Administra usuarios, permisos y roles en la plataforma.
-              </p>
+              <p>Administra usuarios, permisos y roles en la plataforma.</p>
             </div>
           ),
           placement: 'top' as const,
@@ -226,10 +233,12 @@ export default function OnboardingTour({
           target: '#system-settings-card',
           content: (
             <div className="text-center">
-              <h3 className="text-lg font-bold mb-2">🔧 Configuración del Sistema</h3>
+              <h3 className="text-lg font-bold mb-2">
+                🔧 Configuración del Sistema
+              </h3>
               <p>
-                Configuración avanzada, integraciones y mantenimiento
-                de la plataforma.
+                Configuración avanzada, integraciones y mantenimiento de la
+                plataforma.
               </p>
             </div>
           ),
@@ -269,6 +278,17 @@ export default function OnboardingTour({
     setStepIndex(0);
   };
 
+  // No renderizar en móvil
+  if (
+    typeof window !== 'undefined' &&
+    (window.innerWidth < 768 ||
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ))
+  ) {
+    return null;
+  }
+
   return (
     <>
       <Joyride
@@ -282,6 +302,10 @@ export default function OnboardingTour({
           options: {
             primaryColor: '#8B5CF6',
             zIndex: 10000,
+            width:
+              typeof window !== 'undefined' && window.innerWidth < 768
+                ? '90vw'
+                : 400,
           },
           buttonNext: {
             backgroundColor: '#8B5CF6',
@@ -312,6 +336,22 @@ export function useOnboardingTour() {
   const [showTour, setShowTour] = useState(false);
 
   useEffect(() => {
+    // No mostrar onboarding en dispositivos móviles
+    if (typeof window !== 'undefined') {
+      const isMobile =
+        window.innerWidth < 768 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
+
+      if (isMobile) {
+        // Marcar como completado automáticamente en móvil
+        localStorage.setItem('onboarding-tour-completed', 'true');
+        setShowTour(false);
+        return;
+      }
+    }
+
     const tourCompleted = localStorage.getItem('onboarding-tour-completed');
     if (!tourCompleted) {
       setShowTour(true);
@@ -336,11 +376,19 @@ export function useOnboardingTour() {
     setShowTour(true);
   };
 
+  const clearTourData = () => {
+    localStorage.removeItem('onboarding-tour-completed');
+    localStorage.removeItem('onboarding-tour-skipped');
+    setShowTour(false);
+    setHasSeenTour(false);
+  };
+
   return {
     showTour,
     hasSeenTour,
     completeTour,
     skipTour,
     restartTour,
+    clearTourData,
   };
 }

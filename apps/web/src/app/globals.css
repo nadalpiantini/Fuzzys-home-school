@@ -130,15 +130,20 @@
       -webkit-text-size-adjust: 100%;
       /* Prevent horizontal scrolling */
       overflow-x: hidden;
+      /* Improve touch scrolling */
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* Prevent iOS bounce effect */
-    html,
-    body {
-      position: fixed;
-      width: 100%;
+    /* Prevent iOS bounce effect - improved */
+    html {
       height: 100%;
       overflow: hidden;
+    }
+
+    body {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
     }
 
     #__next {
@@ -147,6 +152,8 @@
       height: 100%;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      /* Prevent iOS bounce */
+      overscroll-behavior: none;
     }
 
     /* Optimize tap targets */
@@ -229,19 +236,60 @@
 
   .drop-zone-active {
     background-color: rgba(59, 130, 246, 0.1);
-    border-color: rgb(59, 130, 246);
-    border-style: dashed;
-    animation: pulse 1s infinite;
   }
 
   .drop-zone-valid {
     background-color: rgba(34, 197, 94, 0.1);
-    border-color: rgb(34, 197, 94);
+    border-color: rgba(34, 197, 94, 0.3);
   }
 
   .drop-zone-invalid {
     background-color: rgba(239, 68, 68, 0.1);
-    border-color: rgb(239, 68, 68);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  /* Mobile-specific improvements */
+  @media (max-width: 640px) {
+    /* Smaller text on very small screens */
+    .text-responsive {
+      font-size: 0.875rem;
+    }
+
+    /* Better spacing for mobile */
+    .mobile-spacing {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+    }
+
+    /* Touch-friendly buttons */
+    .btn-mobile {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    /* Mobile-optimized cards */
+    .card-mobile {
+      margin: 0.5rem;
+      padding: 1rem;
+      border-radius: 0.75rem;
+    }
+  }
+
+  /* iOS Safari specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific styles */
+    .ios-fix {
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+
+    /* Fix for iOS Safari viewport issues */
+    .ios-viewport-fix {
+      height: 100vh;
+      height: -webkit-fill-available;
+    }
   }
 }
 

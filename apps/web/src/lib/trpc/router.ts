@@ -1,21 +1,45 @@
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { supabaseBrowser as supabase } from '@/lib/supabase/client';
+import { classRouter } from './routers/classRouter';
+import { enrollmentRouter } from './routers/enrollmentRouter';
+import { assignmentRouter } from './routers/assignmentRouter';
+import { educationalRouter } from './routers/educationalRouter';
+import { adaptiveRouter } from './routers/adaptiveRouter';
+import { liveGameRouter } from './routers/liveGameRouter';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
-const t = initTRPC.create();
+const t = initTRPC
+  .context<{
+    supabase: SupabaseClient;
+  }>()
+  .create();
 
 export const appRouter = t.router({
+  // Class Management System
+  classes: classRouter,
+  enrollments: enrollmentRouter,
+  assignments: assignmentRouter,
+  
+  // Educational Platform System
+  educational: educationalRouter,
+  adaptive: adaptiveRouter,
+  liveGame: liveGameRouter,
+
   // User management
   getUser: t.procedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      const { data, error } = await supabase
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.supabase
         .from('users')
         .select('*')
         .eq('id', input.userId)
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
       return data;
     }),
 
@@ -28,8 +52,8 @@ export const appRouter = t.router({
         preferences: z.any().optional(),
       }),
     )
-    .mutation(async ({ input }) => {
-      const { data, error } = await supabase
+    .mutation(async ({ input, ctx }) => {
+      const { data, error } = await ctx.supabase
         .from('users')
         .update({
           name: input.name,
@@ -41,21 +65,29 @@ export const appRouter = t.router({
         .select()
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
       return data;
     }),
 
   // Progress tracking
   getProgress: t.procedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      const { data, error } = await supabase
+    .query(async ({ input, ctx }) => {
+      const { data, error } = await ctx.supabase
         .from('user_progress')
         .select('*')
         .eq('user_id', input.userId)
         .order('created_at', { ascending: false });
 
-      if (error) throw new Error(error.message);
+      if (error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
       return data;
     }),
 
@@ -69,8 +101,8 @@ export const appRouter = t.router({
         timeSpent: z.number(),
       }),
     )
-    .mutation(async ({ input }) => {
-      const { data, error } = await supabase
+    .mutation(async ({ input, ctx }) => {
+      const { data, error } = await ctx.supabase
         .from('user_progress')
         .insert({
           user_id: input.userId,
@@ -83,7 +115,11 @@ export const appRouter = t.router({
         .select()
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
       return data;
     }),
 
@@ -96,15 +132,19 @@ export const appRouter = t.router({
         level: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
-      let query = supabase.from('games').select('*');
+    .query(async ({ input, ctx }) => {
+      let query = ctx.supabase.from('games').select('*');
 
       if (input.type) query = query.eq('type', input.type);
       if (input.subject) query = query.eq('subject', input.subject);
       if (input.level) query = query.eq('level', input.level);
 
       const { data, error } = await query;
-      if (error) throw new Error(error.message);
+      if (error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
       return data;
     }),
 
@@ -131,6 +171,6 @@ export const appRouter = t.router({
       if (!response.ok) throw new Error('Failed to get AI response');
       return await response.json();
     }),
-});
+});;
 
 export type AppRouter = typeof appRouter;
