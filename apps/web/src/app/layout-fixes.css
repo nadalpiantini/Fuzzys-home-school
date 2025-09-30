@@ -1,0 +1,154 @@
+/* Layout fixes for images and buttons positioning */
+
+/* Fix for Next.js Image components with fill property */
+.relative {
+  position: relative !important;
+}
+
+/* Ensure images with fill property are contained properly */
+div[style*="position:absolute"] {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+/* Fix image container positioning */
+.relative > img,
+.relative > span > img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Button positioning fixes */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+/* Fix for button groups and spacing */
+.flex button,
+.flex-row button,
+.flex-col button {
+  flex-shrink: 0;
+}
+
+/* Card and container fixes for proper content alignment */
+.card,
+[class*="card"] {
+  overflow: visible;
+}
+
+/* Fix header layout for mobile and desktop */
+header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Game card image fixes */
+.game-card img,
+.card img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix for aspect ratio containers */
+[class*="aspect-"] {
+  position: relative;
+  overflow: hidden;
+}
+
+[class*="aspect-"] > img,
+[class*="aspect-"] > div > img {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* Landing page specific fixes */
+.fuzzy-title {
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Fix button hover states */
+button:hover {
+  transform: translateY(0);
+}
+
+/* Fix mobile responsive issues */
+@media (max-width: 640px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .fuzzy-title {
+    font-size: 2rem !important;
+    white-space: normal;
+  }
+
+  button {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* Fix z-index stacking issues */
+.fixed,
+[class*="fixed"] {
+  z-index: 50;
+}
+
+.sticky,
+[class*="sticky"] {
+  z-index: 40;
+}
+
+/* Global box-sizing fix */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Ensure proper image rendering */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Fix Next Image wrapper spans */
+span[style*="box-sizing:border-box"] {
+  display: block !important;
+}
+
+/* Fix button alignment in flex containers */
+.flex-col > button,
+.flex-col > a > button {
+  align-self: stretch;
+}
+
+.flex-row > button,
+.flex-row > a > button {
+  align-self: center;
+}
+
+/* Fix overflow issues */
+body {
+  overflow-x: hidden;
+}
+
+main {
+  overflow-x: hidden;
+  position: relative;
+}

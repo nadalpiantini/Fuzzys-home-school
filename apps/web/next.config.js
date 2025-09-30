@@ -26,15 +26,17 @@ const nextConfig = {
   ],
   images: {
     domains: ['localhost', 'supabase.co', 'fuzzyandfriends.com'],
-    unoptimized: true, // For Cloudflare Pages
+    unoptimized: false, // Enable optimization for Vercel
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   productionBrowserSourceMaps: true, // subir sourcemaps
-  // Temporarily disabled i18n to fix Vercel build issue with styled-jsx
-  // i18n: {
-  //   locales: ['es', 'en'],
-  //   defaultLocale: 'es',
-  //   localeDetection: false,
-  // },
+  i18n: {
+    locales: ['es', 'en'],
+    defaultLocale: 'es',
+    localeDetection: false,
+  },
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
