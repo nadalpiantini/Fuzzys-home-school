@@ -398,7 +398,7 @@ export default function CodeChallengeGame() {
       return newChar;
     });
 
-    return success;
+    return result;
   }, [currentChallenge]);
 
   // Execute program with animation
