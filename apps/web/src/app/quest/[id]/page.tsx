@@ -73,10 +73,10 @@ export default function QuestPage() {
   );
 
   useEffect(() => {
-    if (params.id) {
+    if (params?.id) {
       fetchQuest(params.id as string);
     }
-  }, [params.id, fetchQuest]);
+  }, [params?.id, fetchQuest]);
 
   const handleStartQuest = () => {
     setIsPlaying(true);

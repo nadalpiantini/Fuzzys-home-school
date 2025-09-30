@@ -386,8 +386,8 @@ function ExternalGamesContent() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [isClient, setIsClient] = useState(false);
 
-  const type = searchParams.get('type');
-  const game = searchParams.get('game');
+  const type = searchParams?.get('type') || null;
+  const game = searchParams?.get('game') || null;
 
   useEffect(() => {
     setIsClient(true);
