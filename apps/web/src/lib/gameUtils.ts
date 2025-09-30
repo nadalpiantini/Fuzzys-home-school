@@ -241,7 +241,7 @@ export function generateVocabularyWord(
     },
   };
 
-  const level = Math.min(5, Math.max(1, Math.floor(gradeLevel / 2)));
+  const level = Math.min(5, Math.max(1, Math.floor(gradeLevel / 2))) as 1 | 3 | 5;
   const words = vocabularyByGrade[subject][level] || vocabularyByGrade[subject][1];
   const wordData = words[Math.floor(Math.random() * words.length)];
 
