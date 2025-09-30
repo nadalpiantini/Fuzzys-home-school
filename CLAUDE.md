@@ -42,11 +42,49 @@ npm run test:e2e:ui        # With UI
 npm run test:e2e:headed    # In headed mode
 npm run test:e2e:debug     # Debug mode
 
-# Deploy to Vercel (recommended)
-npm run deploy:vercel
+# IMPORTANT: Use make commands for safe deployment
+make validate      # Run pre-deployment checks
+make deploy        # Safe production deployment
 
-# Deploy to Netlify
+# Legacy commands (use with caution)
+npm run deploy:vercel
 npm run deploy:netlify
+```
+
+## 🔒 DEPLOYMENT PROTECTION SYSTEM
+
+### Critical Pre-Deployment Checklist
+```bash
+# ALWAYS run these before deploying:
+1. make validate    # Validates ALL requirements
+2. make sync        # Syncs env vars to Vercel
+3. make deploy      # Safe deployment with checks
+```
+
+### Required Environment Variables
+ALL these variables MUST be set in both .env.local and Vercel:
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Public anon key
+- `SUPABASE_SERVICE_ROLE_KEY` - Service role key (server-side)
+- `SUPABASE_JWT_SECRET` - JWT secret for auth
+- `DEEPSEEK_API_KEY` - DeepSeek API key
+- `DEEPSEEK_BASE_URL` - https://api.deepseek.com
+- `DEEPSEEK_MODEL` - deepseek-chat
+- `OPENAI_API_KEY` - Same as DEEPSEEK_API_KEY
+- `OPENAI_BASE_URL` - https://api.deepseek.com
+- `NEXT_PUBLIC_APP_URL` - Production URL
+- Feature flags: All must be "true" or "false" (no spaces/newlines)
+
+### Deployment Scripts
+- `scripts/validate-deployment.sh` - Validates everything
+- `scripts/sync-env-to-vercel.sh` - Syncs env vars
+- `Makefile` - All deployment commands
+
+### Emergency Recovery
+```bash
+make emergency-fix   # Bypass checks (emergency only)
+make check-env       # Check current status
+make setup-env       # Reset environment
 ```
 
 ## Architecture

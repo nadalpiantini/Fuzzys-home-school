@@ -1,1 +1,39 @@
-cd apps/web && npm run typecheck
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# =====================================================
+# 🔒 PRE-PUSH VALIDATION HOOK
+# =====================================================
+# Validates critical conditions before pushing to remote
+# =====================================================
+
+echo "🔒 Running pre-push validation..."
+
+# Check if pushing to main/master
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+    echo "📋 Pushing to production branch - running validation..."
+
+    # Run TypeScript check
+    echo "  Checking TypeScript..."
+    cd apps/web && npm run typecheck > /dev/null 2>&1
+    RESULT=$?
+    cd ../..
+    if [ $RESULT -ne 0 ]; then
+        echo "❌ TypeScript errors found!"
+        echo "Run 'npm run typecheck' to see errors"
+        exit 1
+    fi
+    echo "  ✅ TypeScript OK"
+
+    # Check if .env.local is being committed (should never happen)
+    if git diff --cached --name-only | grep -q "\.env\.local"; then
+        echo "❌ ERROR: .env.local should NEVER be committed!"
+        echo "Run: git rm --cached .env.local"
+        exit 1
+    fi
+
+    echo "✅ Pre-push validation passed!"
+fi
+
+echo "🚀 Pushing to $BRANCH..."
