@@ -231,7 +231,7 @@ export default function MatchGame() {
   };
 
   const getCardContent = (card: Card) => {
-    const pair = MATCH_PAIRS.find(p => p.pairId === card.pairId);
+    const pair = MATCH_PAIRS.find(p => p.id === card.pairId);
     if (!pair) return card.content;
     
     return (

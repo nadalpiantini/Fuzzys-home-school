@@ -338,9 +338,9 @@ export default function CodeChallengeGame() {
 
   // Execute a single command
   const executeCommand = useCallback((command: string, params?: any): boolean => {
+    let success = true;
     setCharacter(prevChar => {
       let newChar = { ...prevChar };
-      let success = true;
 
       switch (command) {
         case 'move_forward':
@@ -398,7 +398,7 @@ export default function CodeChallengeGame() {
       return newChar;
     });
 
-    return result;
+    return success;
   }, [currentChallenge]);
 
   // Execute program with animation
@@ -412,9 +412,9 @@ export default function CodeChallengeGame() {
     const executeBlocks = async (blocks: CodeBlock[]): Promise<boolean> => {
       for (const block of blocks) {
         if (block.type === 'loop' && block.params?.times) {
-          setExecutionLog(prev => [...prev, `🔄 Iniciando bucle: ${block.params.times} veces`]);
-          for (let i = 0; i < block.params.times; i++) {
-            setExecutionLog(prev => [...prev, `🔄 Iteración ${i + 1} de ${block.params.times}`]);
+          setExecutionLog(prev => [...prev, `🔄 Iniciando bucle: ${block.params?.times} veces`]);
+          for (let i = 0; i < (block.params?.times || 0); i++) {
+            setExecutionLog(prev => [...prev, `🔄 Iteración ${i + 1} de ${block.params?.times}`]);
             if (block.children) {
               const success = await executeBlocks(block.children);
               if (!success) return false;

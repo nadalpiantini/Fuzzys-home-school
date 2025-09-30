@@ -639,7 +639,7 @@ export default function CrosswordGame() {
                           </div>
                         )}
                         <input
-                          ref={el => cellRefs.current[cell.id] = el}
+                          ref={el => { cellRefs.current[cell.id] = el; }}
                           type="text"
                           maxLength={1}
                           value={getCellDisplayLetter(cell)}
