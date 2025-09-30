@@ -92,6 +92,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "rollup": "^4.28.2",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.36.0",
     "@next/eslint-plugin-next": "^15.5.4",
@@ -117,5 +118,11 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3",
     "typescript-eslint": "^8.44.1"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.28.2",
+    "@rollup/rollup-linux-x64-musl": "^4.28.2",
+    "@rollup/rollup-darwin-x64": "^4.28.2",
+    "@rollup/rollup-darwin-arm64": "^4.28.2"
   }
 }
