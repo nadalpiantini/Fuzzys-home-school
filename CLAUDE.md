@@ -6,49 +6,63 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Fuzzy's Home School is an educational platform with AI tutoring, gamified learning, and AR/QR Colonial Zone exploration. It's a monorepo using Turbo, with Next.js 14 for the web app, Supabase for backend, and DeepSeek AI for intelligent tutoring.
 
+**⚠️ CRITICAL: Always read `DO_NOT_CHANGE.md` before making any architectural changes. This file documents intentional decisions that should NOT be modified.**
+
 ## Development Commands
 
 ```bash
 # Install dependencies (from root)
 npm install
 
-# Development server (port 3000)
+# Development server (port 3000) - run from root or apps/web
 npm run dev
 
-# Build for production
+# Build for production (runs validation checks first)
 npm run build
 
-# Build packages only (excluding web app)
-npm run build:packages
+# Preview deployment
+npm run preview
 
-# Start production server
-npm run start
+# Production deployment
+npm run ship
 
-# Linting
-npm run lint
+# Check deployment status
+npm run status
 
-# Type checking
-npm run typecheck
+# Rollback deployment
+npm run rollback
 
-# Clean build artifacts
-npm run clean
+# Start production server (from apps/web)
+cd apps/web && npm run start
 
-# Seed games database
-npm run seed
+# Linting (from apps/web)
+cd apps/web && npm run lint
+cd apps/web && npm run lint:fix
 
-# E2E testing with Playwright
-npm run test:e2e
-npm run test:e2e:ui        # With UI
-npm run test:e2e:headed    # In headed mode
-npm run test:e2e:debug     # Debug mode
+# Type checking (from apps/web)
+cd apps/web && npm run typecheck
+
+# Code formatting (from apps/web)
+cd apps/web && npm run format
+cd apps/web && npm run format:check
+
+# Clean build artifacts (from apps/web)
+cd apps/web && npm run clean
+
+# E2E testing with Playwright (from root)
+npx playwright test
+npx playwright test --ui        # With UI
+npx playwright test --headed    # In headed mode
+npx playwright test --debug     # Debug mode
 
 # IMPORTANT: Use make commands for safe deployment
 make validate      # Run pre-deployment checks
 make deploy        # Safe production deployment
-
-# Legacy commands (use with caution)
-npm run deploy:vercel
-npm run deploy:netlify
+make sync          # Sync env vars to Vercel
+make check-env     # Check environment status
+make setup-env     # Initial environment setup
+make clean         # Clean build artifacts
+make reset         # Full reset (use with caution)
 ```
 
 ## 🔒 DEPLOYMENT PROTECTION SYSTEM
@@ -183,3 +197,8 @@ Required environment variables in `apps/web/.env.local`:
 - **Transpiled packages**: All workspace packages are transpiled
 - **Webpack fallbacks**: Node.js modules disabled for browser compatibility
 - **Sentry**: Error tracking and performance monitoring configured
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
