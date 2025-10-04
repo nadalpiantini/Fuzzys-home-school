@@ -25,6 +25,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { LinkStudentDialog } from '@/components/parent/LinkStudentDialog';
+import { CrossRecommendations } from '@/components/curriculum/CrossRecommendations';
 
 type StudentSummary = {
   studentId: string;
@@ -48,24 +49,34 @@ type WeeklyReportData = {
 };
 
 export default function ParentDashboard() {
-  const { user } = useAuth();
+  // TODO: Re-enable authentication
+  // const { user, loading: authLoading } = useAuth();
   const [reportData, setReportData] = useState<WeeklyReportData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
+  // Mock user for demo - remove when auth is enabled
+  const user = null;
+
   useEffect(() => {
-    if (user?.id) {
-      fetchWeeklyReport();
-    }
-  }, [user]);
+    console.log('[ParentDashboard] Demo mode - no auth required');
+    // TODO: Re-enable when auth is active
+    // if (authLoading) return;
+    // if (user?.id) {
+    //   fetchWeeklyReport();
+    // }
+  }, []);
 
   const fetchWeeklyReport = async () => {
     if (!user?.id) return;
 
     try {
+      console.log('[ParentDashboard] Fetching report for:', user.id);
       setLoading(true);
       const response = await fetch(`/api/parents/weekly-report?parentId=${user.id}`);
       const result = await response.json();
+
+      console.log('[ParentDashboard] Report response:', result);
 
       if (result.ok && result.data) {
         setReportData(result.data);
@@ -74,7 +85,7 @@ export default function ParentDashboard() {
         }
       }
     } catch (error) {
-      console.error('Error fetching weekly report:', error);
+      console.error('[ParentDashboard] Error fetching weekly report:', error);
       toast.error('Error al cargar el reporte semanal');
     } finally {
       setLoading(false);
@@ -124,20 +135,41 @@ export default function ParentDashboard() {
     // TODO: Implementar generación de PDF
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-64 bg-gray-200 rounded"></div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // TODO: Re-enable loading state when auth is active
+  // if (authLoading || loading) {
+  //   return (
+  //     <div className="container mx-auto p-6">
+  //       <div className="animate-pulse space-y-4">
+  //         <div className="h-8 w-64 bg-gray-200 rounded"></div>
+  //         <div className="grid gap-4 md:grid-cols-3">
+  //           {[1, 2, 3].map((i) => (
+  //             <div key={i} className="h-32 bg-gray-200 rounded"></div>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // TODO: Re-enable authentication when ready
+  // if (!user) {
+  //   return (
+  //     <div className="container mx-auto p-6">
+  //       <Card>
+  //         <CardContent className="flex flex-col items-center justify-center py-12">
+  //           <AlertCircle className="w-16 h-16 text-gray-400 mb-4" />
+  //           <h3 className="text-xl font-semibold mb-2">Acceso no autorizado</h3>
+  //           <p className="text-gray-600 mb-4 text-center">
+  //             Debes iniciar sesión para ver el panel de padres
+  //           </p>
+  //           <Button onClick={() => window.location.href = '/login'}>
+  //             Iniciar Sesión
+  //           </Button>
+  //         </CardContent>
+  //       </Card>
+  //     </div>
+  //   );
+  // }
 
   const students = reportData?.students || [];
   const currentStudent = students.find((s) => s.studentId === selectedStudent);
@@ -151,17 +183,18 @@ export default function ParentDashboard() {
           <p className="text-gray-600 mt-1">Seguimiento del progreso de tus hijos</p>
         </div>
         <div className="flex gap-2">
-          {user?.id && (
-            <LinkStudentDialog 
-              parentId={user.id} 
-              onSuccess={handleLinkStudent} 
+          {/* TODO: Re-enable when authentication is active */}
+          {/* {user?.id && (
+            <LinkStudentDialog
+              parentId={user.id}
+              onSuccess={handleLinkStudent}
             />
-          )}
-          <Button variant="outline" onClick={handleSendEmail}>
+          )} */}
+          <Button variant="outline" onClick={handleSendEmail} disabled>
             <Mail className="w-4 h-4 mr-2" />
             Enviar Reporte
           </Button>
-          <Button variant="outline" onClick={handleDownloadPDF}>
+          <Button variant="outline" onClick={handleDownloadPDF} disabled>
             <Download className="w-4 h-4 mr-2" />
             Descargar PDF
           </Button>
@@ -375,6 +408,9 @@ export default function ParentDashboard() {
                   </CardContent>
                 </Card>
               )}
+
+              {/* Cross-Subject Recommendations */}
+              <CrossRecommendations studentId={student.studentId} />
             </TabsContent>
           ))}
         </Tabs>

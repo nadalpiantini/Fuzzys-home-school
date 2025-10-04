@@ -63,7 +63,7 @@ export default function EditContentPage() {
   const { t, language } = useTranslation();
   const router = useRouter();
   const params = useParams();
-  const contentId = params.id as string;
+  const contentId = params?.id as string;
 
   const [formData, setFormData] = useState<ContentFormData | null>(null);
   const [newTag, setNewTag] = useState('');

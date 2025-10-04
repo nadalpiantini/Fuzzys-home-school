@@ -65,7 +65,7 @@ export default function ViewContentPage() {
   const { t, language } = useTranslation();
   const router = useRouter();
   const params = useParams();
-  const contentId = params.id as string;
+  const contentId = params?.id as string;
 
   const [content, setContent] = useState<ContentData | null>(null);
   const [isLoading, setIsLoading] = useState(true);

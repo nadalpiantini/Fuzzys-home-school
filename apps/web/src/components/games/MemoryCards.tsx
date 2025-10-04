@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, memo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Trophy, Timer, RotateCcw } from 'lucide-react';
@@ -9,7 +9,7 @@ import {
   useMobileDetection,
   triggerHapticFeedback,
 } from '@/lib/hooks/useMobileDetection';
-import { useTouchGestures } from '@/lib/hooks/useTouchGestures';
+import { useOptimizedTouch } from '@/lib/hooks/useOptimizedTouch';
 
 interface MemoryCardsProps {
   game: MemoryCardsGame;
@@ -31,7 +31,77 @@ interface CardItem {
   isMatched: boolean;
 }
 
-export const MemoryCards: React.FC<MemoryCardsProps> = ({
+// Componente de tarjeta individual memoizado
+const MemoryCard = memo(({ 
+  card, 
+  index, 
+  isFlipped, 
+  isMatched, 
+  isSelected, 
+  onCardClick, 
+  isTouchDevice, 
+  isMobile 
+}: {
+  card: CardItem;
+  index: number;
+  isFlipped: boolean;
+  isMatched: boolean;
+  isSelected: boolean;
+  onCardClick: (index: number) => void;
+  isTouchDevice: boolean;
+  isMobile: boolean;
+}) => {
+  const handleClick = useCallback(() => {
+    onCardClick(index);
+  }, [index, onCardClick]);
+
+  return (
+    <div
+      key={index}
+      data-card-index={index}
+      onClick={isTouchDevice ? undefined : handleClick}
+      className={`
+        relative aspect-square transition-all duration-300 transform select-none
+        ${
+          isTouchDevice
+            ? 'active:scale-95 touch-manipulation'
+            : 'cursor-pointer hover:scale-105'
+        }
+        ${isFlipped || isMatched ? 'rotate-0' : ''}
+        ${isMatched ? 'opacity-50' : ''}
+        ${isSelected ? 'ring-2 ring-blue-400' : ''}
+      `}
+      className={`${isMobile ? 'min-h-[60px] min-w-[60px]' : 'min-h-[80px] min-w-[80px]'}`}
+    >
+      <Card className="w-full h-full overflow-hidden">
+        {isFlipped || isMatched ? (
+          <div className="w-full h-full flex items-center justify-center p-2">
+            {card.image ? (
+              <img 
+                src={card.image} 
+                alt={card.content}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <span className="text-sm font-medium text-center break-words">
+                {card.content}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-200 rounded-full"></div>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+});
+
+MemoryCard.displayName = 'MemoryCard';
+
+export const MemoryCards: React.FC<MemoryCardsProps> = memo(({
   game,
   onAnswer,
   onNext,
@@ -48,6 +118,88 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
   const [startTime, setStartTime] = useState<number>(Date.now());
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Función optimizada para manejar clicks en tarjetas
+  const handleCardClick = useCallback((index: number) => {
+    if (showFeedback || isComplete) return;
+    
+    const card = cards[index];
+    if (!card || card.isFlipped || card.isMatched) return;
+
+    if (flippedCards.length >= 2) return;
+
+    const newFlippedCards = [...flippedCards, index];
+    setFlippedCards(newFlippedCards);
+    setMoves(prev => prev + 1);
+
+    if (hasHapticFeedback) {
+      triggerHapticFeedback('light');
+    }
+
+    if (newFlippedCards.length === 2) {
+      const [firstIndex, secondIndex] = newFlippedCards;
+      const firstCard = cards[firstIndex];
+      const secondCard = cards[secondIndex];
+
+      if (firstCard.id.replace('-front', '').replace('-back', '') === 
+          secondCard.id.replace('-front', '').replace('-back', '')) {
+        // Match found
+        setTimeout(() => {
+          setCards(prev => prev.map((card, i) => 
+            i === firstIndex || i === secondIndex 
+              ? { ...card, isMatched: true }
+              : card
+          ));
+          setMatchedPairs(prev => prev + 1);
+          setFlippedCards([]);
+          
+          if (hasHapticFeedback) {
+            triggerHapticFeedback('medium');
+          }
+        }, 1000);
+      } else {
+        // No match
+        setTimeout(() => {
+          setCards(prev => prev.map((card, i) => 
+            i === firstIndex || i === secondIndex 
+              ? { ...card, isFlipped: false }
+              : card
+          ));
+          setFlippedCards([]);
+        }, 1500);
+      }
+    }
+  }, [cards, flippedCards, showFeedback, isComplete, hasHapticFeedback]);
+
+  // Touch events optimizados
+  const { touchHandlers } = useOptimizedTouch({
+    onTap: useCallback((point) => {
+      if (showFeedback) return;
+      // Encontrar la tarjeta más cercana al punto de toque
+      const cardElements = document.querySelectorAll('[data-card-index]');
+      let closestCard = null;
+      let minDistance = Infinity;
+      
+      cardElements.forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.sqrt(
+          Math.pow(point.x - centerX, 2) + Math.pow(point.y - centerY, 2)
+        );
+        
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCard = element;
+        }
+      });
+      
+      if (closestCard) {
+        const cardIndex = parseInt(closestCard.getAttribute('data-card-index') || '0');
+        handleCardClick(cardIndex);
+      }
+    }, [showFeedback, handleCardClick]),
+  });
 
   useEffect(() => {
     // Initialize and shuffle cards
@@ -282,30 +434,17 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
           }}
         >
           {cards.map((card, index) => (
-            <div
+            <MemoryCard
               key={index}
-              data-card-index={index}
-              onClick={isTouchDevice ? undefined : () => handleCardClick(index)}
-              className={`
-                relative aspect-square transition-all duration-300 transform select-none
-                ${
-                  isTouchDevice
-                    ? 'active:scale-95 touch-manipulation'
-                    : 'cursor-pointer hover:scale-105'
-                }
-                ${card.isFlipped || card.isMatched ? 'rotate-0' : ''}
-                ${card.isMatched ? 'opacity-50' : ''}
-                ${flippedCards.includes(index) ? 'ring-2 ring-blue-400' : ''}
-              `}
-              style={{
-                minHeight: isMobile ? '60px' : '80px',
-                minWidth: isMobile ? '60px' : '80px',
-              }}
-            >
-              <Card className="w-full h-full overflow-hidden">
-                {getCardContent(card)}
-              </Card>
-            </div>
+              card={card}
+              index={index}
+              isFlipped={card.isFlipped}
+              isMatched={card.isMatched}
+              isSelected={flippedCards.includes(index)}
+              onCardClick={handleCardClick}
+              isTouchDevice={isTouchDevice}
+              isMobile={isMobile}
+            />
           ))}
         </div>
 
@@ -345,4 +484,6 @@ export const MemoryCards: React.FC<MemoryCardsProps> = ({
       </div>
     </Card>
   );
-};
+});
+
+MemoryCards.displayName = 'MemoryCards';

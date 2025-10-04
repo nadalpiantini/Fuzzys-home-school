@@ -93,7 +93,8 @@ export default function StoryLesson({
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [adaptiveSession, setAdaptiveSession] = useState<any>(null);
-  const [activityStartTime, setActivityStartTime] = useState<number>(Date.now());(false);
+  const [activityStartTime, setActivityStartTime] = useState<number>(Date.now());
+  const [lastChapterId, setLastChapterId] = useState<string | null>(null);
 
   const currentChapter = curriculum.chapters[currentChapterIndex];
   const currentActivity = currentChapter?.activities[currentActivityIndex];
@@ -237,16 +238,9 @@ export default function StoryLesson({
         await awardBadge(currentChapter.badge);
       }
 
-      // Update local chapter progress state
-      if (result.ok) {
-        setChapterProgress((prev) => ({
-          ...prev,
-          [currentChapter.id]: {
-            completed: chapterCompleted,
-            score: score,
-          },
-        }));
-      }
+      // ✅ REMOVED: Redundant state update that caused race condition
+      // The state is now updated in handleActivityComplete BEFORE advancing chapters
+      // This ensures the lock check has the correct data
 
       // Award points when activity is completed
       if (activityCompleted) {
@@ -259,7 +253,7 @@ export default function StoryLesson({
     } catch (error) {
       console.error('Error saving progress:', error);
     }
-  };
+  };;
 
   // Award points using the advanced system
   const awardPoints = async (score: number = 0, timeSpent: number = 0) => {
@@ -556,6 +550,58 @@ export default function StoryLesson({
     const chapterCompleted = currentActivityIndex === totalActivities - 1;
 
     if (chapterCompleted) {
+      // 🎁 Award exploration bonus if coming from alternative/reinforcement path
+      try {
+        await fetch('/api/points/award/alt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId: childData?.id,
+            fromChapterId: lastChapterId,
+            toChapterId: currentChapter.id,
+          }),
+        }).then(async (res) => {
+          const bonusResult = await res.json();
+          if (bonusResult.ok && bonusResult.bonus) {
+            toast.success(bonusResult.message, {
+              description: `Has explorado un camino ${bonusResult.type === 'alternative' ? 'alternativo' : 'de refuerzo'}`,
+              duration: 5000,
+            });
+          }
+        });
+      } catch (error) {
+        console.error('Error awarding exploration bonus:', error);
+      }
+
+      // 🔓 Unlock next chapters based on performance
+      try {
+        const unlockResponse = await fetch('/api/curriculum/unlock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId: childData?.id,
+            curriculumId: curriculum.id,
+            chapterId: currentChapter.id,
+            score: activityScore,
+          }),
+        });
+
+        const unlockResult = await unlockResponse.json();
+
+        if (unlockResult.ok && unlockResult.unlocked?.length > 0) {
+          // Notify user about unlocked chapters
+          const unlockedTitles = unlockResult.unlocked.map((u: any) => u.title).join(', ');
+          toast.success(`🎉 ¡Nuevos capítulos desbloqueados!`, {
+            description: unlockedTitles,
+            duration: 5000,
+          });
+
+          console.log('🔓 Unlocked chapters:', unlockResult.unlocked);
+        }
+      } catch (error) {
+        console.error('Error unlocking chapters:', error);
+      }
+
       toast.success(`✅ ¡Capítulo completado: ${currentChapter.title}!`, {
         description: 'Tu progreso ha sido guardado',
         duration: 3000,
@@ -572,17 +618,38 @@ export default function StoryLesson({
         setSessionStartTime(Date.now()); // Reset timer for new activity
         setActivityStartTime(Date.now()); // Reset activity timer
       } else if (currentChapterIndex < totalChapters - 1) {
-        setCurrentChapterIndex((prev) => prev + 1);
-        setCurrentActivityIndex(0);
-        setSessionStartTime(Date.now()); // Reset timer for new chapter
-        setActivityStartTime(Date.now()); // Reset activity timer
-        setShowFeedback(false); // Reset feedback state for new chapter
-        setFeedbackSubmitted(false);
+        // ✅ FIX: Update chapter progress BEFORE advancing to ensure state is ready
+        const completedChapterId = currentChapter.id;
+        
+        // 🔗 Track last chapter for exploration bonus
+        setLastChapterId(completedChapterId);
+        
+        setChapterProgress((prev) => {
+          const updated = {
+            ...prev,
+            [completedChapterId]: {
+              completed: true,
+              score: activityScore,
+            },
+          };
+          
+          // ✅ Advance to next chapter AFTER state is updated
+          setTimeout(() => {
+            setCurrentChapterIndex((prevIdx) => prevIdx + 1);
+            setCurrentActivityIndex(0);
+            setSessionStartTime(Date.now());
+            setActivityStartTime(Date.now());
+            setShowFeedback(false);
+            setFeedbackSubmitted(false);
+          }, 0);
+          
+          return updated;
+        });
       }
     }, 1500);
 
     onProgress?.(currentChapter.id, currentActivityIndex, true);
-  };
+  };;
 
   // Navigation functions
   const goToPrevious = () => {

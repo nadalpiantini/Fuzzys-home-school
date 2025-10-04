@@ -40,9 +40,6 @@ const nextConfig = {
   experimental: {
     // Enable edge runtime for better Cloudflare Pages compatibility
     // runtime: 'edge', // Removed as it's not supported in this Next.js version
-    // Mobile performance optimizations
-    optimizeCss: true,
-    optimizePackageImports: ['@fuzzy/adaptive-engine', '@fuzzy/creative-tools', '@fuzzy/external-games'],
   },
   compiler: {
     styledComponents: false,  // Disable styled-components to prevent SSR issues
@@ -80,16 +77,6 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public,max-age=31536000,immutable' },
-        ],
-      },
-      // Mobile performance headers
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-DNS-Prefetch-Control', value: 'on' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         ],
       },
       {
@@ -157,29 +144,11 @@ const nextConfig = {
   // PRO Pack: Redirects
   async redirects() {
     return [
-      // A → Aprender
-      { source: '/library', destination: '/learn/library', permanent: true },
-      { source: '/learn/map', destination: '/learn', permanent: true },
-      { source: '/quest/:id', destination: '/learn/mission/:id', permanent: true },
-      { source: '/quests', destination: '/learn/missions', permanent: true },
-      // B → Jugar
-      { source: '/games', destination: '/play', permanent: true },
-      { source: '/games/:path*', destination: '/play/:path*', permanent: true },
-      { source: '/colonial-rally', destination: '/play/mode/rally', permanent: true },
-      { source: '/rally-colonial', destination: '/play/mode/rally', permanent: true },
-      // C → Progreso
-      { source: '/student', destination: '/progress/me', permanent: true },
-      { source: '/student/progress', destination: '/progress/me', permanent: true },
-      { source: '/student/tutor', destination: '/progress/conversations', permanent: true },
-      { source: '/teacher', destination: '/progress/class', permanent: true },
-      { source: '/teacher/:path*', destination: '/progress/:path*', permanent: true },
-      { source: '/parent', destination: '/progress/family', permanent: true },
-      { source: '/admin', destination: '/progress/admin/users', permanent: true },
-      { source: '/admin/settings', destination: '/progress/admin/settings', permanent: true },
-      // IA Dashboard antiguo → Observaciones (evitamos "IA" visible)
-      { source: '/ai-dashboard', destination: '/progress/insights', permanent: true },
-      // Tutor suelto → Charlas con Fuzzy
-      { source: '/tutor', destination: '/progress/conversations', permanent: true },
+      {
+        source: '/admin',
+        destination: '/teacher',
+        permanent: false,
+      },
     ];
   },
   // PRO Pack: Rewrites for API optimization

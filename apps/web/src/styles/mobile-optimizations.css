@@ -1,0 +1,387 @@
+/* Optimizaciones específicas para dispositivos móviles */
+
+/* Prevenir zoom en inputs en iOS */
+input, textarea, select {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Optimización de scroll */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+}
+
+/* Hardware acceleration para elementos interactivos */
+.touch-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimización de botones táctiles */
+.touch-button {
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Optimización de drag and drop */
+.drag-item {
+  touch-action: none;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.drag-item.dragging {
+  z-index: 1000;
+  pointer-events: none;
+  transform: translateZ(0) scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Optimización de animaciones */
+.animate-mobile {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reducir motion para usuarios sensibles */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimización de imágenes */
+.mobile-image {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Optimización de fuentes */
+.mobile-text {
+  font-display: swap;
+  text-rendering: optimizeSpeed;
+}
+
+/* Optimización de grid para móviles */
+.mobile-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .mobile-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.25rem;
+  }
+}
+
+/* Optimización de cards para móviles */
+.mobile-card {
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.mobile-card:active {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: scale(0.98);
+}
+
+/* Optimización de formularios móviles */
+.mobile-form input,
+.mobile-form textarea,
+.mobile-form select {
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  font-size: 16px; /* Prevenir zoom en iOS */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mobile-form input:focus,
+.mobile-form textarea:focus,
+.mobile-form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Optimización de navegación móvil */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  z-index: 50;
+  padding: 0.5rem;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.mobile-nav-item:active {
+  background-color: #f3f4f6;
+}
+
+/* Optimización de modales móviles */
+.mobile-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.mobile-modal-content {
+  background: white;
+  border-radius: 1rem 1rem 0 0;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimización de listas móviles */
+.mobile-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.mobile-list-item {
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-list-item:active {
+  background-color: #f9fafb;
+}
+
+/* Optimización de botones de acción flotantes */
+.mobile-fab {
+  position: fixed;
+  bottom: 5rem;
+  right: 1rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  transition: all 0.2s ease;
+}
+
+.mobile-fab:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.6);
+}
+
+/* Optimización de indicadores de carga */
+.mobile-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.mobile-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f3f4f6;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Optimización de feedback táctil */
+.mobile-feedback {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-feedback::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.mobile-feedback:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* Optimización de dispositivos de gama baja */
+.low-end-device * {
+  animation-duration: 0.1s !important;
+  transition-duration: 0.1s !important;
+}
+
+.low-end-device .mobile-card {
+  box-shadow: none;
+  border: 1px solid #e5e7eb;
+}
+
+.low-end-device .mobile-fab {
+  box-shadow: none;
+  border: 1px solid #d1d5db;
+}
+
+/* Optimización para conexiones lentas */
+.slow-connection img {
+  filter: blur(2px);
+  transition: filter 0.3s ease;
+}
+
+.slow-connection img.loaded {
+  filter: none;
+}
+
+/* Optimización de scroll infinito */
+.infinite-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.infinite-scroll-trigger {
+  height: 1px;
+  width: 100%;
+}
+
+/* Optimización de gestos */
+.gesture-container {
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gesture-item {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Optimización de video */
+.mobile-video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  -webkit-playsinline: true;
+  playsinline: true;
+}
+
+/* Optimización de canvas */
+.mobile-canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimización de WebGL */
+.mobile-webgl {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimización de fuentes para móviles */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+  h4 { font-size: 1rem; }
+  h5 { font-size: 0.875rem; }
+  h6 { font-size: 0.75rem; }
+}
+
+/* Optimización de espaciado para móviles */
+@media (max-width: 640px) {
+  .mobile-spacing {
+    padding: 0.5rem;
+    margin: 0.25rem;
+  }
+  
+  .mobile-spacing-lg {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+}
+
+/* Optimización de contraste para móviles */
+@media (prefers-contrast: high) {
+  .mobile-card {
+    border: 2px solid #000;
+  }
+  
+  .mobile-button {
+    border: 2px solid #000;
+  }
+}
+
+/* Optimización de modo oscuro para móviles */
+@media (prefers-color-scheme: dark) {
+  .mobile-card {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+  
+  .mobile-button {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+}

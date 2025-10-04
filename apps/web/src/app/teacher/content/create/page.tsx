@@ -62,7 +62,7 @@ function CreateContentForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const contentType =
-    (searchParams.get('type') as 'lesson' | 'quiz' | 'game') || 'lesson';
+    (searchParams?.get('type') as 'lesson' | 'quiz' | 'game') || 'lesson';
 
   const [formData, setFormData] = useState<ContentFormData>({
     title: '',

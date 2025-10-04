@@ -84,6 +84,7 @@
     "react-joyride": "^2.9.3",
     "react-leaflet": "^4.2.1",
     "react-qr-scanner": "^1.0.0-alpha.11",
+    "reactflow": "^11.11.4",
     "recharts": "^3.2.1",
     "resend": "^6.1.2",
     "socket.io-client": "^4.8.1",

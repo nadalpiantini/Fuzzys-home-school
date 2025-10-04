@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar optimizaciones móviles */
+@import '../styles/mobile-optimizations.css';
+
 /* Variables CSS para colores Barney (sin púrpura) */
 :root {
   /* Verde grama fuerte - Barney Green */

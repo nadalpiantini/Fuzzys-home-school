@@ -97,17 +97,17 @@ export async function GET(req: Request) {
 
       // 4. Análisis de Tendencia (últimos 3 capítulos)
       const curriculumRecent = (recentChapters || [])
-        .filter(ch => ch.curriculum_id === pattern.curriculum_id)
+        .filter((ch: any) => ch.curriculum_id === pattern.curriculum_id)
         .slice(0, 3);
-      
+
       let trendFactor = 0.5;
       let trendDirection: 'improving' | 'stable' | 'struggling' | 'insufficient_data' = 'insufficient_data';
-      
+
       if (curriculumRecent.length >= 2) {
-        const scores = curriculumRecent.map(ch => ch.score || 0);
-        const avgRecent = scores.reduce((a, b) => a + b, 0) / scores.length;
+        const scores = curriculumRecent.map((ch: any) => ch.score || 0);
+        const avgRecent = scores.reduce((a: number, b: number) => a + b, 0) / scores.length;
         const isImproving = scores.length >= 2 && scores[0] > scores[1];
-        const isStable = scores.every(s => Math.abs(s - avgRecent) < 10);
+        const isStable = scores.every((s: number) => Math.abs(s - avgRecent) < 10);
         
         if (isImproving) {
           trendDirection = 'improving';

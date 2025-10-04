@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fuzzy Maze - Blockly Games</title>
+    <link rel="stylesheet" href="/games/blockly/maze/style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .fuzzy-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .fuzzy-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .fuzzy-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .game-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        #visualization {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            background: #f0f8ff;
+        }
+        
+        #blockly {
+            width: 100%;
+            height: 500px;
+        }
+        
+        .fuzzy-footer {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .fuzzy-footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        
+        .fuzzy-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fuzzy-header">
+        <h1>🧩 Fuzzy Maze</h1>
+        <p>¡Ayuda a Fuzzy a encontrar la salida del laberinto programando con bloques!</p>
+    </div>
+    
+    <div class="game-container">
+        <div class="game-wrapper">
+            <div class="controls">
+                <button id="runButton" class="btn">▶️ Ejecutar</button>
+                <button id="resetButton" class="btn btn-secondary" style="display: none;">🔄 Reiniciar</button>
+                <button id="helpButton" class="btn btn-secondary">❓ Ayuda</button>
+            </div>
+            
+            <div id="visualization">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="svgMaze" width="400px" height="400px">
+                    <g id="look">
+                        <path d="M 0,-15 a 15 15 0 0 1 15 15" />
+                        <path d="M 0,-35 a 35 35 0 0 1 35 35" />
+                        <path d="M 0,-55 a 55 55 0 0 1 55 55" />
+                    </g>
+                </svg>
+                <div id="capacityBubble">
+                    <div id="capacity"></div>
+                </div>
+            </div>
+            
+            <div id="blockly"></div>
+        </div>
+    </div>
+    
+    <div class="fuzzy-footer">
+        <p>🎮 <strong>Fuzzy's Home School</strong> - Aprende programación de forma divertida</p>
+        <p><a href="/games">← Volver a los juegos</a> | <a href="/">🏠 Inicio</a></p>
+    </div>
+
+    <!-- Blockly Dependencies from CDN -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/js/es.js"></script>
+    
+    <!-- Custom Maze Game Implementation -->
+    <script>
+        // Simple Maze Game Implementation
+        class FuzzyMazeGame {
+            constructor() {
+                this.workspace = null;
+                this.pegman = { x: 1, y: 1, direction: 0 }; // 0=North, 1=East, 2=South, 3=West
+                this.maze = [
+                    ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
+                    ['#', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', '#'],
+                    ['#', ' ', '#', ' ', '#', ' ', '#', '#', ' ', '#'],
+                    ['#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+                    ['#', ' ', '#', '#', '#', '#', '#', ' ', '#', '#'],
+                    ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+                    ['#', '#', '#', '#', '#', '#', '#', '#', ' ', '#'],
+                    ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+                    ['#', ' ', '#', '#', '#', '#', '#', '#', ' ', '#'],
+                    ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#']
+                ];
+                this.target = { x: 8, y: 8 };
+                this.isRunning = false;
+                this.init();
+            }
+            
+            init() {
+                this.createWorkspace();
+                this.createBlocks();
+                this.renderMaze();
+                this.setupEventListeners();
+            }
+            
+            createWorkspace() {
+                this.workspace = Blockly.inject('blockly', {
+                    toolbox: this.getToolbox(),
+                    grid: {
+                        spacing: 20,
+                        length: 3,
+                        colour: '#ccc',
+                        snap: true
+                    },
+                    zoom: {
+                        controls: true,
+                        wheel: true,
+                        startScale: 1.0,
+                        maxScale: 3,
+                        minScale: 0.3,
+                        scaleSpeed: 1.2
+                    },
+                    trashcan: true
+                });
+            }
+            
+            getToolbox() {
+                return `
+                    <xml>
+                        <block type="maze_move_forward"></block>
+                        <block type="maze_turn_left"></block>
+                        <block type="maze_turn_right"></block>
+                        <block type="maze_if_path_ahead"></block>
+                        <block type="maze_repeat"></block>
+                        <block type="controls_if"></block>
+                        <block type="controls_repeat"></block>
+                    </xml>
+                `;
+            }
+            
+            createBlocks() {
+                // Move Forward Block
+                Blockly.Blocks['maze_move_forward'] = {
+                    init: function() {
+                        this.appendDummyInput()
+                            .appendField("Mover hacia adelante");
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(160);
+                        this.setTooltip("Mueve a Fuzzy hacia adelante");
+                    }
+                };
+                
+                // Turn Left Block
+                Blockly.Blocks['maze_turn_left'] = {
+                    init: function() {
+                        this.appendDummyInput()
+                            .appendField("Girar a la izquierda");
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(160);
+                        this.setTooltip("Gira a Fuzzy a la izquierda");
+                    }
+                };
+                
+                // Turn Right Block
+                Blockly.Blocks['maze_turn_right'] = {
+                    init: function() {
+                        this.appendDummyInput()
+                            .appendField("Girar a la derecha");
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(160);
+                        this.setTooltip("Gira a Fuzzy a la derecha");
+                    }
+                };
+                
+                // If Path Ahead Block
+                Blockly.Blocks['maze_if_path_ahead'] = {
+                    init: function() {
+                        this.appendDummyInput()
+                            .appendField("Si hay camino hacia adelante");
+                        this.appendStatementInput('DO')
+                            .appendField("entonces");
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(210);
+                        this.setTooltip("Ejecuta los bloques si hay camino hacia adelante");
+                    }
+                };
+                
+                // Repeat Block
+                Blockly.Blocks['maze_repeat'] = {
+                    init: function() {
+                        this.appendDummyInput()
+                            .appendField("Repetir")
+                            .appendField(new Blockly.FieldNumber(4, 1, 20), 'TIMES')
+                            .appendField("veces");
+                        this.appendStatementInput('DO')
+                            .appendField("hacer");
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(120);
+                        this.setTooltip("Repite los bloques un número de veces");
+                    }
+                };
+            }
+            
+            renderMaze() {
+                const svg = document.getElementById('svgMaze');
+                svg.innerHTML = '';
+                
+                // Draw maze
+                for (let y = 0; y < this.maze.length; y++) {
+                    for (let x = 0; x < this.maze[y].length; x++) {
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('x', x * 40);
+                        rect.setAttribute('y', y * 40);
+                        rect.setAttribute('width', 40);
+                        rect.setAttribute('height', 40);
+                        rect.setAttribute('fill', this.maze[y][x] === '#' ? '#333' : '#fff');
+                        rect.setAttribute('stroke', '#ccc');
+                        svg.appendChild(rect);
+                    }
+                }
+                
+                // Draw target
+                const target = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                target.setAttribute('cx', this.target.x * 40 + 20);
+                target.setAttribute('cy', this.target.y * 40 + 20);
+                target.setAttribute('r', 15);
+                target.setAttribute('fill', '#4CAF50');
+                svg.appendChild(target);
+                
+                // Draw pegman
+                this.drawPegman();
+            }
+            
+            drawPegman() {
+                const svg = document.getElementById('svgMaze');
+                const pegman = document.getElementById('pegman') || document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                pegman.id = 'pegman';
+                pegman.innerHTML = '';
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', this.pegman.x * 40 + 20);
+                circle.setAttribute('cy', this.pegman.y * 40 + 20);
+                circle.setAttribute('r', 12);
+                circle.setAttribute('fill', '#FF9800');
+                pegman.appendChild(circle);
+                
+                // Direction indicator
+                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                const points = this.getDirectionPoints();
+                arrow.setAttribute('points', points);
+                arrow.setAttribute('fill', '#fff');
+                pegman.appendChild(arrow);
+                
+                svg.appendChild(pegman);
+            }
+            
+            getDirectionPoints() {
+                const x = this.pegman.x * 40 + 20;
+                const y = this.pegman.y * 40 + 20;
+                const size = 8;
+                
+                switch (this.pegman.direction) {
+                    case 0: // North
+                        return `${x},${y-size} ${x-size},${y+size} ${x+size},${y+size}`;
+                    case 1: // East
+                        return `${x+size},${y} ${x-size},${y-size} ${x-size},${y+size}`;
+                    case 2: // South
+                        return `${x},${y+size} ${x-size},${y-size} ${x+size},${y-size}`;
+                    case 3: // West
+                        return `${x-size},${y} ${x+size},${y-size} ${x+size},${y+size}`;
+                }
+            }
+            
+            setupEventListeners() {
+                document.getElementById('runButton').addEventListener('click', () => {
+                    this.runProgram();
+                });
+                
+                document.getElementById('resetButton').addEventListener('click', () => {
+                    this.resetGame();
+                });
+            }
+            
+            runProgram() {
+                if (this.isRunning) return;
+                
+                this.isRunning = true;
+                document.getElementById('runButton').style.display = 'none';
+                document.getElementById('resetButton').style.display = 'inline-block';
+                
+                try {
+                    const code = this.generateCode();
+                    this.executeCode(code);
+                } catch (error) {
+                    console.error('Error ejecutando programa:', error);
+                    alert('Error en el programa: ' + error.message);
+                    this.resetGame();
+                }
+            }
+            
+            generateCode() {
+                const code = Blockly.JavaScript.workspaceToCode(this.workspace);
+                return code;
+            }
+            
+            executeCode(code) {
+                // Simple interpreter for our maze game
+                const steps = [];
+                let stepIndex = 0;
+                
+                const executeStep = () => {
+                    if (stepIndex >= steps.length) {
+                        this.checkWin();
+                        return;
+                    }
+                    
+                    const step = steps[stepIndex];
+                    this.executeStep(step);
+                    stepIndex++;
+                    
+                    setTimeout(executeStep, 500);
+                };
+                
+                // Parse code and create steps
+                this.parseCode(code, steps);
+                executeStep();
+            }
+            
+            parseCode(code, steps) {
+                // Simple parser for our blocks
+                const lines = code.split('\n');
+                for (const line of lines) {
+                    if (line.includes('maze_move_forward')) {
+                        steps.push('move_forward');
+                    } else if (line.includes('maze_turn_left')) {
+                        steps.push('turn_left');
+                    } else if (line.includes('maze_turn_right')) {
+                        steps.push('turn_right');
+                    }
+                }
+            }
+            
+            executeStep(step) {
+                switch (step) {
+                    case 'move_forward':
+                        this.moveForward();
+                        break;
+                    case 'turn_left':
+                        this.turnLeft();
+                        break;
+                    case 'turn_right':
+                        this.turnRight();
+                        break;
+                }
+                this.renderMaze();
+            }
+            
+            moveForward() {
+                const newX = this.pegman.x + (this.pegman.direction === 1 ? 1 : this.pegman.direction === 3 ? -1 : 0);
+                const newY = this.pegman.y + (this.pegman.direction === 0 ? -1 : this.pegman.direction === 2 ? 1 : 0);
+                
+                if (this.isValidPosition(newX, newY)) {
+                    this.pegman.x = newX;
+                    this.pegman.y = newY;
+                } else {
+                    throw new Error('¡Fuzzy chocó con una pared!');
+                }
+            }
+            
+            turnLeft() {
+                this.pegman.direction = (this.pegman.direction + 3) % 4;
+            }
+            
+            turnRight() {
+                this.pegman.direction = (this.pegman.direction + 1) % 4;
+            }
+            
+            isValidPosition(x, y) {
+                return x >= 0 && x < this.maze[0].length && 
+                       y >= 0 && y < this.maze.length && 
+                       this.maze[y][x] !== '#';
+            }
+            
+            checkWin() {
+                if (this.pegman.x === this.target.x && this.pegman.y === this.target.y) {
+                    alert('¡Felicidades! ¡Fuzzy llegó a la meta! 🎉');
+                } else {
+                    alert('¡Inténtalo de nuevo! Fuzzy no llegó a la meta.');
+                }
+                this.resetGame();
+            }
+            
+            resetGame() {
+                this.isRunning = false;
+                this.pegman = { x: 1, y: 1, direction: 0 };
+                document.getElementById('runButton').style.display = 'inline-block';
+                document.getElementById('resetButton').style.display = 'none';
+                this.renderMaze();
+            }
+        }
+        
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.fuzzyMazeGame = new FuzzyMazeGame();
+            console.log('🎮 Fuzzy Maze cargado exitosamente!');
+        });
+    </script>
+    
+    <script>
+        // Initialize the game when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Fuzzy theming
+            const runButton = document.getElementById('runButton');
+            const resetButton = document.getElementById('resetButton');
+            const helpButton = document.getElementById('helpButton');
+            
+            if (runButton) {
+                runButton.addEventListener('click', function() {
+                    console.log('🎮 Fuzzy Maze: Ejecutando programa...');
+                });
+            }
+            
+            if (resetButton) {
+                resetButton.addEventListener('click', function() {
+                    console.log('🔄 Fuzzy Maze: Reiniciando...');
+                });
+            }
+            
+            if (helpButton) {
+                helpButton.addEventListener('click', function() {
+                    alert('🧩 ¡Bienvenido a Fuzzy Maze!\n\n' +
+                          '• Arrastra los bloques para crear tu programa\n' +
+                          '• Haz clic en "Ejecutar" para ver a Fuzzy en acción\n' +
+                          '• ¡Ayuda a Fuzzy a encontrar la salida del laberinto!');
+                });
+            }
+            
+            console.log('🎮 Fuzzy Maze cargado exitosamente!');
+        });
+    </script>
+</body>
+</html>

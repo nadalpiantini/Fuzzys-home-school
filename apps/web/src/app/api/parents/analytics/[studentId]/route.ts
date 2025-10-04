@@ -213,7 +213,7 @@ export async function GET(
     });
 
     // Process chapter progress by subject
-    (chapterProgressData.data || []).forEach(chapter => {
+    (chapterProgressData.data || []).forEach((chapter: any) => {
       const subject = chapter.subject || 'General';
       if (!subjectMap.has(subject)) {
         subjectMap.set(subject, {
@@ -251,20 +251,20 @@ export async function GET(
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split('T')[0];
 
-      const daySessions = sessions.filter(s =>
+      const daySessions = sessions.filter((s: any) =>
         s.started_at?.startsWith(dateStr)
       );
 
       weeklyBreakdown.push({
         day: daysOfWeek[date.getDay()],
-        points: daySessions.reduce((sum, s) => sum + (s.points_earned || 0), 0),
+        points: daySessions.reduce((sum: number, s: any) => sum + (s.points_earned || 0), 0),
         gamesPlayed: daySessions.length,
-        timeSpent: Math.round(daySessions.reduce((sum, s) => sum + (s.time_spent || 0), 0) / 60)
+        timeSpent: Math.round(daySessions.reduce((sum: number, s: any) => sum + (s.time_spent || 0), 0) / 60)
       });
     }
 
     // Recent achievements
-    const recentAchievements = (achievementsData.data || []).map(achievement => ({
+    const recentAchievements = (achievementsData.data || []).map((achievement: any) => ({
       id: achievement.id,
       title: achievement.title || 'Achievement',
       description: achievement.description || '',

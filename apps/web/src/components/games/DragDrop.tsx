@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
@@ -9,11 +9,7 @@ import {
   useMobileDetection,
   triggerHapticFeedback,
 } from '@/lib/hooks/useMobileDetection';
-import {
-  useTouchDragDrop,
-  type TouchPoint,
-  type GestureState,
-} from '@/lib/hooks/useTouchGestures';
+import { useOptimizedTouch, useOptimizedDragDrop } from '@/lib/hooks/useOptimizedTouch';
 
 interface DragDropProps {
   game: DragDropGame;
