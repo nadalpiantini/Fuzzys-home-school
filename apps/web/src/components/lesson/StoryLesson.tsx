@@ -457,7 +457,13 @@ export default function StoryLesson({
             game: {
               statement:
                 trueFalseData.instructions || 'Selecciona verdadero o falso',
-              questions: trueFalseData.items || [],
+              questions: trueFalseData.items?.map((item: any) => ({
+                id: item.q || Math.random().toString(),
+                q: item.q,
+                answer: item.answer,
+                audioText: item.q, // Usar la pregunta como texto de audio
+              })) || [],
+              audioText: trueFalseData.instructions, // Audio para las instrucciones
             },
             onAnswer: (answer: boolean) => handleActivityComplete(),
             onNext: () => handleActivityComplete(),

@@ -1,10 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { AnalyticsData, AnalyticsFilters, AnalyticsReport } from './types';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+// Supabase client will be created using factory pattern in functions
 
 export class AnalyticsService {
   /**
@@ -75,6 +72,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     // Try to get from daily analytics first (more efficient)
     const { data: dailyAnalytics } = await supabase
       .from('daily_analytics')
@@ -151,6 +149,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: subjects } = await supabase
       .from('subjects')
       .select('id, name, code');
@@ -204,6 +203,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: activities } = await supabase
       .from('game_sessions')
       .select(
@@ -244,6 +244,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: students } = await supabase
       .from('student_progress')
       .select(
@@ -285,6 +286,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: activities } = await supabase
       .from('games')
       .select(
@@ -322,6 +324,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: chapters } = await supabase
       .from('chapter_progress')
       .select(
@@ -378,6 +381,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     // Try to get from activity_heatmap table first
     const { data: heatmapData } = await supabase
       .from('activity_heatmap')
@@ -444,6 +448,7 @@ export class AnalyticsService {
     dateFilter: string,
     filters: AnalyticsFilters,
   ) {
+    const supabase = getSupabaseServer(true);
     const { data: sessions } = await supabase
       .from('game_sessions')
       .select('player_id, started_at, time_spent')

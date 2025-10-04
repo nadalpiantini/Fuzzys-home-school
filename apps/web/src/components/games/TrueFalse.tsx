@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { AudioButtonWithText } from '@/components/ui/AudioButton';
 import { Check, X } from 'lucide-react';
 import type { TrueFalseGame } from '@/types/game-types';
 
@@ -26,6 +27,12 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
   feedback,
 }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // Si hay múltiples preguntas, usar la primera como ejemplo
+  const currentQuestion = game.questions && game.questions.length > 0 
+    ? game.questions[currentQuestionIndex] 
+    : null;
 
   const handleSelect = (answer: boolean) => {
     if (showFeedback) return;
@@ -59,7 +66,18 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-6">
         <div className="text-lg font-medium text-gray-900">
-          {game.statement}
+          {currentQuestion ? currentQuestion.q : game.statement}
+        </div>
+        
+        {/* Botón de audio para la pregunta actual */}
+        <div className="flex justify-center">
+          <AudioButtonWithText
+            text={currentQuestion?.audioText || game.audioText || (currentQuestion ? currentQuestion.q : game.statement)}
+            showText={true}
+            rate={0.7} // Más lento para niños
+            volume={0.9}
+            className="bg-blue-50 hover:bg-blue-100 border-blue-200"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

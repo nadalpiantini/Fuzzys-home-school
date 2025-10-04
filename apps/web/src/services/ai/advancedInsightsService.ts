@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+// Supabase client will be created using factory pattern in functions
 
 export interface LearningPattern {
   id: string;
@@ -245,6 +242,7 @@ export class AdvancedInsightsService {
    * Get comprehensive student data
    */
   private static async getStudentData(studentId: string) {
+    const supabase = getSupabaseServer(true);
     const { data: analytics } = await supabase
       .from('analytics_events')
       .select('*')
@@ -595,6 +593,7 @@ export class AdvancedInsightsService {
    * Save insights to database
    */
   private static async saveInsights(insights: AIInsight[]): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const { error } = await supabase.from('ai_insights').insert(
       insights.map((insight) => ({
         ...insight,
@@ -612,6 +611,7 @@ export class AdvancedInsightsService {
   private static async saveRecommendations(
     recommendations: PersonalizedRecommendation[],
   ): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const { error } = await supabase.from('ai_recommendations').insert(
       recommendations.map((rec) => ({
         ...rec,
@@ -628,6 +628,7 @@ export class AdvancedInsightsService {
   private static async saveLearningProfile(
     profile: LearningProfile,
   ): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const { error } = await supabase.from('learning_profiles').upsert({
       student_id: profile.studentId,
       learning_style: profile.learningStyle,
@@ -648,6 +649,7 @@ export class AdvancedInsightsService {
   private static async getRecentInsights(
     studentId: string,
   ): Promise<AIInsight[]> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('ai_insights')
       .select('*')
@@ -665,6 +667,7 @@ export class AdvancedInsightsService {
   private static async getLearningProfile(
     studentId: string,
   ): Promise<LearningProfile | null> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('learning_profiles')
       .select('*')

@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 import { AnalyticsService } from '@/services/analytics/analyticsService';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Supabase client will be created using factory pattern in functions
 
 export interface ParentAnalyticsData {
   studentInfo: {
@@ -58,6 +55,7 @@ export async function GET(
   { params }: { params: { studentId: string } }
 ) {
   try {
+    const supabase = getSupabaseServer(true);
     const { studentId } = params;
     const cookieStore = cookies();
     const authCookie = cookieStore.get('sb-access-token') || cookieStore.get('supabase-auth-token');

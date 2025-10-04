@@ -38,6 +38,13 @@ export interface TrueFalseGame {
   description?: string;
   statement: string;
   correctAnswer: boolean;
+  audioText?: string; // Texto para pronunciar con audio
+  questions?: Array<{
+    id: string;
+    q: string;
+    answer: boolean;
+    audioText?: string; // Texto específico para cada pregunta
+  }>;
 }
 
 export interface MatchGame {

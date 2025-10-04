@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseServer } from '@/lib/supabase/server'
 
 type WeeklyReportData = {
   students: StudentSummary[]
@@ -40,10 +40,7 @@ export async function GET(req: Request) {
     }
 
     // Initialize Supabase client
-    const supa = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
+    const supa = getSupabaseServer(true)
 
     // Get student IDs linked to this parent
     const { data: links, error: linksError } = await supa
@@ -166,10 +163,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = getSupabaseServer(true);
 
     // Verificar que ambos perfiles existen
     const { data: parentProfile } = await supabase

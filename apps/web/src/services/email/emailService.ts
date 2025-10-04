@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+// Supabase client will be created using factory pattern in functions
 
 export interface EmailTemplate {
   id: string;
@@ -131,6 +128,7 @@ export class EmailService {
   static async scheduleNotification(
     notification: Omit<EmailNotification, 'id' | 'sentAt' | 'status'>,
   ): Promise<string> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('email_notifications')
       .insert({
@@ -154,6 +152,7 @@ export class EmailService {
    * Get user email preferences
    */
   static async getUserPreferences(userId: string): Promise<EmailPreferences> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('email_preferences')
       .select('*')
@@ -192,6 +191,7 @@ export class EmailService {
     userId: string,
     preferences: Partial<EmailPreferences>,
   ): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const { error } = await supabase.from('email_preferences').upsert({
       user_id: userId,
       ...preferences,
@@ -205,6 +205,7 @@ export class EmailService {
    * Get email template
    */
   static async getTemplate(templateId: string): Promise<EmailTemplate | null> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('email_templates')
       .select('*')
@@ -320,6 +321,7 @@ export class EmailService {
   static async recordNotification(
     notification: Omit<EmailNotification, 'id'>,
   ): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const { error } = await supabase.from('email_notifications').insert({
       recipient_id: notification.recipientId,
       recipient_email: notification.recipientEmail,
@@ -339,6 +341,7 @@ export class EmailService {
    * Process scheduled notifications
    */
   static async processScheduledNotifications(): Promise<void> {
+    const supabase = getSupabaseServer(true);
     const now = new Date();
 
     const { data: notifications, error } = await supabase
@@ -361,6 +364,7 @@ export class EmailService {
     userId: string,
     limit = 50,
   ): Promise<EmailNotification[]> {
+    const supabase = getSupabaseServer(true);
     const { data, error } = await supabase
       .from('email_notifications')
       .select('*')

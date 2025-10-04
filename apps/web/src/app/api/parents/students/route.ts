@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
+// Supabase client will be created using factory pattern in functions
 
 export interface Student {
   id: string;
@@ -24,6 +21,7 @@ export interface Student {
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = getSupabaseServer(true);
     const cookieStore = cookies();
     const authCookie =
       cookieStore.get('sb-access-token') ||
