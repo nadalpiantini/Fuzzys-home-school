@@ -11,12 +11,20 @@ select
   cp.completed,
   cp.score,
   cp.updated_at,
-  sp.total_points,
-  sp.streak_days,
-  sp.last_activity
+  COALESCE(sp.total_points, 0) as total_points,
+  COALESCE(sp.streak_days, 0) as streak_days,
+  COALESCE(sp.last_activity, cp.updated_at) as last_activity
 from public.chapter_progress cp
 join public.profiles p on p.id = cp.student_id
-left join public.student_progress sp on sp.student_id = cp.student_id
+left join (
+  select 
+    student_id,
+    SUM(total_points) as total_points,
+    MAX(streak_days) as streak_days,
+    MAX(last_activity) as last_activity
+  from public.student_progress 
+  group by student_id
+) sp on sp.student_id = cp.student_id
 where cp.updated_at >= now() - interval '7 days'
 order by cp.updated_at desc;
 

@@ -63,11 +63,9 @@ export function AITutorChat({
   useEffect(() => {
     const initializeTutor = async () => {
       const deepSeekConfig = {
-        apiKey: process.env.NEXT_PUBLIC_DEEPSEEK_API_KEY || '',
-        baseURL:
-          process.env.NEXT_PUBLIC_DEEPSEEK_BASE_URL ||
-          'https://api.deepseek.com',
-        model: process.env.NEXT_PUBLIC_DEEPSEEK_MODEL || 'deepseek-chat',
+        apiKey: '',
+        baseURL: 'https://api.deepseek.com',
+        model: 'deepseek-chat',
         temperature: 0.7,
         maxTokens: 2000,
         systemPrompt:

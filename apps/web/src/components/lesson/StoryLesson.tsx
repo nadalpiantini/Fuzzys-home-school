@@ -92,6 +92,8 @@ export default function StoryLesson({
   const [difficultyChangeReason, setDifficultyChangeReason] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [adaptiveSession, setAdaptiveSession] = useState<any>(null);
+  const [activityStartTime, setActivityStartTime] = useState<number>(Date.now());(false);
 
   const currentChapter = curriculum.chapters[currentChapterIndex];
   const currentActivity = currentChapter?.activities[currentActivityIndex];
@@ -102,7 +104,7 @@ export default function StoryLesson({
       (currentActivityIndex / totalActivities) * 100) /
     totalChapters;
 
-  // Load existing progress on component mount
+  // Load existing progress and start adaptive session on component mount
   useEffect(() => {
     const loadProgress = async () => {
       if (!childData?.id) return;
@@ -171,8 +173,35 @@ export default function StoryLesson({
       }
     };
 
+    const startAdaptiveSession = async () => {
+      if (!childData?.id) return;
+
+      try {
+        const response = await fetch('/api/adaptive/session/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId: childData.id,
+            curriculumId: curriculum.id,
+            chapterId: currentChapter.id,
+            difficulty: 'medium'
+          })
+        });
+
+        const result = await response.json();
+        if (result.ok) {
+          setAdaptiveSession(result.session);
+          setAdaptiveDifficulty(result.session.current_difficulty);
+          console.log('🎯 Adaptive session started:', result.session);
+        }
+      } catch (error) {
+        console.error('Error starting adaptive session:', error);
+      }
+    };
+
     loadProgress();
     loadPoints();
+    startAdaptiveSession();
   }, [childData?.id, curriculum.id]);
 
   // Save progress to database
@@ -224,7 +253,8 @@ export default function StoryLesson({
         await awardPoints(score, timeSpent);
         
         // Check adaptive difficulty adjustment after awarding points
-        await checkDifficultyAdjustment(score, timeSpent);
+        // TODO: Implement checkDifficultyAdjustment function
+        // await checkDifficultyAdjustment(score, timeSpent);
       }
     } catch (error) {
       console.error('Error saving progress:', error);
@@ -286,9 +316,8 @@ export default function StoryLesson({
     }
   };
 
-
-  // Check and adjust difficulty adaptively
-  const checkDifficultyAdjustment = async (score: number = 0, timeSpent: number = 0) => {
+  // Check adaptive difficulty adjustment
+  const checkDifficultyAdjustment = async (score: number, timeSpent: number) => {
     if (!childData?.id) return;
 
     try {
@@ -296,28 +325,66 @@ export default function StoryLesson({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'adjust_difficulty',
+          type: 'difficulty_adjustment',
           studentId: childData.id,
-          currentDifficulty: adaptiveDifficulty,
+          currentDifficulty: adaptiveDifficulty || 'medium',
           recentScore: score,
-          timeSpent,
+          timeSpent: timeSpent,
         }),
       });
 
       const result = await response.json();
-
-      if (result.ok && result.data.shouldAdjust) {
-        const { newDifficulty, adjustmentReason } = result.data;
-        
-        setAdaptiveDifficulty(newDifficulty);
-        setDifficultyChangeReason(adjustmentReason);
-        setShowDifficultyChange(true);
-
-        // Auto-hide notification after 5 seconds
-        setTimeout(() => setShowDifficultyChange(false), 5000);
+      
+      if (result.ok && result.data?.shouldAdjust) {
+        // Update the adaptive difficulty for future activities
+        setAdaptiveDifficulty(result.data.newDifficulty);
+        console.log(`Difficulty adjusted to: ${result.data.newDifficulty}`);
       }
     } catch (error) {
       console.error('Error checking difficulty adjustment:', error);
+    }
+  };
+
+
+  // Log adaptive event and check difficulty adjustment
+  const logAdaptiveEvent = async (correct: boolean, responseMs: number, payload?: any) => {
+    if (!adaptiveSession?.id) return;
+
+    try {
+      const response = await fetch('/api/adaptive/session/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: adaptiveSession.id,
+          eventType: 'question_submitted',
+          correct,
+          responseMs,
+          payload
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.ok && result.state?.new_difficulty) {
+        const newDiff = result.state.new_difficulty;
+        if (newDiff !== adaptiveDifficulty) {
+          setAdaptiveDifficulty(newDiff);
+          
+          // Show user-friendly notification
+          const reasons: Record<string, string> = {
+            easy: '¡Vamos a hacerlo más fácil! 🎯',
+            medium: 'Nivel equilibrado para ti ⚡',
+            hard: '¡Reto aumentado! Tú puedes 🚀'
+          };
+          setDifficultyChangeReason(reasons[newDiff] || 'Nivel ajustado');
+          setShowDifficultyChange(true);
+          setTimeout(() => setShowDifficultyChange(false), 5000);
+          
+          console.log('🔄 Difficulty adjusted:', { old: adaptiveDifficulty, new: newDiff, state: result.state });
+        }
+      }
+    } catch (error) {
+      console.error('Error logging adaptive event:', error);
     }
   };
 
@@ -474,7 +541,13 @@ export default function StoryLesson({
     setCompletedActivities(newCompleted);
 
     const activityScore = score || 0;
+    const responseMs = Date.now() - activityStartTime;
+    const correct = activityScore >= 70; // Consider >70% as correct
+    
     setTotalScore((prev) => prev + activityScore);
+
+    // Log adaptive event BEFORE saving progress
+    await logAdaptiveEvent(correct, responseMs, { score: activityScore, activityId });
 
     // Save progress to database
     await saveProgress(true, activityScore);
@@ -497,10 +570,12 @@ export default function StoryLesson({
       if (currentActivityIndex < totalActivities - 1) {
         setCurrentActivityIndex((prev) => prev + 1);
         setSessionStartTime(Date.now()); // Reset timer for new activity
+        setActivityStartTime(Date.now()); // Reset activity timer
       } else if (currentChapterIndex < totalChapters - 1) {
         setCurrentChapterIndex((prev) => prev + 1);
         setCurrentActivityIndex(0);
         setSessionStartTime(Date.now()); // Reset timer for new chapter
+        setActivityStartTime(Date.now()); // Reset activity timer
         setShowFeedback(false); // Reset feedback state for new chapter
         setFeedbackSubmitted(false);
       }
@@ -513,19 +588,23 @@ export default function StoryLesson({
   const goToPrevious = () => {
     if (currentActivityIndex > 0) {
       setCurrentActivityIndex((prev) => prev - 1);
+      setActivityStartTime(Date.now()); // Reset timer
     } else if (currentChapterIndex > 0) {
       setCurrentChapterIndex((prev) => prev - 1);
       const prevChapter = curriculum.chapters[currentChapterIndex - 1];
       setCurrentActivityIndex(prevChapter.activities.length - 1);
+      setActivityStartTime(Date.now()); // Reset timer
     }
   };
 
   const goToNext = () => {
     if (currentActivityIndex < totalActivities - 1) {
       setCurrentActivityIndex((prev) => prev + 1);
+      setActivityStartTime(Date.now()); // Reset timer
     } else if (currentChapterIndex < totalChapters - 1) {
       setCurrentChapterIndex((prev) => prev + 1);
       setCurrentActivityIndex(0);
+      setActivityStartTime(Date.now()); // Reset timer
     }
   };
 
@@ -793,10 +872,26 @@ export default function StoryLesson({
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="w-5 h-5" />
-              {currentChapter.title}
-            </CardTitle>
+            <div className="flex items-center gap-3">
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5" />
+                {currentChapter.title}
+              </CardTitle>
+              {adaptiveSession && (
+                <Badge 
+                  variant="outline" 
+                  className={`text-xs px-2 py-0.5 ${
+                    adaptiveDifficulty === 'hard' 
+                      ? 'bg-red-50 text-red-700 border-red-200' 
+                      : adaptiveDifficulty === 'easy' 
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                      : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                  }`}
+                >
+                  {adaptiveDifficulty === 'hard' ? '🚀 Difícil' : adaptiveDifficulty === 'easy' ? '🎯 Fácil' : '⚡ Moderado'}
+                </Badge>
+              )}
+            </div>
             <Badge variant="outline">
               Capítulo {currentChapterIndex + 1} de {totalChapters}
             </Badge>

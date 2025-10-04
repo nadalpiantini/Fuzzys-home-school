@@ -212,17 +212,25 @@ export default function TeacherDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-blue-100">
+              <p className="text-blue-100 mb-3">
                 {language === 'es'
                   ? 'Analiza el progreso de tus estudiantes'
                   : "Analyze your students' progress"}
               </p>
-              <Button
-                className="mt-4 bg-white text-blue-600 hover:bg-gray-100"
-                onClick={handleViewAnalytics}
-              >
-                {language === 'es' ? 'Ver Análisis' : 'View Analytics'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1 bg-white text-blue-600 hover:bg-gray-100"
+                  onClick={handleViewAnalytics}
+                >
+                  {language === 'es' ? 'General' : 'General'}
+                </Button>
+                <Button
+                  className="flex-1 bg-white/90 text-blue-600 hover:bg-gray-100"
+                  onClick={() => router.push('/teacher/analytics/adaptive')}
+                >
+                  {language === 'es' ? 'IA Adaptativa' : 'Adaptive AI'}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

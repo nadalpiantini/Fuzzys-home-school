@@ -113,11 +113,11 @@ async function verifyProPack() {
 
   // 5. Verificar configuración de Next.js
   console.log('\n5️⃣ Verificando configuración de Next.js...');
-  const nextConfigPath = path.join(__dirname, '..', 'next.config.js');
+  const nextConfigPath = path.join(__dirname, '..', 'next.config.mjs');
   const nextConfigContent = fs.readFileSync(nextConfigPath, 'utf8');
 
   if (!nextConfigContent.includes('headers()')) {
-    console.error('❌ Headers de seguridad no configurados en next.config.js');
+    console.error('❌ Headers de seguridad no configurados en next.config.mjs');
     return false;
   }
   console.log('✅ Headers de seguridad configurados');

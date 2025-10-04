@@ -149,11 +149,11 @@ if (isServer) {
     const msg = result.error.errors
       .map((e) => `SERVER ${e.path.join('.')}: ${e.message}`)
       .join(' | ');
-    // En desarrollo, usar valores por defecto en lugar de fallar
-    if (process.env.NODE_ENV === 'development') {
+    // En desarrollo o build time, usar valores por defecto en lugar de fallar
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'production') {
       console.warn(`Env validation (server) failed: ${msg}`);
       console.warn(
-        'Using default values for development. Please set up .env.local file.',
+        'Using default values for development/build. Please set up .env.local file.',
       );
       parsedServer = {
         SUPABASE_SERVICE_ROLE_KEY: 'placeholder-service-role-key',
@@ -162,7 +162,7 @@ if (isServer) {
         DEEPSEEK_API_KEY: 'placeholder-deepseek-key',
         OPENAI_API_KEY: undefined,
         OPENAI_BASE_URL: undefined,
-        NODE_ENV: 'development' as const,
+        NODE_ENV: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
       };
     } else {
       throw new Error(`Env validation (server) failed: ${msg}`);

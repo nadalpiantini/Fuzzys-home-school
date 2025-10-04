@@ -7,6 +7,6 @@ jobs:
       - name: Ping health (prod)
         run: curl -fsS "${{ secrets.PROD_URL }}/api/_health"
       - name: Ping health (preview, optional)
-        if: ${{ secrets.PREVIEW_URL != '' }}
+        if: ${{ secrets.PREVIEW_URL }}
         run: curl -fsS "${{ secrets.PREVIEW_URL }}/api/_health"
 

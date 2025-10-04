@@ -175,23 +175,23 @@ export async function GET(
     ]);
 
     // Calculate metrics
-    const totalPoints = pointsData.data?.reduce((sum, session) => sum + (session.points_earned || 0), 0) || 0;
+    const totalPoints = pointsData.data?.reduce((sum: number, session: any) => sum + (session.points_earned || 0), 0) || 0;
     const currentStreak = streakData.data?.[0]?.current_streak || 0;
     const level = Math.floor(Math.sqrt(totalPoints / 100)) + 1;
 
     // Process game sessions data
     const sessions = gameSessionsData.data || [];
-    const completedSessions = sessions.filter(s => s.completed);
-    const totalTimeSpent = sessions.reduce((sum, s) => sum + (s.time_spent || 0), 0);
+    const completedSessions = sessions.filter((s: any) => s.completed);
+    const totalTimeSpent = sessions.reduce((sum: number, s: any) => sum + (s.time_spent || 0), 0);
     const averageScore = completedSessions.length
-      ? completedSessions.reduce((sum, s) => sum + (s.score || 0), 0) / completedSessions.length
+      ? completedSessions.reduce((sum: number, s: any) => sum + (s.score || 0), 0) / completedSessions.length
       : 0;
 
     // Subject breakdown
     const subjectMap = new Map<string, any>();
 
     // Process game sessions by subject
-    sessions.forEach(session => {
+    sessions.forEach((session: any) => {
       const subject = session.subject || 'General';
       if (!subjectMap.has(subject)) {
         subjectMap.set(subject, {

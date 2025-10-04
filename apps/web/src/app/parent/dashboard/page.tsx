@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { LinkStudentDialog } from '@/components/parent/LinkStudentDialog';
 
 type StudentSummary = {
   studentId: string;
@@ -81,13 +82,41 @@ export default function ParentDashboard() {
   };
 
   const handleLinkStudent = async () => {
-    toast.info('Funcionalidad de vinculación en desarrollo');
-    // TODO: Implementar modal para vincular estudiante
+    // Refresh data after linking
+    await fetchWeeklyReport();
   };
 
   const handleSendEmail = async () => {
-    toast.info('Enviando reporte por email...');
-    // TODO: Implementar envío de email
+    if (!user?.id) {
+      toast.error('No se pudo obtener tu ID de usuario');
+      return;
+    }
+
+    try {
+      toast.loading('Enviando reporte por email...', { id: 'send-email' });
+
+      const response = await fetch('/api/parents/send-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ parentId: user.id }),
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        toast.success('¡Reporte enviado exitosamente!', {
+          id: 'send-email',
+          description: 'Revisa tu bandeja de entrada',
+        });
+      } else {
+        toast.error(result.error || 'Error al enviar reporte', {
+          id: 'send-email',
+        });
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast.error('Error al enviar reporte', { id: 'send-email' });
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -122,10 +151,12 @@ export default function ParentDashboard() {
           <p className="text-gray-600 mt-1">Seguimiento del progreso de tus hijos</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleLinkStudent}>
-            <Plus className="w-4 h-4 mr-2" />
-            Vincular Estudiante
-          </Button>
+          {user?.id && (
+            <LinkStudentDialog 
+              parentId={user.id} 
+              onSuccess={handleLinkStudent} 
+            />
+          )}
           <Button variant="outline" onClick={handleSendEmail}>
             <Mail className="w-4 h-4 mr-2" />
             Enviar Reporte

@@ -1,27 +1,40 @@
 import { createClient } from '@supabase/supabase-js';
 
-function required(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`${name} is required`);
-  return v;
+// Helper function to get required environment variable
+function required(key: string): string {
+  const value = process.env[key];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+  return value;
 }
 
+// Server-side Supabase client using service role key
+export function createServerSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+// Factory lazy - se crea solo cuando se llama
 export function getSupabaseServer(useServiceRole = false) {
-  const supabaseUrl = required('NEXT_PUBLIC_SUPABASE_URL');
-  const supabaseKey = useServiceRole
+  const url = required('NEXT_PUBLIC_SUPABASE_URL');
+  const key = useServiceRole
     ? required('SUPABASE_SERVICE_ROLE_KEY')
     : required('NEXT_PUBLIC_SUPABASE_ANON_KEY');
 
-  // No instanciar en top-level; siempre dentro de la función
-  const client = createClient(supabaseUrl, supabaseKey, {
-    global: {
-      headers: {
-        'x-app-id': 'fuzzys-web',
-        'x-runtime': 'server',
-      },
-    },
+  return createClient(url, key, {
     auth: { persistSession: false },
+    global: { headers: { 'X-Client-Info': 'fuzzys-web@1.0.0' } },
   });
-
-  return client;
 }
