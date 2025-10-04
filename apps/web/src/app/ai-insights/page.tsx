@@ -73,7 +73,7 @@ export default function AIInsightsPage() {
         setStudents(data.children || []);
       } else if (user?.role === 'student') {
         // For students, show their own data
-        setStudents([{ id: user.id, name: user.name || 'Estudiante' }]);
+        setStudents([{ id: user.id, name: user.user_metadata?.name || user.email || 'Estudiante' }]);
         setSelectedStudent(user.id);
       }
 

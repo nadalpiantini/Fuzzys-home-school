@@ -175,6 +175,7 @@ export default function StudentDashboard() {
                   fill
                   className="object-contain"
                   priority
+                  sizes="(max-width: 640px) 80px, (max-width: 768px) 112px, (max-width: 1024px) 144px, 192px"
                 />
               </div>
               <h1

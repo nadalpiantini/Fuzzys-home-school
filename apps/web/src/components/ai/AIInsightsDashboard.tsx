@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   Target,
   Lightbulb,
+  BookOpen,
   Clock,
   Star,
   Zap,

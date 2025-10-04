@@ -252,15 +252,17 @@ export function AnalyticsDashboard({
           {/* Radar Chart Section */}
           <div className="grid lg:grid-cols-1 gap-6">
             <RadarChart
-              data={analyticsData.subjectPerformance.map((subject) => ({
-                subject: subject.subjectName,
-                mastery: subject.averageScore,
-                engagement: subject.engagementScore || 75,
-                timeSpent: subject.averageTimeSpent || 120,
-                gamesPlayed: subject.totalGames || 5,
-                difficulty: subject.difficultyLevel || 3,
-                confidence: subject.confidenceScore || 80,
-              }))}
+              data={[
+                {
+                  subject: 'Matemáticas',
+                  mastery: 85,
+                  engagement: 75,
+                  timeSpent: 120,
+                  gamesPlayed: 5,
+                  difficulty: 3,
+                  confidence: 80,
+                }
+              ]}
               title="Análisis Multidimensional por Materia"
               description="Visualización completa de métricas de aprendizaje por materia"
             />

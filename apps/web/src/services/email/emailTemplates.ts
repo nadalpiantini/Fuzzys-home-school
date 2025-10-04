@@ -237,7 +237,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
       'nextGoals',
       'profileUrl',
     ],
-    category: 'achievements',
+    category: 'notification',
   },
   {
     id: 'alert-struggling',

@@ -20,10 +20,12 @@ export default function OnboardingTour({
   const [userRole, setUserRole] = useState<'student' | 'teacher' | 'admin'>(
     'student',
   );
+  const [isHydrated, setIsHydrated] = useState(false);
   const router = useRouter();
 
   // Detectar el rol del usuario basado en la URL actual
   useEffect(() => {
+    setIsHydrated(true);
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       if (path.includes('/teacher')) {
@@ -278,6 +280,11 @@ export default function OnboardingTour({
     setStepIndex(0);
   };
 
+  // No renderizar hasta que esté hidratado
+  if (!isHydrated) {
+    return null;
+  }
+
   // No renderizar en móvil
   if (
     typeof window !== 'undefined' &&
@@ -334,8 +341,11 @@ export default function OnboardingTour({
 export function useOnboardingTour() {
   const [hasSeenTour, setHasSeenTour] = useState(false);
   const [showTour, setShowTour] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    setIsHydrated(true);
+    
     // No mostrar onboarding en dispositivos móviles
     if (typeof window !== 'undefined') {
       const isMobile =
@@ -384,7 +394,7 @@ export function useOnboardingTour() {
   };
 
   return {
-    showTour,
+    showTour: isHydrated ? showTour : false,
     hasSeenTour,
     completeTour,
     skipTour,

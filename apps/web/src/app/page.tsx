@@ -43,6 +43,7 @@ export default function HomePage() {
               fill
               className="object-contain"
               priority
+              sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, (max-width: 1024px) 192px, 240px"
             />
           </div>
           <h1
