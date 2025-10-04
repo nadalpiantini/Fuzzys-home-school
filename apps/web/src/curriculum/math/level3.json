@@ -1,0 +1,324 @@
+{
+  "id": "math-level3",
+  "title": "Matemáticas del Futuro · Nivel 3",
+  "description": "Matemáticas avanzadas con Fuzzy: álgebra básica, geometría, estadística y programación",
+  "ageRange": "10-12",
+  "estimatedDuration": "75 minutos",
+  "chapters": [
+    {
+      "id": "algebra-01",
+      "title": "Introducción al Álgebra",
+      "goals": [
+        "Entender el concepto de variable",
+        "Resolver ecuaciones simples",
+        "Usar letras para representar números"
+      ],
+      "activities": [
+        {
+          "type": "external",
+          "component": "ExternalGame",
+          "title": "Simulación de álgebra PhET",
+          "data": {
+            "source": "phet",
+            "gameId": "algebra-basics",
+            "url": "https://phet.colorado.edu/sims/html/equation-grapher/latest/equation-grapher_es.html",
+            "description": "Explora ecuaciones y gráficos de forma interactiva"
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué es una variable?",
+          "data": {
+            "questions": [
+              {
+                "question": "En la expresión x + 5 = 8, ¿qué representa x?",
+                "visual": "x + 5 = 8",
+                "options": ["El número 3", "Una variable", "El número 8"],
+                "correct": 1,
+                "explanation": "x es una variable que representa un número desconocido"
+              },
+              {
+                "question": "Si x = 3, ¿cuánto vale x + 2?",
+                "visual": "x + 2 = ?",
+                "options": ["3", "5", "6"],
+                "correct": 1,
+                "explanation": "Si x = 3, entonces x + 2 = 3 + 2 = 5"
+              },
+              {
+                "question": "¿Cuál es la solución de x - 4 = 6?",
+                "visual": "x - 4 = 6",
+                "options": ["x = 2", "x = 10", "x = 4"],
+                "correct": 1,
+                "explanation": "x - 4 = 6, entonces x = 6 + 4 = 10"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Resuelve la ecuación",
+          "data": {
+            "questions": [
+              {
+                "question": "Resuelve: x + 3 = 7",
+                "answer": "4",
+                "explanation": "x + 3 = 7, entonces x = 7 - 3 = 4"
+              },
+              {
+                "question": "Resuelve: 2x = 10",
+                "answer": "5",
+                "explanation": "2x = 10, entonces x = 10 ÷ 2 = 5"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🔢",
+      "badgeDescription": "Algebrista Junior"
+    },
+    {
+      "id": "geometria-avanzada-01",
+      "title": "Geometría Avanzada",
+      "goals": [
+        "Calcular área y perímetro",
+        "Identificar ángulos y sus tipos",
+        "Usar el teorema de Pitágoras básico"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Cuál es el área?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuál es el área de un rectángulo de 4 cm × 3 cm?",
+                "visual": "4cm × 3cm",
+                "options": ["7 cm²", "12 cm²", "14 cm²"],
+                "correct": 1,
+                "explanation": "Área = largo × ancho = 4 × 3 = 12 cm²"
+              },
+              {
+                "question": "¿Cuál es el área de un cuadrado de 5 cm de lado?",
+                "visual": "5cm × 5cm",
+                "options": ["10 cm²", "20 cm²", "25 cm²"],
+                "correct": 2,
+                "explanation": "Área = lado × lado = 5 × 5 = 25 cm²"
+              },
+              {
+                "question": "¿Cuál es el perímetro de un cuadrado de 4 cm de lado?",
+                "visual": "4cm",
+                "options": ["8 cm", "12 cm", "16 cm"],
+                "correct": 2,
+                "explanation": "Perímetro = 4 × lado = 4 × 4 = 16 cm"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué tipo de ángulo es?",
+          "data": {
+            "questions": [
+              {
+                "question": "Un ángulo de 90° se llama:",
+                "visual": "└",
+                "options": ["Agudo", "Recto", "Obtuso"],
+                "correct": 1,
+                "explanation": "Un ángulo de 90° se llama ángulo recto"
+              },
+              {
+                "question": "Un ángulo menor que 90° se llama:",
+                "visual": "∠",
+                "options": ["Agudo", "Recto", "Obtuso"],
+                "correct": 0,
+                "explanation": "Un ángulo menor que 90° se llama ángulo agudo"
+              },
+              {
+                "question": "Un ángulo mayor que 90° se llama:",
+                "visual": "∡",
+                "options": ["Agudo", "Recto", "Obtuso"],
+                "correct": 2,
+                "explanation": "Un ángulo mayor que 90° se llama ángulo obtuso"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica los ángulos",
+          "data": {
+            "prompt": "Arrastra cada ángulo a su categoría correcta",
+            "items": [
+              { "text": "45°", "target": "Agudos", "image": "∠" },
+              { "text": "90°", "target": "Rectos", "image": "└" },
+              { "text": "120°", "target": "Obtusos", "image": "∡" },
+              { "text": "30°", "target": "Agudos", "image": "∠" }
+            ]
+          }
+        }
+      ],
+      "badge": "📐",
+      "badgeDescription": "Geómetra Avanzado"
+    },
+    {
+      "id": "estadistica-01",
+      "title": "Estadística Básica",
+      "goals": [
+        "Entender conceptos de media y mediana",
+        "Leer e interpretar gráficos",
+        "Recopilar y organizar datos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Cuál es la media?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuál es la media de 2, 4, 6?",
+                "visual": "2, 4, 6",
+                "options": ["4", "6", "12"],
+                "correct": 0,
+                "explanation": "Media = (2 + 4 + 6) ÷ 3 = 12 ÷ 3 = 4"
+              },
+              {
+                "question": "¿Cuál es la mediana de 1, 3, 5, 7, 9?",
+                "visual": "1, 3, 5, 7, 9",
+                "options": ["3", "5", "7"],
+                "correct": 1,
+                "explanation": "La mediana es el número del medio: 5"
+              },
+              {
+                "question": "¿Cuál es el rango de 2, 5, 8, 3, 9?",
+                "visual": "2, 5, 8, 3, 9",
+                "options": ["5", "7", "9"],
+                "correct": 1,
+                "explanation": "Rango = máximo - mínimo = 9 - 2 = 7"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Interpreta el gráfico",
+          "data": {
+            "prompt": "Arrastra cada respuesta a su pregunta correspondiente",
+            "items": [
+              {
+                "text": "¿Cuál es el color favorito?",
+                "target": "Azul",
+                "image": "📊"
+              },
+              {
+                "text": "¿Cuántos niños prefieren rojo?",
+                "target": "3",
+                "image": "📈"
+              },
+              {
+                "text": "¿Qué color es menos popular?",
+                "target": "Verde",
+                "image": "📉"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Calcula la media",
+          "data": {
+            "questions": [
+              {
+                "question": "Calcula la media de: 5, 7, 9, 11",
+                "answer": "8",
+                "explanation": "Media = (5 + 7 + 9 + 11) ÷ 4 = 32 ÷ 4 = 8"
+              },
+              {
+                "question": "Calcula la mediana de: 2, 4, 6, 8, 10",
+                "answer": "6",
+                "explanation": "La mediana es el número del medio: 6"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "📊",
+      "badgeDescription": "Estadístico Junior"
+    },
+    {
+      "id": "programacion-01",
+      "title": "Matemáticas y Programación",
+      "goals": [
+        "Entender algoritmos básicos",
+        "Usar lógica matemática en programación",
+        "Resolver problemas con pensamiento computacional"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "BlocklyPuzzle",
+          "title": "Programa con bloques",
+          "data": {
+            "puzzle": "math-sequence",
+            "instructions": "Usa bloques para crear una secuencia que sume números del 1 al 10",
+            "blocks": ["start", "variable", "loop", "add", "display"],
+            "solution": "start → variable x = 0 → loop 10 times → add x + 1 → display x"
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué hace este algoritmo?",
+          "data": {
+            "questions": [
+              {
+                "question": "Si un algoritmo dice: 'Suma 5 a cada número', ¿qué resultado da para 3?",
+                "visual": "3 + 5 = ?",
+                "options": ["8", "15", "35"],
+                "correct": 0,
+                "explanation": "3 + 5 = 8. El algoritmo suma 5 al número dado"
+              },
+              {
+                "question": "¿Qué hace el algoritmo: 'Si el número es par, divídelo entre 2'?",
+                "visual": "Número par → ÷ 2",
+                "options": [
+                  "Lo multiplica por 2",
+                  "Lo divide entre 2",
+                  "Le suma 2"
+                ],
+                "correct": 1,
+                "explanation": "El algoritmo divide números pares entre 2"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "CodeChallenge",
+          "title": "Desafío de programación",
+          "data": {
+            "challenge": "math-calculator",
+            "instructions": "Crea un programa que calcule el área de un círculo",
+            "hint": "Usa la fórmula: área = π × radio²",
+            "testCases": [
+              { "input": "radio = 3", "expected": "28.27" },
+              { "input": "radio = 5", "expected": "78.54" }
+            ]
+          }
+        }
+      ],
+      "badge": "💻",
+      "badgeDescription": "Programador Junior"
+    }
+  ],
+  "finalBadge": "🏆",
+  "prerequisites": ["math-level2"],
+  "nextLevel": null
+}

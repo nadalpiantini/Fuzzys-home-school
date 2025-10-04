@@ -141,7 +141,7 @@ CREATE POLICY "Students can update their own game sessions" ON external_game_ses
 CREATE POLICY "Teachers can view their students' game sessions" ON external_game_sessions
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM class_memberships cm
+      SELECT 1 FROM class_enrollments cm
       JOIN classes c ON c.id = cm.class_id
       WHERE cm.student_id = external_game_sessions.student_id
       AND c.teacher_id = auth.uid()
@@ -159,7 +159,7 @@ CREATE POLICY "Students can create their own game events" ON external_game_event
 CREATE POLICY "Teachers can view their students' game events" ON external_game_events
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM class_memberships cm
+      SELECT 1 FROM class_enrollments cm
       JOIN classes c ON c.id = cm.class_id
       WHERE cm.student_id = external_game_events.student_id
       AND c.teacher_id = auth.uid()
@@ -180,7 +180,7 @@ CREATE POLICY "Students can update their own progress" ON student_external_game_
 CREATE POLICY "Teachers can view their students' progress" ON student_external_game_progress
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM class_memberships cm
+      SELECT 1 FROM class_enrollments cm
       JOIN classes c ON c.id = cm.class_id
       WHERE cm.student_id = student_external_game_progress.student_id
       AND c.teacher_id = auth.uid()

@@ -32,7 +32,7 @@ interface DragItem {
   content: string;
 }
 
-export const DragDrop: React.FC<DragDropProps> = ({
+const DragDrop: React.FC<DragDropProps> = ({
   game,
   onAnswer,
   onNext,
@@ -403,3 +403,5 @@ export const DragDrop: React.FC<DragDropProps> = ({
     </Card>
   );
 };
+
+export default DragDrop;

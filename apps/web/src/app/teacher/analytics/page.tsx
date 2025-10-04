@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -22,100 +22,131 @@ import {
   Calendar,
   Download,
   Filter,
+  Clock,
+  Activity,
+  Award,
+  Zap,
+  Brain,
+  MapPin,
 } from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { toast } from 'sonner';
+import { AnalyticsService } from '@/services/analytics/analyticsService';
+import { AnalyticsData, AnalyticsFilters } from '@/services/analytics/types';
+import { HeatmapChart } from '@/components/analytics/HeatmapChart';
+import { EngagementChart } from '@/components/analytics/EngagementChart';
+import { ActivityHeatmap } from '@/components/analytics/ActivityHeatmap';
 
 export default function AnalyticsPage() {
   const { t, language } = useTranslation();
   const router = useRouter();
-  const [selectedPeriod, setSelectedPeriod] = useState('week');
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<AnalyticsFilters['period']>('week');
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
 
-  const analyticsData = {
-    overview: {
-      totalStudents: 72,
-      activeClasses: 3,
-      averageScore: 78,
-      completionRate: 85,
-    },
-    performance: [
-      { subject: 'Matemáticas', score: 82, trend: 'up' },
-      { subject: 'Ciencias', score: 75, trend: 'up' },
-      { subject: 'Historia', score: 68, trend: 'down' },
-      { subject: 'Lengua', score: 88, trend: 'up' },
-    ],
-    recentActivity: [
-      {
-        student: 'María González',
-        action: 'Completó Quiz de Matemáticas',
-        time: 'Hace 2 horas',
-        score: 95,
-      },
-      {
-        student: 'Carlos Ruiz',
-        action: 'Subió de nivel en Ciencias',
-        time: 'Hace 4 horas',
-        score: 87,
-      },
-      {
-        student: 'Ana López',
-        action: 'Preguntó al tutor IA',
-        time: 'Hace 6 horas',
-        score: null,
-      },
-      {
-        student: 'Luis Martínez',
-        action: 'Completó Juego de Memoria',
-        time: 'Hace 8 horas',
-        score: 92,
-      },
-    ],
-  };
+  // Load analytics data
+  useEffect(() => {
+    const loadAnalytics = async () => {
+      try {
+        setLoading(true);
+        const filters: AnalyticsFilters = {
+          period: selectedPeriod,
+        };
+        const data = await AnalyticsService.getAnalyticsData(filters);
+        setAnalyticsData(data);
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+        toast.error('Error cargando analíticas');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAnalytics();
+  }, [selectedPeriod]);
 
   const handleBack = () => {
     router.push('/teacher');
   };
 
-  const handleDownloadReport = () => {
-    toast.info(
-      language === 'es' ? 'Descargando reporte...' : 'Downloading report...',
-    );
-    // Basic report download implementation
-    const reportData = {
-      period: selectedPeriod,
-      totalStudents: 24,
-      avgScore: 85,
-      generatedAt: new Date().toISOString(),
-    };
-    const blob = new Blob([JSON.stringify(reportData, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `analytics-report-${selectedPeriod}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleDownloadReport = async () => {
+    try {
+      toast.info(
+        language === 'es' ? 'Generando reporte...' : 'Generating report...',
+      );
+
+      const filters: AnalyticsFilters = {
+        period: selectedPeriod,
+      };
+      const report = await AnalyticsService.generateReport(filters);
+
+      const blob = new Blob([JSON.stringify(report, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `analytics-report-${selectedPeriod}-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success('Reporte descargado exitosamente');
+    } catch (error) {
+      console.error('Error generating report:', error);
+      toast.error('Error generando reporte');
+    }
   };
 
-  const handleFilterChange = (period: string) => {
+  const handleFilterChange = (period: AnalyticsFilters['period']) => {
     setSelectedPeriod(period);
     toast.info(language === 'es' ? 'Filtrando datos...' : 'Filtering data...');
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
+        <div className="text-center">
+          <div className="mx-auto mb-4 w-12 h-12 rounded-full border-b-2 animate-spin border-fuzzy-purple"></div>
+          <p className="text-gray-600">
+            {language === 'es'
+              ? 'Cargando analíticas...'
+              : 'Loading analytics...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
+        <div className="text-center">
+          <p className="text-gray-600">
+            {language === 'es'
+              ? 'No hay datos disponibles'
+              : 'No data available'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-green-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
+      <header className="bg-white border-b shadow-sm">
+        <div className="container px-6 py-4 mx-auto">
+          <div className="flex gap-4 items-center">
             <Button variant="outline" size="sm" onClick={handleBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 w-4 h-4" />
               {language === 'es' ? 'Volver' : 'Back'}
             </Button>
-            <div className="flex items-center gap-3">
+            <div className="flex gap-3 items-center">
               <BarChart3 className="w-8 h-8 text-fuzzy-purple" />
               <h1 className="text-2xl font-bold">
                 {language === 'es' ? 'Analíticas' : 'Analytics'}
@@ -126,11 +157,11 @@ export default function AnalyticsPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container px-6 py-8 mx-auto">
         {/* Actions Bar */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold mb-2">
+            <h2 className="mb-2 text-3xl font-bold">
               {language === 'es'
                 ? 'Análisis de Rendimiento'
                 : 'Performance Analysis'}
@@ -166,18 +197,18 @@ export default function AnalyticsPage() {
               </Button>
             </div>
             <Button onClick={handleDownloadReport}>
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="mr-2 w-4 h-4" />
               {language === 'es' ? 'Descargar' : 'Download'}
             </Button>
           </div>
         </div>
 
         {/* Overview Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid gap-6 mb-8 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-purple/10 rounded-lg flex items-center justify-center">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-purple/10">
                   <Users className="w-6 h-6 text-fuzzy-purple" />
                 </div>
                 <div>
@@ -194,8 +225,8 @@ export default function AnalyticsPage() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-green/10 rounded-lg flex items-center justify-center">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-green/10">
                   <BookOpen className="w-6 h-6 text-fuzzy-green" />
                 </div>
                 <div>
@@ -212,8 +243,8 @@ export default function AnalyticsPage() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-blue/10 rounded-lg flex items-center justify-center">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-blue/10">
                   <Target className="w-6 h-6 text-fuzzy-blue" />
                 </div>
                 <div>
@@ -230,8 +261,8 @@ export default function AnalyticsPage() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-fuzzy-yellow/10 rounded-lg flex items-center justify-center">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-yellow/10">
                   <TrendingUp className="w-6 h-6 text-fuzzy-yellow" />
                 </div>
                 <div>
@@ -249,11 +280,68 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
+        {/* Additional Metrics */}
+        <div className="grid gap-6 mb-8 md:grid-cols-3">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-orange/10">
+                  <Clock className="w-6 h-6 text-fuzzy-orange" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {analyticsData.overview.totalTimeSpent}m
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {language === 'es' ? 'Tiempo Total' : 'Total Time'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-pink/10">
+                  <Activity className="w-6 h-6 text-fuzzy-pink" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {analyticsData.overview.engagementScore}%
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {language === 'es' ? 'Engagement' : 'Engagement'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex gap-4 items-center">
+                <div className="flex justify-center items-center w-12 h-12 rounded-lg bg-fuzzy-cyan/10">
+                  <Zap className="w-6 h-6 text-fuzzy-cyan" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">
+                    {analyticsData.overview.averageSessionTime}m
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {language === 'es' ? 'Sesión Promedio' : 'Avg Session'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Performance by Subject */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid gap-6 mb-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex gap-2 items-center">
                 <BarChart3 className="w-5 h-5" />
                 {language === 'es'
                   ? 'Rendimiento por Materia'
@@ -267,26 +355,28 @@ export default function AnalyticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {analyticsData.performance.map((subject, index) => (
+                {analyticsData.subjectPerformance.map((subject, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between"
+                    className="flex justify-between items-center"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex gap-3 items-center">
                       <span className="font-medium">{subject.subject}</span>
-                      <div className="flex items-center gap-1">
+                      <div className="flex gap-1 items-center">
                         {subject.trend === 'up' ? (
                           <TrendingUp className="w-4 h-4 text-green-600" />
-                        ) : (
+                        ) : subject.trend === 'down' ? (
                           <TrendingDown className="w-4 h-4 text-red-600" />
+                        ) : (
+                          <div className="w-4 h-4 bg-gray-400 rounded-full" />
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex gap-2 items-center">
                       <span className="font-semibold">{subject.score}%</span>
-                      <div className="w-20 bg-gray-200 rounded-full h-2">
+                      <div className="w-20 h-2 bg-gray-200 rounded-full">
                         <div
-                          className="bg-fuzzy-green h-2 rounded-full"
+                          className="h-2 rounded-full bg-fuzzy-green"
                           style={{ width: `${subject.score}%` }}
                         />
                       </div>
@@ -299,7 +389,7 @@ export default function AnalyticsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex gap-2 items-center">
                 <Calendar className="w-5 h-5" />
                 {language === 'es' ? 'Actividad Reciente' : 'Recent Activity'}
               </CardTitle>
@@ -312,12 +402,14 @@ export default function AnalyticsPage() {
             <CardContent>
               <div className="space-y-4">
                 {analyticsData.recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-fuzzy-purple/10 rounded-full flex items-center justify-center">
+                  <div key={index} className="flex gap-3 items-center">
+                    <div className="flex justify-center items-center w-8 h-8 rounded-full bg-fuzzy-purple/10">
                       <Users className="w-4 h-4 text-fuzzy-purple" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.student}</p>
+                      <p className="text-sm font-medium">
+                        {activity.studentName}
+                      </p>
                       <p className="text-xs text-gray-600">{activity.action}</p>
                     </div>
                     <div className="text-right">
@@ -326,7 +418,9 @@ export default function AnalyticsPage() {
                           {activity.score}%
                         </Badge>
                       )}
-                      <p className="text-xs text-gray-500">{activity.time}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Date(activity.timestamp).toLocaleString()}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -335,35 +429,82 @@ export default function AnalyticsPage() {
           </Card>
         </div>
 
-        {/* Detailed Analytics */}
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* Heat Map and Engagement Charts */}
+        <div className="grid gap-6 mb-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">
+              <CardTitle className="flex gap-2 items-center">
+                <MapPin className="w-5 h-5" />
+                {language === 'es'
+                  ? 'Mapa de Calor de Actividad'
+                  : 'Activity Heatmap'}
+              </CardTitle>
+              <CardDescription>
+                {language === 'es'
+                  ? 'Patrones de actividad por día y hora'
+                  : 'Activity patterns by day and hour'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ActivityHeatmap data={analyticsData.heatmapData} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex gap-2 items-center">
+                <Brain className="w-5 h-5" />
+                {language === 'es'
+                  ? 'Métricas de Engagement'
+                  : 'Engagement Metrics'}
+              </CardTitle>
+              <CardDescription>
+                {language === 'es'
+                  ? 'Análisis de participación estudiantil'
+                  : 'Student participation analysis'}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <EngagementChart data={analyticsData.engagementMetrics} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Detailed Analytics */}
+        <div className="grid gap-6 mb-8 md:grid-cols-3">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex gap-2 items-center">
+                <Award className="w-5 h-5" />
                 {language === 'es' ? 'Estudiantes Top' : 'Top Students'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">María González</span>
-                  <Badge>95%</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Carlos Ruiz</span>
-                  <Badge>87%</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Ana López</span>
-                  <Badge>82%</Badge>
-                </div>
+                {analyticsData.topStudents.slice(0, 5).map((student, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
+                    <div className="flex gap-2 items-center">
+                      <span className="text-sm font-medium">
+                        {student.studentName}
+                      </span>
+                      {student.improvement > 0 && (
+                        <TrendingUp className="w-3 h-3 text-green-600" />
+                      )}
+                    </div>
+                    <Badge variant="outline">{student.averageScore}%</Badge>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">
+              <CardTitle className="flex gap-2 items-center">
+                <Activity className="w-5 h-5" />
                 {language === 'es'
                   ? 'Actividades Populares'
                   : 'Popular Activities'}
@@ -371,51 +512,45 @@ export default function AnalyticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Quiz de Matemáticas</span>
-                  <span className="text-xs text-gray-500">24 estudiantes</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Juego de Memoria</span>
-                  <span className="text-xs text-gray-500">22 estudiantes</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Simulación PhET</span>
-                  <span className="text-xs text-gray-500">18 estudiantes</span>
-                </div>
+                {analyticsData.popularActivities
+                  .slice(0, 5)
+                  .map((activity, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-sm">{activity.activityName}</span>
+                      <span className="text-xs text-gray-500">
+                        {activity.playCount} estudiantes
+                      </span>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">
-                {language === 'es' ? 'Tendencias' : 'Trends'}
+              <CardTitle className="flex gap-2 items-center">
+                <Clock className="w-5 h-5" />
+                {language === 'es' ? 'Tiempo por Capítulo' : 'Chapter Timing'}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Participación</span>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    <span className="text-green-600 text-sm">+12%</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Tiempo de estudio</span>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    <span className="text-green-600 text-sm">+8%</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Puntuaciones</span>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    <span className="text-green-600 text-sm">+5%</span>
-                  </div>
-                </div>
+                {analyticsData.chapterTiming
+                  .slice(0, 5)
+                  .map((chapter, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-sm">{chapter.chapterName}</span>
+                      <span className="text-xs text-gray-500">
+                        {chapter.averageTimeSpent}m
+                      </span>
+                    </div>
+                  ))}
               </div>
             </CardContent>
           </Card>

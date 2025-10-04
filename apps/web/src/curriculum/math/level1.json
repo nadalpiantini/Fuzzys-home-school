@@ -1,0 +1,216 @@
+{
+  "id": "math-level1",
+  "title": "Mundo Matemágico · Nivel 1",
+  "description": "Explora los números y las primeras operaciones con Fuzzy en aventuras matemáticas",
+  "ageRange": "6-8",
+  "estimatedDuration": "50 minutos",
+  "chapters": [
+    {
+      "id": "numeros-01",
+      "title": "Números 0–10: Contando tesoros",
+      "goals": [
+        "Reconocer números del 0 al 10",
+        "Contar objetos correctamente",
+        "Relacionar cantidad con símbolo"
+      ],
+      "activities": [
+        {
+          "type": "external",
+          "component": "ExternalGame",
+          "title": "Simulación de fracciones PhET",
+          "data": {
+            "source": "phet",
+            "gameId": "fractions-intro",
+            "url": "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro_es.html",
+            "description": "Explora fracciones de forma visual e interactiva"
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Cuántos hay?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuántos 🐢 ves?",
+                "visual": "🐢🐢🐢",
+                "options": ["2", "3", "4"],
+                "correct": 1,
+                "explanation": "Cuenta uno por uno: 🐢(1) 🐢(2) 🐢(3)"
+              },
+              {
+                "question": "¿Cuántas 🌟 hay?",
+                "visual": "🌟🌟🌟🌟🌟",
+                "options": ["4", "5", "6"],
+                "correct": 1,
+                "explanation": "¡Exacto! Hay 5 estrellas brillantes"
+              },
+              {
+                "question": "¿Cuántos 🎈 ves?",
+                "visual": "🎈🎈🎈🎈🎈🎈🎈",
+                "options": ["6", "7", "8"],
+                "correct": 1,
+                "explanation": "¡Perfecto! Son 7 globos de colores"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Números y cantidades",
+          "data": {
+            "prompt": "Arrastra cada número hacia la cantidad correcta",
+            "items": [
+              { "text": "3", "target": "tres-objetos", "visual": "🍎🍎🍎" },
+              { "text": "5", "target": "cinco-objetos", "visual": "⭐⭐⭐⭐⭐" },
+              { "text": "7", "target": "siete-objetos", "visual": "🌸🌸🌸🌸🌸🌸🌸" },
+              { "text": "2", "target": "dos-objetos", "visual": "🦋🦋" }
+            ]
+          }
+        },
+        {
+          "type": "quiz",
+          "component": "QuizGenerator",
+          "title": "Quiz de conteo",
+          "data": {
+            "subject": "math",
+            "grade": 1,
+            "topic": "counting-0-10",
+            "levels": ["remember", "understand"],
+            "questionCount": 5
+          }
+        }
+      ],
+      "badge": "Contador Novato",
+      "badgeDescription": "¡Puedes contar hasta 10 como un verdadero matemático!"
+    },
+    {
+      "id": "sumas-01",
+      "title": "Primeras sumas: Juntando tesoros",
+      "goals": [
+        "Entender el concepto de suma",
+        "Resolver sumas hasta 10",
+        "Usar símbolos matemáticos + y ="
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "Sumas visuales",
+          "data": {
+            "questions": [
+              {
+                "question": "Si Fuzzy tiene 2 🍎 y encuentra 3 🍎 más, ¿cuántas tiene en total?",
+                "visual": "🍎🍎 + 🍎🍎🍎 = ?",
+                "options": ["4", "5", "6"],
+                "correct": 1,
+                "explanation": "2 + 3 = 5. ¡Contemos juntos: 🍎🍎🍎🍎🍎!"
+              },
+              {
+                "question": "¿Cuánto es 4 + 2?",
+                "visual": "🌟🌟🌟🌟 + 🌟🌟 = ?",
+                "options": ["5", "6", "7"],
+                "correct": 1,
+                "explanation": "4 + 2 = 6. Las estrellas se juntaron: 🌟🌟🌟🌟🌟🌟"
+              },
+              {
+                "question": "Si hay 3 🐾 y llegan 4 🐾 más, ¿cuántas hay?",
+                "visual": "🐾🐾🐾 + 🐾🐾🐾🐾 = ?",
+                "options": ["6", "7", "8"],
+                "correct": 1,
+                "explanation": "3 + 4 = 7. ¡Las huellas forman un camino!"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Completa las sumas",
+          "data": {
+            "prompt": "Arrastra el resultado correcto para cada suma",
+            "items": [
+              { "text": "6", "target": "suma-2-4", "equation": "2 + 4 = ?" },
+              { "text": "8", "target": "suma-3-5", "equation": "3 + 5 = ?" },
+              { "text": "9", "target": "suma-4-5", "equation": "4 + 5 = ?" },
+              { "text": "7", "target": "suma-1-6", "equation": "1 + 6 = ?" }
+            ]
+          }
+        },
+        {
+          "type": "branching",
+          "component": "BranchingScenario",
+          "title": "La tienda mágica de Fuzzy",
+          "data": {
+            "title": "La tienda mágica de Fuzzy",
+            "description": "Fuzzy abre una tienda de objetos mágicos. ¡Ayúdalo a contar las ventas!",
+            "startNode": "tienda-inicio",
+            "nodes": [
+              {
+                "id": "tienda-inicio",
+                "content": "¡Bienvenido a la tienda mágica! Un cliente quiere 2 pociones y 3 varitas. ¿Cuántos objetos en total?",
+                "options": [
+                  {
+                    "text": "5 objetos",
+                    "next": "correcto-venta1",
+                    "points": 20
+                  },
+                  {
+                    "text": "4 objetos",
+                    "next": "incorrecto-venta1",
+                    "points": 0
+                  }
+                ]
+              },
+              {
+                "id": "correcto-venta1",
+                "content": "¡Excelente! 2 + 3 = 5. Llega otro cliente que quiere 4 cristales y 1 amuleto. ¿Total?",
+                "options": [
+                  {
+                    "text": "5 objetos",
+                    "next": "gran-final",
+                    "points": 20
+                  },
+                  {
+                    "text": "3 objetos",
+                    "next": "casi-final",
+                    "points": 10
+                  }
+                ]
+              },
+              {
+                "id": "incorrecto-venta1",
+                "content": "¡Vamos a contar juntos! 2 pociones + 3 varitas = 5 objetos. ¡Intentemos otra vez!",
+                "options": [
+                  {
+                    "text": "Contar de nuevo",
+                    "next": "tienda-inicio",
+                    "points": 5
+                  }
+                ]
+              },
+              {
+                "id": "gran-final",
+                "content": "¡Increíble! Has ayudado a Fuzzy a vender perfectamente. ¡Eres un genio de las sumas!",
+                "isEnd": true,
+                "points": 30
+              },
+              {
+                "id": "casi-final",
+                "content": "¡Buen esfuerzo! La respuesta era 5 (4 + 1). ¡Sigues aprendiendo muy bien!",
+                "isEnd": true,
+                "points": 20
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "Sumador Inicial",
+      "badgeDescription": "¡Ya sabes juntar números como un verdadero matemático!"
+    }
+  ],
+  "finalBadge": "Explorador Matemático Nivel 1",
+  "prerequisites": [],
+  "nextLevel": "math-level2"
+}

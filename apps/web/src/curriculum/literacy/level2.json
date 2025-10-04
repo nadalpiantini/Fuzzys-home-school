@@ -1,0 +1,311 @@
+{
+  "id": "literacy-level2",
+  "title": "Aventuras de Lectura · Nivel 2",
+  "description": "Aventuras de lectura con Fuzzy: comprensión lectora, vocabulario y escritura creativa",
+  "ageRange": "7-9",
+  "estimatedDuration": "55 minutos",
+  "chapters": [
+    {
+      "id": "comprension-01",
+      "title": "Comprensión Lectora: Historias Cortas",
+      "goals": [
+        "Leer historias cortas con fluidez",
+        "Responder preguntas sobre el texto",
+        "Identificar personajes principales"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "La aventura de Fuzzy",
+          "data": {
+            "story": "Fuzzy el robot amaba explorar el bosque. Un día encontró una cueva misteriosa. Dentro había cristales brillantes que brillaban como estrellas. Fuzzy se sintió muy feliz.",
+            "questions": [
+              {
+                "question": "¿Dónde encontró Fuzzy la cueva?",
+                "options": ["En la montaña", "En el bosque", "En el río"],
+                "correct": 1,
+                "explanation": "El texto dice que Fuzzy exploraba el bosque y encontró la cueva allí"
+              },
+              {
+                "question": "¿Qué había dentro de la cueva?",
+                "options": ["Oro", "Cristales brillantes", "Tesoros"],
+                "correct": 1,
+                "explanation": "El texto menciona 'cristales brillantes que brillaban como estrellas'"
+              },
+              {
+                "question": "¿Cómo se sintió Fuzzy?",
+                "options": ["Triste", "Asustado", "Feliz"],
+                "correct": 2,
+                "explanation": "El texto dice que 'Fuzzy se sintió muy feliz'"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "¿Quién es el personaje principal?",
+          "data": {
+            "story": "María y su perro Max fueron al parque. Max corrió tras una pelota roja. María se rió mucho viendo a Max jugar.",
+            "questions": [
+              {
+                "question": "¿Cuál es el nombre del perro?",
+                "answer": "Max",
+                "explanation": "El texto dice 'María y su perro Max'"
+              },
+              {
+                "question": "¿De qué color era la pelota?",
+                "answer": "roja",
+                "explanation": "El texto menciona 'una pelota roja'"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso?",
+          "data": {
+            "story": "Los delfines son mamíferos que viven en el océano. Pueden saltar muy alto y son muy inteligentes. Les gusta jugar con las olas.",
+            "items": [
+              { "q": "Los delfines viven en el océano", "answer": true },
+              { "q": "Los delfines pueden volar", "answer": false },
+              { "q": "Los delfines son inteligentes", "answer": true },
+              { "q": "Los delfines viven en el desierto", "answer": false }
+            ]
+          }
+        }
+      ],
+      "badge": "📚",
+      "badgeDescription": "Lector Avanzado"
+    },
+    {
+      "id": "vocabulario-01",
+      "title": "Vocabulario: Palabras Nuevas",
+      "goals": [
+        "Aprender palabras nuevas y su significado",
+        "Usar palabras en contexto",
+        "Identificar sinónimos y antónimos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué significa esta palabra?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Qué significa 'gigante'?",
+                "options": ["Muy pequeño", "Muy grande", "Muy rápido"],
+                "correct": 1,
+                "explanation": "Gigante significa muy grande, como un gigante en los cuentos"
+              },
+              {
+                "question": "¿Qué significa 'valiente'?",
+                "options": ["Tener miedo", "Ser muy grande", "No tener miedo"],
+                "correct": 2,
+                "explanation": "Valiente significa no tener miedo, ser muy corajudo"
+              },
+              {
+                "question": "¿Qué significa 'misterioso'?",
+                "options": ["Muy claro", "Muy extraño", "Muy bonito"],
+                "correct": 1,
+                "explanation": "Misterioso significa extraño, que no se entiende bien"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Une sinónimos",
+          "data": {
+            "prompt": "Arrastra cada palabra a su sinónimo correspondiente",
+            "items": [
+              { "text": "grande", "target": "enorme", "image": "🔍" },
+              { "text": "rápido", "target": "veloz", "image": "🏃" },
+              { "text": "bonito", "target": "hermoso", "image": "🌸" },
+              { "text": "triste", "target": "melancólico", "image": "😢" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "Matching",
+          "title": "Une antónimos",
+          "data": {
+            "prompt": "Conecta cada palabra con su antónimo",
+            "items": [
+              { "word": "grande", "antonym": "pequeño" },
+              { "word": "alto", "antonym": "bajo" },
+              { "word": "rápido", "antonym": "lento" },
+              { "word": "feliz", "antonym": "triste" }
+            ]
+          }
+        }
+      ],
+      "badge": "📖",
+      "badgeDescription": "Maestro del Vocabulario"
+    },
+    {
+      "id": "escritura-01",
+      "title": "Escritura Creativa: Historias Propias",
+      "goals": [
+        "Escribir oraciones completas",
+        "Crear historias cortas",
+        "Usar conectores básicos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Completa la historia",
+          "data": {
+            "prompt": "Completa esta historia con tu propia idea:",
+            "story": "Había una vez un robot llamado Fuzzy que vivía en una ciudad de cristal. Un día, Fuzzy decidió...",
+            "questions": [
+              {
+                "question": "¿Qué decidió hacer Fuzzy?",
+                "answer": "respuesta libre",
+                "explanation": "¡Excelente! Has creado tu propia continuación de la historia"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "FillBlank",
+          "title": "Completa las oraciones",
+          "data": {
+            "instructions": "Completa cada oración con la palabra correcta",
+            "items": [
+              {
+                "sentence": "El gato está ___ el árbol",
+                "options": ["en", "sobre", "debajo"],
+                "correct": 0,
+                "explanation": "La preposición 'en' indica que el gato está dentro del árbol"
+              },
+              {
+                "sentence": "María ___ muy contenta hoy",
+                "options": ["es", "está", "tiene"],
+                "correct": 1,
+                "explanation": "'Está' se usa para estados temporales como estar contento"
+              },
+              {
+                "sentence": "Los niños ___ en el parque",
+                "options": ["juegan", "juegan", "jugan"],
+                "correct": 0,
+                "explanation": "'Juegan' es la forma correcta del verbo jugar"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "CreativeWriting",
+          "title": "Escribe tu propia historia",
+          "data": {
+            "prompt": "Escribe una historia corta (3-4 oraciones) sobre un animal que hace algo especial",
+            "guidelines": [
+              "Incluye un personaje principal",
+              "Describe qué hace el animal",
+              "Usa palabras descriptivas",
+              "Termina con una conclusión"
+            ],
+            "example": "Había una vez un perro llamado Max que podía hablar. Max ayudaba a los niños perdidos a encontrar su casa. Todos en el pueblo querían a Max porque era muy bueno y valiente."
+          }
+        }
+      ],
+      "badge": "✍️",
+      "badgeDescription": "Escritor Creativo"
+    },
+    {
+      "id": "gramatica-01",
+      "title": "Gramática: Sustantivos y Adjetivos",
+      "goals": [
+        "Identificar sustantivos y adjetivos",
+        "Usar adjetivos para describir",
+        "Formar oraciones completas"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué tipo de palabra es?",
+          "data": {
+            "questions": [
+              {
+                "question": "En la oración 'El gato negro duerme', ¿qué palabra es un sustantivo?",
+                "options": ["gato", "negro", "duerme"],
+                "correct": 0,
+                "explanation": "'Gato' es un sustantivo porque nombra un animal"
+              },
+              {
+                "question": "En la oración 'La casa grande es bonita', ¿qué palabra es un adjetivo?",
+                "options": ["casa", "grande", "es"],
+                "correct": 1,
+                "explanation": "'Grande' es un adjetivo porque describe cómo es la casa"
+              },
+              {
+                "question": "En la oración 'Los niños felices juegan', ¿cuál es el sustantivo?",
+                "options": ["niños", "felices", "juegan"],
+                "correct": 0,
+                "explanation": "'Niños' es un sustantivo porque nombra a las personas"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica las palabras",
+          "data": {
+            "prompt": "Arrastra cada palabra a su categoría correcta",
+            "items": [
+              { "text": "perro", "target": "Sustantivos", "image": "🐕" },
+              { "text": "grande", "target": "Adjetivos", "image": "📏" },
+              { "text": "casa", "target": "Sustantivos", "image": "🏠" },
+              { "text": "bonito", "target": "Adjetivos", "image": "🌸" },
+              { "text": "árbol", "target": "Sustantivos", "image": "🌳" },
+              { "text": "alto", "target": "Adjetivos", "image": "📐" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "FillBlank",
+          "title": "Completa con adjetivos",
+          "data": {
+            "instructions": "Elige el adjetivo correcto para cada oración",
+            "items": [
+              {
+                "sentence": "El elefante es muy ___",
+                "options": ["grande", "pequeño", "rápido"],
+                "correct": 0,
+                "explanation": "Los elefantes son animales grandes"
+              },
+              {
+                "sentence": "La rosa es muy ___",
+                "options": ["fea", "bonita", "grande"],
+                "correct": 1,
+                "explanation": "Las rosas son flores bonitas"
+              },
+              {
+                "sentence": "El conejo es muy ___",
+                "options": ["lento", "rápido", "grande"],
+                "correct": 1,
+                "explanation": "Los conejos son animales rápidos"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "📝",
+      "badgeDescription": "Gramático Junior"
+    }
+  ],
+  "finalBadge": "🏆",
+  "prerequisites": ["literacy-level1"],
+  "nextLevel": "literacy-level3"
+}

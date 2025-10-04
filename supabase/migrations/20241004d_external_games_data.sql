@@ -67,7 +67,7 @@ INSERT INTO external_game_configs (
       "completionCriteria": {"action": "circuit-completed", "minCount": 1}
     }
   ]'::jsonb
-);
+) ON CONFLICT (game_id) DO NOTHING;
 
 -- Insert Blockly Games
 INSERT INTO external_game_configs (
@@ -135,7 +135,7 @@ INSERT INTO external_game_configs (
       "completionCriteria": {"action": "challenge-completed", "minCount": 1}
     }
   ]'::jsonb
-);
+) ON CONFLICT (game_id) DO NOTHING;
 
 -- Insert Music Blocks
 INSERT INTO external_game_configs (
@@ -182,7 +182,7 @@ INSERT INTO external_game_configs (
       "completionCriteria": {"action": "melody-composed", "minCount": 1}
     }
   ]'::jsonb
-);
+) ON CONFLICT (game_id) DO NOTHING;
 
 -- Insert AR Colonial Zone
 INSERT INTO external_game_configs (
@@ -250,7 +250,7 @@ INSERT INTO external_game_configs (
       "completionCriteria": {"action": "area-explored", "minCount": 10}
     }
   ]'::jsonb
-);
+) ON CONFLICT (game_id) DO NOTHING;
 
 -- Insert custom external games
 INSERT INTO external_game_configs (
@@ -297,7 +297,7 @@ INSERT INTO external_game_configs (
       "completionCriteria": {"action": "exercise-completed", "minCount": 5}
     }
   ]'::jsonb
-);
+) ON CONFLICT (game_id) DO NOTHING;
 
 -- Update timestamps
 UPDATE external_game_configs SET updated_at = NOW();

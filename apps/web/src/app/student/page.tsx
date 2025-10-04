@@ -49,6 +49,8 @@ export default function StudentDashboard() {
   const [totalPoints, setTotalPoints] = useState(1250);
   const [level, setLevel] = useState(5);
   const [showMessageBar, setShowMessageBar] = useState(false);
+  const [overallProgress, setOverallProgress] = useState(0);
+  const [availableWorlds, setAvailableWorlds] = useState(6);
 
   // Handler functions for different actions
   const handleAskTutor = () => {
@@ -94,6 +96,70 @@ export default function StudentDashboard() {
     );
     router.push('/colonial-rally');
   };
+
+  const handleLearnWorlds = () => {
+    toast.success(
+      language === 'es'
+        ? '¡Explorando mundos de aprendizaje!'
+        : 'Exploring learning worlds!',
+    );
+    router.push('/learn');
+  };
+
+  // Load overall progress from learning worlds
+  React.useEffect(() => {
+    const loadLearningProgress = async () => {
+      if (!childData?.id) return;
+
+      try {
+        const response = await fetch(
+          `/api/chapter/progress?studentId=${childData.id}`,
+        );
+        const result = await response.json();
+
+        if (result.ok && result.data.length > 0) {
+          // Calculate overall progress across all curriculums
+          const curriculumIds = ['literacy-level1', 'literacy-level2', 'math-level1', 'math-level2', 'math-level3', 'science-level1'];
+          const progressByCurriculum: Record<string, number> = {};
+
+          curriculumIds.forEach((id) => {
+            const curriculumProgress = result.data.filter(
+              (p: any) => p.curriculum_id === id,
+            );
+            const completedChapters = curriculumProgress.filter(
+              (p: any) => p.completed,
+            ).length;
+
+            // Approximate chapter counts (this could be dynamic from curriculum data)
+            const chapterCounts = {
+              'literacy-level1': 2,
+              'literacy-level2': 4,
+              'math-level1': 2,
+              'math-level2': 4,
+              'math-level3': 4,
+              'science-level1': 5
+            };
+
+            const totalChapters = chapterCounts[id as keyof typeof chapterCounts] || 1;
+            progressByCurriculum[id] = (completedChapters / totalChapters) * 100;
+          });
+
+          // Calculate overall progress
+          const totalProgress = Object.values(progressByCurriculum).reduce((acc, curr) => acc + curr, 0);
+          const averageProgress = Math.round(totalProgress / curriculumIds.length);
+          setOverallProgress(averageProgress);
+
+          // Update total points based on progress
+          const calculatedPoints = Math.round(averageProgress * 20); // 20 points per percent
+          setTotalPoints(calculatedPoints);
+        }
+      } catch (error) {
+        console.error('Error loading learning progress:', error);
+      }
+    };
+
+    loadLearningProgress();
+  }, [childData?.id]);
 
   return (
     <div className="min-h-screen">
@@ -229,6 +295,84 @@ export default function StudentDashboard() {
                     45 min
                   </p>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Mundos de Aprendizaje - Hero Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold text-cream-50 title-font">
+              {language === 'es' ? 'Mundos de Aprendizaje' : 'Learning Worlds'}
+            </h3>
+          </div>
+
+          <Card
+            className="card-minimal group cursor-pointer bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20 border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-[1.02] touch-target"
+            onClick={handleLearnWorlds}
+          >
+            <CardContent className="p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="flex-1 text-center sm:text-left">
+                  <h4 className="text-2xl sm:text-3xl font-bold text-cream-50 mb-3">
+                    {language === 'es'
+                      ? '¡Embárcate en Aventuras Educativas!'
+                      : 'Embark on Educational Adventures!'}
+                  </h4>
+                  <p className="text-lg text-cream-100 mb-4">
+                    {language === 'es'
+                      ? 'Explora mundos mágicos llenos de matemáticas, lectura y ciencias. Cada mundo está diseñado para hacer que aprender sea emocionante.'
+                      : 'Explore magical worlds full of math, reading and science. Each world is designed to make learning exciting.'}
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center sm:justify-start mb-4">
+                    <Badge className="bg-purple-600 text-white border-purple-500">
+                      <BookOpen className="w-3 h-3 mr-1" />
+                      {language === 'es' ? 'Lectura' : 'Reading'}
+                    </Badge>
+                    <Badge className="bg-blue-600 text-white border-blue-500">
+                      <Brain className="w-3 h-3 mr-1" />
+                      {language === 'es' ? 'Matemáticas' : 'Math'}
+                    </Badge>
+                    <Badge className="bg-green-600 text-white border-green-500">
+                      <Target className="w-3 h-3 mr-1" />
+                      {language === 'es' ? 'Ciencias' : 'Science'}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="flex-shrink-0">
+                  <div className="relative">
+                    <div className="w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-purple-400 to-blue-500 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="text-6xl sm:text-7xl">🌟</div>
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
+                      <span className="text-xs font-bold">¡{availableWorlds}!</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/20">
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-cream-200">
+                    {language === 'es' ? 'Progreso general:' : 'Overall progress:'}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-20 bg-white/20 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-purple-400 to-blue-400 h-2 rounded-full" style={{ width: `${overallProgress}%` }}></div>
+                    </div>
+                    <span className="text-sm font-semibold text-white">{overallProgress}%</span>
+                  </div>
+                </div>
+
+                <Button size="lg" className="bg-white text-purple-700 hover:bg-cream-100 font-semibold px-6">
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                  {language === 'es' ? '¡Comenzar Aventura!' : 'Start Adventure!'}
+                </Button>
               </div>
             </CardContent>
           </Card>

@@ -18,7 +18,7 @@ interface BranchingScenarioProps {
   };
 }
 
-export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
+const BranchingScenario: React.FC<BranchingScenarioProps> = ({
   game,
   onAnswer,
   onNext,
@@ -245,3 +245,5 @@ export const BranchingScenario: React.FC<BranchingScenarioProps> = ({
     </Card>
   );
 };
+
+export default BranchingScenario;

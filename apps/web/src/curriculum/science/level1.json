@@ -1,0 +1,323 @@
+{
+  "id": "science-level1",
+  "title": "Exploradores Científicos · Nivel 1",
+  "description": "Aventuras científicas con Fuzzy: plantas, animales, el cuerpo humano y el sistema solar",
+  "ageRange": "6-8",
+  "estimatedDuration": "50 minutos",
+  "chapters": [
+    {
+      "id": "plantas-01",
+      "title": "El Mundo de las Plantas",
+      "goals": [
+        "Identificar partes de una planta",
+        "Entender cómo crecen las plantas",
+        "Reconocer diferentes tipos de plantas"
+      ],
+      "activities": [
+        {
+          "type": "external",
+          "component": "ExternalGame",
+          "title": "Simulación de plantas PhET",
+          "data": {
+            "source": "phet",
+            "gameId": "plants",
+            "url": "https://phet.colorado.edu/sims/html/plants/latest/plants_es.html",
+            "description": "Explora cómo crecen las plantas de forma interactiva"
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué parte de la planta es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Qué parte de la planta está bajo tierra?",
+                "visual": "🌱",
+                "options": ["Hojas", "Raíz", "Flor"],
+                "correct": 1,
+                "explanation": "¡Exacto! La raíz está bajo tierra y absorbe agua"
+              },
+              {
+                "question": "¿Qué parte de la planta hace la fotosíntesis?",
+                "visual": "🍃",
+                "options": ["Tallo", "Hojas", "Raíz"],
+                "correct": 1,
+                "explanation": "¡Correcto! Las hojas hacen la fotosíntesis con la luz del sol"
+              },
+              {
+                "question": "¿Qué necesitan las plantas para crecer?",
+                "visual": "🌱☀️💧",
+                "options": ["Solo agua", "Solo sol", "Agua, sol y tierra"],
+                "correct": 2,
+                "explanation": "Las plantas necesitan agua, luz del sol y tierra para crecer"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Construye una planta",
+          "data": {
+            "prompt": "Arrastra las partes para construir una planta completa",
+            "items": [
+              { "text": "Raíz", "target": "parte-inferior", "image": "🌱" },
+              { "text": "Tallo", "target": "parte-media", "image": "🌿" },
+              { "text": "Hojas", "target": "parte-superior", "image": "🍃" },
+              { "text": "Flor", "target": "parte-flor", "image": "🌸" }
+            ]
+          }
+        }
+      ],
+      "badge": "🌱",
+      "badgeDescription": "Botánico Junior"
+    },
+    {
+      "id": "animales-01",
+      "title": "El Reino Animal",
+      "goals": [
+        "Clasificar animales por hábitat",
+        "Identificar características de animales",
+        "Entender la diferencia entre vertebrados e invertebrados"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Dónde vive este animal?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Dónde vive el pez?",
+                "visual": "🐠",
+                "options": ["En el aire", "En el agua", "En la tierra"],
+                "correct": 1,
+                "explanation": "Los peces viven en el agua, en ríos, mares y océanos"
+              },
+              {
+                "question": "¿Dónde vive el pájaro?",
+                "visual": "🐦",
+                "options": [
+                  "Solo en el agua",
+                  "En el aire y tierra",
+                  "Solo bajo tierra"
+                ],
+                "correct": 1,
+                "explanation": "Los pájaros pueden volar en el aire y caminar en la tierra"
+              },
+              {
+                "question": "¿Dónde vive el conejo?",
+                "visual": "🐰",
+                "options": ["En el agua", "En la tierra", "En el aire"],
+                "correct": 1,
+                "explanation": "Los conejos viven en la tierra, en madrigueras"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica los animales",
+          "data": {
+            "prompt": "Arrastra cada animal a su hábitat correcto",
+            "items": [
+              { "text": "🐠", "target": "Agua", "image": "🌊" },
+              { "text": "🐦", "target": "Aire", "image": "☁️" },
+              { "text": "🐰", "target": "Tierra", "image": "🌍" },
+              { "text": "🐸", "target": "Agua y Tierra", "image": "🏞️" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso?",
+          "data": {
+            "items": [
+              { "q": "Los perros tienen columna vertebral", "answer": true },
+              { "q": "Las mariposas son vertebrados", "answer": false },
+              { "q": "Los peces respiran bajo el agua", "answer": true },
+              { "q": "Los pájaros pueden volar", "answer": true }
+            ]
+          }
+        }
+      ],
+      "badge": "🐾",
+      "badgeDescription": "Zoólogo Junior"
+    },
+    {
+      "id": "cuerpo-humano-01",
+      "title": "Mi Cuerpo",
+      "goals": [
+        "Identificar partes del cuerpo",
+        "Entender funciones básicas del cuerpo",
+        "Aprender sobre los 5 sentidos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué parte del cuerpo es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Con qué parte del cuerpo vemos?",
+                "visual": "👀",
+                "options": ["Oídos", "Ojos", "Nariz"],
+                "correct": 1,
+                "explanation": "¡Exacto! Con los ojos vemos el mundo que nos rodea"
+              },
+              {
+                "question": "¿Con qué parte del cuerpo oímos?",
+                "visual": "👂",
+                "options": ["Ojos", "Oídos", "Boca"],
+                "correct": 1,
+                "explanation": "¡Correcto! Con los oídos escuchamos los sonidos"
+              },
+              {
+                "question": "¿Con qué parte del cuerpo respiramos?",
+                "visual": "👃",
+                "options": ["Boca", "Nariz", "Ambas"],
+                "correct": 2,
+                "explanation": "Podemos respirar tanto por la nariz como por la boca"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Une los sentidos",
+          "data": {
+            "prompt": "Arrastra cada sentido a su parte del cuerpo correspondiente",
+            "items": [
+              { "text": "Vista", "target": "👀", "image": "Ojos" },
+              { "text": "Oído", "target": "👂", "image": "Oídos" },
+              { "text": "Olfato", "target": "👃", "image": "Nariz" },
+              { "text": "Gusto", "target": "👅", "image": "Lengua" },
+              { "text": "Tacto", "target": "✋", "image": "Manos" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "Hotspot",
+          "title": "Explora el cuerpo humano",
+          "data": {
+            "image": "body-outline.png",
+            "hotspots": [
+              {
+                "area": "head",
+                "label": "Cabeza",
+                "description": "Aquí están el cerebro, los ojos, la nariz y la boca"
+              },
+              {
+                "area": "chest",
+                "label": "Pecho",
+                "description": "Aquí están el corazón y los pulmones"
+              },
+              {
+                "area": "arms",
+                "label": "Brazos",
+                "description": "Con los brazos podemos abrazar y tocar"
+              },
+              {
+                "area": "legs",
+                "label": "Piernas",
+                "description": "Con las piernas caminamos y corremos"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "👤",
+      "badgeDescription": "Anatomista Junior"
+    },
+    {
+      "id": "sistema-solar-01",
+      "title": "Nuestro Sistema Solar",
+      "goals": [
+        "Identificar los planetas principales",
+        "Entender que el sol es una estrella",
+        "Reconocer la luna como satélite de la Tierra"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué planeta es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuál es el planeta más cercano al sol?",
+                "visual": "☀️🪐🌍",
+                "options": ["Tierra", "Mercurio", "Venus"],
+                "correct": 1,
+                "explanation": "¡Exacto! Mercurio es el planeta más cercano al sol"
+              },
+              {
+                "question": "¿En qué planeta vivimos?",
+                "visual": "🌍",
+                "options": ["Marte", "Tierra", "Venus"],
+                "correct": 1,
+                "explanation": "¡Correcto! Vivimos en el planeta Tierra"
+              },
+              {
+                "question": "¿Qué es el sol?",
+                "visual": "☀️",
+                "options": ["Un planeta", "Una estrella", "Un satélite"],
+                "correct": 1,
+                "explanation": "El sol es una estrella que nos da luz y calor"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "Sequence",
+          "title": "Ordena los planetas",
+          "data": {
+            "prompt": "Ordena los planetas desde el más cercano al sol",
+            "items": [
+              { "text": "Mercurio", "order": 1 },
+              { "text": "Venus", "order": 2 },
+              { "text": "Tierra", "order": 3 },
+              { "text": "Marte", "order": 4 },
+              { "text": "Júpiter", "order": 5 }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "La luna y la Tierra",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Qué es la luna?",
+                "visual": "🌙",
+                "options": ["Un planeta", "Un satélite", "Una estrella"],
+                "correct": 1,
+                "explanation": "La luna es el satélite natural de la Tierra"
+              },
+              {
+                "question": "¿Cuántas lunas tiene la Tierra?",
+                "visual": "🌍🌙",
+                "options": ["Una", "Dos", "Tres"],
+                "correct": 0,
+                "explanation": "La Tierra tiene una sola luna"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🚀",
+      "badgeDescription": "Astronauta Junior"
+    }
+  ],
+  "finalBadge": "🔬",
+  "prerequisites": [],
+  "nextLevel": "science-level2"
+}

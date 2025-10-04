@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS brain_jobs (
 CREATE INDEX IF NOT EXISTS idx_brain_jobs_type ON brain_jobs(type);
 CREATE INDEX IF NOT EXISTS idx_brain_jobs_status ON brain_jobs(status);
 CREATE INDEX IF NOT EXISTS idx_brain_jobs_created_at ON brain_jobs(created_at);
-CREATE INDEX IF NOT EXISTS idx_brain_jobs_subjects ON brain_jobs USING GIN ((params->>'subjects'));
+CREATE INDEX IF NOT EXISTS idx_brain_jobs_subjects ON brain_jobs USING GIN (params);
 
 -- Brain Runs Table - tracks execution results and generated content
 CREATE TABLE IF NOT EXISTS brain_runs (

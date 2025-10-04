@@ -16,3 +16,4 @@ export { Timeline } from './Timeline';
 export { Match } from './Match';
 export { MathSolver } from './MathSolver';
 export { CodeChallenge } from './CodeChallenge';
+export { ReadingComprehension } from './ReadingComprehension';

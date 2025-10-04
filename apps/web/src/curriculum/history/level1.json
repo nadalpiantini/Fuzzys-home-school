@@ -1,0 +1,330 @@
+{
+  "id": "history-level1",
+  "title": "Exploradores del Tiempo · Nivel 1",
+  "description": "Viaje por la historia: civilizaciones antiguas, descubrimientos y personajes históricos",
+  "ageRange": "6-8",
+  "estimatedDuration": "50 minutos",
+  "chapters": [
+    {
+      "id": "civilizaciones-01",
+      "title": "Civilizaciones Antiguas",
+      "goals": [
+        "Conocer las primeras civilizaciones",
+        "Identificar características de cada cultura",
+        "Entender la importancia de la escritura"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué civilización es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Dónde se construyeron las pirámides?",
+                "visual": "🏺",
+                "options": ["Grecia", "Egipto", "Roma"],
+                "correct": 1,
+                "explanation": "¡Exacto! Las pirámides se construyeron en el antiguo Egipto"
+              },
+              {
+                "question": "¿Qué civilización inventó la democracia?",
+                "visual": "🏛️",
+                "options": ["Egipto", "Grecia", "Roma"],
+                "correct": 1,
+                "explanation": "¡Correcto! Los griegos inventaron la democracia"
+              },
+              {
+                "question": "¿Qué construyeron los romanos?",
+                "visual": "🏛️",
+                "options": ["Pirámides", "Acueductos", "Templos griegos"],
+                "correct": 1,
+                "explanation": "Los romanos construyeron acueductos para llevar agua a las ciudades"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Une civilización con su logro",
+          "data": {
+            "prompt": "Arrastra cada logro a su civilización",
+            "items": [
+              { "text": "Pirámides", "target": "Egipto", "image": "🏺" },
+              { "text": "Democracia", "target": "Grecia", "image": "🏛️" },
+              { "text": "Acueductos", "target": "Roma", "image": "🏛️" },
+              { "text": "Escritura", "target": "Mesopotamia", "image": "📜" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre civilizaciones?",
+          "data": {
+            "items": [
+              { "q": "Todas las civilizaciones eran iguales", "answer": false },
+              { "q": "La escritura fue un invento importante", "answer": true },
+              { "q": "Los griegos inventaron las Olimpiadas", "answer": true },
+              {
+                "q": "Los romanos no construyeron nada importante",
+                "answer": false
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🏛️",
+      "badgeDescription": "Historiador Junior"
+    },
+    {
+      "id": "descubrimientos-01",
+      "title": "Grandes Descubrimientos",
+      "goals": [
+        "Conocer los grandes exploradores",
+        "Entender la importancia de los viajes",
+        "Identificar nuevos continentes"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Quién descubrió América?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Quién llegó a América en 1492?",
+                "visual": "🚢",
+                "options": ["Vasco da Gama", "Cristóbal Colón", "Marco Polo"],
+                "correct": 1,
+                "explanation": "¡Exacto! Cristóbal Colón llegó a América en 1492"
+              },
+              {
+                "question": "¿En qué barcos viajó Colón?",
+                "visual": "🚢",
+                "options": ["Las Tres Carabelas", "El Titanic", "Los Vikingos"],
+                "correct": 0,
+                "explanation": "¡Correcto! Colón viajó en las Tres Carabelas: La Niña, La Pinta y La Santa María"
+              },
+              {
+                "question": "¿Qué buscaba Colón?",
+                "visual": "🗺️",
+                "options": ["América", "Una ruta a Asia", "Oro"],
+                "correct": 1,
+                "explanation": "Colón buscaba una nueva ruta para llegar a Asia"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "Sequence",
+          "title": "Ordena los descubrimientos",
+          "data": {
+            "prompt": "Ordena los descubrimientos por fecha",
+            "items": [
+              { "text": "Descubrimiento de América (1492)", "order": 1 },
+              { "text": "Primer viaje a la Luna (1969)", "order": 2 },
+              { "text": "Descubrimiento de Australia (1770)", "order": 3 }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Exploradores y sus viajes",
+          "data": {
+            "prompt": "Arrastra cada explorador a su descubrimiento",
+            "items": [
+              { "text": "Cristóbal Colón", "target": "América", "image": "🌎" },
+              { "text": "Marco Polo", "target": "Asia", "image": "🏔️" },
+              {
+                "text": "Vasco da Gama",
+                "target": "Ruta a India",
+                "image": "🌊"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🗺️",
+      "badgeDescription": "Explorador del Tiempo"
+    },
+    {
+      "id": "personajes-01",
+      "title": "Personajes Históricos",
+      "goals": [
+        "Conocer personajes importantes",
+        "Entender sus contribuciones",
+        "Valorar la diversidad histórica"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Quién fue este personaje?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Quién fue Cleopatra?",
+                "visual": "👑",
+                "options": [
+                  "Una reina griega",
+                  "Una reina egipcia",
+                  "Una emperatriz romana"
+                ],
+                "correct": 1,
+                "explanation": "¡Exacto! Cleopatra fue la última reina del antiguo Egipto"
+              },
+              {
+                "question": "¿Quién fue Leonardo da Vinci?",
+                "visual": "🎨",
+                "options": [
+                  "Solo un pintor",
+                  "Un artista y científico",
+                  "Solo un científico"
+                ],
+                "correct": 1,
+                "explanation": "¡Correcto! Leonardo da Vinci fue artista, científico e inventor"
+              },
+              {
+                "question": "¿Quién fue Juana de Arco?",
+                "visual": "⚔️",
+                "options": [
+                  "Una reina",
+                  "Una guerrera francesa",
+                  "Una emperatriz"
+                ],
+                "correct": 1,
+                "explanation": "Juana de Arco fue una guerrera francesa que luchó por su país"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Personajes y sus logros",
+          "data": {
+            "prompt": "Arrastra cada logro a su personaje",
+            "items": [
+              {
+                "text": "Pintó la Mona Lisa",
+                "target": "Leonardo da Vinci",
+                "image": "🎨"
+              },
+              {
+                "text": "Fue reina de Egipto",
+                "target": "Cleopatra",
+                "image": "👑"
+              },
+              {
+                "text": "Luchó por Francia",
+                "target": "Juana de Arco",
+                "image": "⚔️"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre personajes?",
+          "data": {
+            "items": [
+              {
+                "q": "Cleopatra fue la última reina de Egipto",
+                "answer": true
+              },
+              { "q": "Leonardo da Vinci solo pintaba", "answer": false },
+              { "q": "Juana de Arco fue una guerrera", "answer": true },
+              {
+                "q": "Todos los personajes históricos eran hombres",
+                "answer": false
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "👑",
+      "badgeDescription": "Conocedor de Personajes"
+    },
+    {
+      "id": "cultura-01",
+      "title": "Cultura y Tradiciones",
+      "goals": [
+        "Conocer diferentes culturas",
+        "Valorar la diversidad cultural",
+        "Entender las tradiciones"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿De qué cultura es esta tradición?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Dónde se celebra el Día de los Muertos?",
+                "visual": "💀",
+                "options": ["China", "México", "Egipto"],
+                "correct": 1,
+                "explanation": "¡Exacto! El Día de los Muertos se celebra en México"
+              },
+              {
+                "question": "¿Dónde se originó el té?",
+                "visual": "🍵",
+                "options": ["Europa", "China", "América"],
+                "correct": 1,
+                "explanation": "¡Correcto! El té se originó en China hace miles de años"
+              },
+              {
+                "question": "¿Qué cultura inventó el papel?",
+                "visual": "📄",
+                "options": ["Roma", "China", "Egipto"],
+                "correct": 1,
+                "explanation": "Los chinos inventaron el papel hace más de 2000 años"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Culturas y sus inventos",
+          "data": {
+            "prompt": "Arrastra cada invento a su cultura de origen",
+            "items": [
+              { "text": "Papel", "target": "China", "image": "📄" },
+              { "text": "Democracia", "target": "Grecia", "image": "🏛️" },
+              { "text": "Pirámides", "target": "Egipto", "image": "🏺" },
+              { "text": "Acueductos", "target": "Roma", "image": "🏛️" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre culturas?",
+          "data": {
+            "items": [
+              { "q": "Todas las culturas son iguales", "answer": false },
+              { "q": "La diversidad cultural es valiosa", "answer": true },
+              {
+                "q": "Solo una cultura inventó cosas importantes",
+                "answer": false
+              },
+              { "q": "Podemos aprender de todas las culturas", "answer": true }
+            ]
+          }
+        }
+      ],
+      "badge": "🌍",
+      "badgeDescription": "Embajador Cultural"
+    }
+  ],
+  "finalBadge": "📚",
+  "prerequisites": [],
+  "nextLevel": "history-level2"
+}

@@ -1,0 +1,336 @@
+{
+  "id": "art-level1",
+  "title": "Artistas Creativos · Nivel 1",
+  "description": "Exploración artística: colores, formas, técnicas y expresión creativa",
+  "ageRange": "6-8",
+  "estimatedDuration": "50 minutos",
+  "chapters": [
+    {
+      "id": "colores-01",
+      "title": "El Mundo de los Colores",
+      "goals": [
+        "Identificar colores primarios y secundarios",
+        "Entender la mezcla de colores",
+        "Reconocer colores cálidos y fríos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué colores son primarios?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuáles son los colores primarios?",
+                "visual": "🎨",
+                "options": [
+                  "Rojo, azul, amarillo",
+                  "Verde, naranja, morado",
+                  "Rosa, turquesa, dorado"
+                ],
+                "correct": 0,
+                "explanation": "¡Exacto! Los colores primarios son rojo, azul y amarillo"
+              },
+              {
+                "question": "¿Qué color se forma al mezclar rojo y azul?",
+                "visual": "🔴🔵",
+                "options": ["Verde", "Morado", "Naranja"],
+                "correct": 1,
+                "explanation": "¡Correcto! Rojo + azul = morado"
+              },
+              {
+                "question": "¿Qué color se forma al mezclar amarillo y azul?",
+                "visual": "🟡🔵",
+                "options": ["Naranja", "Verde", "Rosa"],
+                "correct": 1,
+                "explanation": "¡Exacto! Amarillo + azul = verde"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica los colores",
+          "data": {
+            "prompt": "Arrastra cada color a su categoría",
+            "items": [
+              { "text": "🔴 Rojo", "target": "Primarios", "image": "🔴" },
+              { "text": "🟡 Amarillo", "target": "Primarios", "image": "🟡" },
+              { "text": "🔵 Azul", "target": "Primarios", "image": "🔵" },
+              { "text": "🟢 Verde", "target": "Secundarios", "image": "🟢" },
+              { "text": "🟠 Naranja", "target": "Secundarios", "image": "🟠" },
+              { "text": "🟣 Morado", "target": "Secundarios", "image": "🟣" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Colores cálidos y fríos",
+          "data": {
+            "prompt": "Arrastra cada color a su temperatura",
+            "items": [
+              { "text": "🔴 Rojo", "target": "Cálidos", "image": "🔥" },
+              { "text": "🟡 Amarillo", "target": "Cálidos", "image": "☀️" },
+              { "text": "🔵 Azul", "target": "Fríos", "image": "❄️" },
+              { "text": "🟢 Verde", "target": "Fríos", "image": "🌿" }
+            ]
+          }
+        }
+      ],
+      "badge": "🎨",
+      "badgeDescription": "Maestro del Color"
+    },
+    {
+      "id": "formas-01",
+      "title": "Formas y Figuras",
+      "goals": [
+        "Identificar formas geométricas básicas",
+        "Reconocer formas en el arte",
+        "Crear composiciones con formas"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué forma es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Qué forma tiene 3 lados?",
+                "visual": "🔺",
+                "options": ["Cuadrado", "Triángulo", "Círculo"],
+                "correct": 1,
+                "explanation": "¡Exacto! El triángulo tiene 3 lados"
+              },
+              {
+                "question": "¿Qué forma tiene 4 lados iguales?",
+                "visual": "⬜",
+                "options": ["Rectángulo", "Cuadrado", "Triángulo"],
+                "correct": 1,
+                "explanation": "¡Correcto! El cuadrado tiene 4 lados iguales"
+              },
+              {
+                "question": "¿Qué forma no tiene esquinas?",
+                "visual": "⭕",
+                "options": ["Cuadrado", "Triángulo", "Círculo"],
+                "correct": 2,
+                "explanation": "¡Exacto! El círculo no tiene esquinas, es redondo"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Identifica las formas",
+          "data": {
+            "prompt": "Arrastra cada objeto a su forma",
+            "items": [
+              { "text": "🍕 Pizza", "target": "Círculo", "image": "⭕" },
+              { "text": "📱 Teléfono", "target": "Rectángulo", "image": "📱" },
+              {
+                "text": "🔺 Señal de tráfico",
+                "target": "Triángulo",
+                "image": "🔺"
+              },
+              { "text": "🎲 Dado", "target": "Cuadrado", "image": "⬜" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre formas?",
+          "data": {
+            "items": [
+              { "q": "El círculo tiene esquinas", "answer": false },
+              { "q": "El triángulo tiene 3 lados", "answer": true },
+              {
+                "q": "El cuadrado y el rectángulo son iguales",
+                "answer": false
+              },
+              {
+                "q": "Podemos encontrar formas en la naturaleza",
+                "answer": true
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🔺",
+      "badgeDescription": "Explorador de Formas"
+    },
+    {
+      "id": "tecnicas-01",
+      "title": "Técnicas Artísticas",
+      "goals": [
+        "Conocer diferentes técnicas artísticas",
+        "Identificar materiales de arte",
+        "Experimentar con texturas"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué técnica es?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Qué técnica usa pinceles y pintura?",
+                "visual": "🖌️",
+                "options": ["Escultura", "Pintura", "Collage"],
+                "correct": 1,
+                "explanation": "¡Exacto! La pintura usa pinceles y pintura"
+              },
+              {
+                "question": "¿Qué técnica usa papel cortado y pegado?",
+                "visual": "✂️",
+                "options": ["Pintura", "Collage", "Dibujo"],
+                "correct": 1,
+                "explanation": "¡Correcto! El collage usa papel cortado y pegado"
+              },
+              {
+                "question": "¿Qué técnica usa arcilla?",
+                "visual": "🏺",
+                "options": ["Pintura", "Escultura", "Collage"],
+                "correct": 1,
+                "explanation": "¡Exacto! La escultura usa arcilla y otros materiales moldeables"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Técnicas y materiales",
+          "data": {
+            "prompt": "Arrastra cada material a su técnica",
+            "items": [
+              { "text": "🖌️ Pincel", "target": "Pintura", "image": "🎨" },
+              { "text": "✂️ Tijeras", "target": "Collage", "image": "📄" },
+              { "text": "🏺 Arcilla", "target": "Escultura", "image": "🗿" },
+              { "text": "✏️ Lápiz", "target": "Dibujo", "image": "📝" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre técnicas?",
+          "data": {
+            "items": [
+              { "q": "Solo hay una forma de hacer arte", "answer": false },
+              { "q": "El collage usa papel", "answer": true },
+              { "q": "La escultura es solo con arcilla", "answer": false },
+              { "q": "Podemos mezclar diferentes técnicas", "answer": true }
+            ]
+          }
+        }
+      ],
+      "badge": "🖌️",
+      "badgeDescription": "Artista Técnico"
+    },
+    {
+      "id": "expresion-01",
+      "title": "Expresión Creativa",
+      "goals": [
+        "Entender que el arte es expresión",
+        "Valorar la creatividad personal",
+        "Reconocer diferentes estilos artísticos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Para qué sirve el arte?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Para qué sirve el arte?",
+                "visual": "🎨",
+                "options": [
+                  "Solo para decorar",
+                  "Para expresar sentimientos",
+                  "Solo para vender"
+                ],
+                "correct": 1,
+                "explanation": "¡Exacto! El arte sirve para expresar sentimientos e ideas"
+              },
+              {
+                "question": "¿Puede el arte contar historias?",
+                "visual": "📖",
+                "options": ["No", "Sí, como los libros", "Solo a veces"],
+                "correct": 1,
+                "explanation": "¡Correcto! El arte puede contar historias sin palabras"
+              },
+              {
+                "question": "¿Todos pueden ser artistas?",
+                "visual": "👥",
+                "options": [
+                  "Solo los adultos",
+                  "Sí, todos",
+                  "Solo los que saben dibujar"
+                ],
+                "correct": 1,
+                "explanation": "¡Exacto! Todos pueden ser artistas, no importa la edad"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Estilos de arte",
+          "data": {
+            "prompt": "Arrastra cada descripción a su estilo",
+            "items": [
+              {
+                "text": "Colores brillantes y formas simples",
+                "target": "Arte Pop",
+                "image": "🎨"
+              },
+              {
+                "text": "Formas geométricas",
+                "target": "Arte Abstracto",
+                "image": "🔺"
+              },
+              {
+                "text": "Parece una foto",
+                "target": "Realismo",
+                "image": "📸"
+              },
+              {
+                "text": "Colores suaves y pinceladas visibles",
+                "target": "Impresionismo",
+                "image": "🌅"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso sobre expresión?",
+          "data": {
+            "items": [
+              { "q": "El arte es solo para artistas famosos", "answer": false },
+              {
+                "q": "Cada persona puede tener su propio estilo",
+                "answer": true
+              },
+              { "q": "El arte no puede expresar emociones", "answer": false },
+              { "q": "La creatividad es importante", "answer": true }
+            ]
+          }
+        }
+      ],
+      "badge": "✨",
+      "badgeDescription": "Artista Expresivo"
+    }
+  ],
+  "finalBadge": "🎭",
+  "prerequisites": [],
+  "nextLevel": "art-level2"
+}

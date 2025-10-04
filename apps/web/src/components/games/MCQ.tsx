@@ -18,7 +18,7 @@ interface MCQProps {
   };
 }
 
-export const MCQ: React.FC<MCQProps> = ({
+const MCQ: React.FC<MCQProps> = ({
   game,
   onAnswer,
   onNext,
@@ -148,3 +148,5 @@ export const MCQ: React.FC<MCQProps> = ({
     </Card>
   );
 };
+
+export default MCQ;

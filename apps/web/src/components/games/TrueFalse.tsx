@@ -18,7 +18,7 @@ interface TrueFalseProps {
   };
 }
 
-export const TrueFalse: React.FC<TrueFalseProps> = ({
+const TrueFalse: React.FC<TrueFalseProps> = ({
   game,
   onAnswer,
   onNext,
@@ -116,3 +116,5 @@ export const TrueFalse: React.FC<TrueFalseProps> = ({
     </Card>
   );
 };
+
+export default TrueFalse;

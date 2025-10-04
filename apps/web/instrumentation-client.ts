@@ -6,3 +6,6 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
 });
+
+// Export the required hook for navigation instrumentation
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

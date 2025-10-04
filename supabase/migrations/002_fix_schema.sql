@@ -17,5 +17,6 @@ CREATE POLICY "Games are viewable by everyone" ON public.games
   FOR SELECT USING (true);
 
 -- Create policy for colonial rally points
+DROP POLICY IF EXISTS "Rally points are viewable by everyone" ON public.colonial_rally_points;
 CREATE POLICY "Rally points are viewable by everyone" ON public.colonial_rally_points
   FOR SELECT USING (true);

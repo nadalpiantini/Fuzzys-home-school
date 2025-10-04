@@ -1,0 +1,321 @@
+{
+  "id": "literacy-level3",
+  "title": "Exploradores de Palabras · Nivel 3",
+  "description": "Aventuras avanzadas de lectoescritura con Fuzzy: literatura, análisis crítico y escritura creativa",
+  "ageRange": "9-11",
+  "estimatedDuration": "70 minutos",
+  "chapters": [
+    {
+      "id": "literatura-01",
+      "title": "Introducción a la Literatura",
+      "goals": [
+        "Identificar géneros literarios",
+        "Analizar personajes y tramas",
+        "Entender elementos narrativos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué género literario es?",
+          "data": {
+            "questions": [
+              {
+                "question": "Una historia sobre hadas y dragones es:",
+                "visual": "🧚‍♀️🐉",
+                "options": ["Ciencia ficción", "Fantasía", "Misterio"],
+                "correct": 1,
+                "explanation": "Las historias con hadas y dragones son de fantasía"
+              },
+              {
+                "question": "Una historia sobre el futuro y robots es:",
+                "visual": "🤖🚀",
+                "options": ["Fantasía", "Ciencia ficción", "Romance"],
+                "correct": 1,
+                "explanation": "Las historias sobre el futuro y tecnología son ciencia ficción"
+              },
+              {
+                "question": "Una historia que da miedo es:",
+                "visual": "👻",
+                "options": ["Comedia", "Terror", "Aventura"],
+                "correct": 1,
+                "explanation": "Las historias que dan miedo son de terror"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica los géneros",
+          "data": {
+            "prompt": "Arrastra cada historia a su género correcto",
+            "items": [
+              {
+                "text": "El mago y la varita",
+                "target": "Fantasía",
+                "image": "🪄"
+              },
+              {
+                "text": "El robot del futuro",
+                "target": "Ciencia ficción",
+                "image": "🤖"
+              },
+              {
+                "text": "El fantasma de la casa",
+                "target": "Terror",
+                "image": "👻"
+              },
+              {
+                "text": "Las aventuras del pirata",
+                "target": "Aventura",
+                "image": "🏴‍☠️"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Analiza el personaje",
+          "data": {
+            "story": "María era una niña muy valiente que siempre ayudaba a sus amigos. Un día, cuando vio que un gatito estaba atrapado en un árbol, no dudó en subir a rescatarlo, aunque tuviera miedo a las alturas.",
+            "questions": [
+              {
+                "question": "¿Cómo es María?",
+                "answer": "valiente",
+                "explanation": "El texto dice que María era 'muy valiente'"
+              },
+              {
+                "question": "¿Qué hizo María para ayudar?",
+                "answer": "rescató al gatito",
+                "explanation": "María subió al árbol para rescatar al gatito atrapado"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "📚",
+      "badgeDescription": "Crítico Literario"
+    },
+    {
+      "id": "analisis-critico-01",
+      "title": "Pensamiento Crítico",
+      "goals": [
+        "Distinguir entre hecho y opinión",
+        "Identificar argumentos",
+        "Evaluar la credibilidad de fuentes"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Facts o opinión?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuál es un hecho?",
+                "options": [
+                  "Los perros son mejores que los gatos",
+                  "Los perros tienen 4 patas",
+                  "Los perros son más bonitos"
+                ],
+                "correct": 1,
+                "explanation": "Los perros tienen 4 patas es un hecho verificable"
+              },
+              {
+                "question": "¿Cuál es una opinión?",
+                "options": [
+                  "El agua hierve a 100°C",
+                  "La pizza es la mejor comida",
+                  "La Tierra gira alrededor del sol"
+                ],
+                "correct": 1,
+                "explanation": "La pizza es la mejor comida es una opinión personal"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Verdadero o falso?",
+          "data": {
+            "items": [
+              { "q": "Un hecho puede ser verificado", "answer": true },
+              { "q": "Una opinión es siempre correcta", "answer": false },
+              { "q": "Los hechos no cambian", "answer": true },
+              { "q": "Las opiniones son personales", "answer": true }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Clasifica las afirmaciones",
+          "data": {
+            "prompt": "Arrastra cada afirmación a su categoría correcta",
+            "items": [
+              { "text": "El cielo es azul", "target": "Hecho", "image": "☁️" },
+              {
+                "text": "El helado es delicioso",
+                "target": "Opinión",
+                "image": "🍦"
+              },
+              { "text": "2 + 2 = 4", "target": "Hecho", "image": "🔢" },
+              {
+                "text": "El rojo es el mejor color",
+                "target": "Opinión",
+                "image": "🔴"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "🧠",
+      "badgeDescription": "Pensador Crítico"
+    },
+    {
+      "id": "escritura-avanzada-01",
+      "title": "Escritura Avanzada",
+      "goals": [
+        "Escribir párrafos estructurados",
+        "Usar conectores y transiciones",
+        "Desarrollar argumentos persuasivos"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Completa el párrafo",
+          "data": {
+            "prompt": "Completa este párrafo usando conectores apropiados:",
+            "text": "Los perros son excelentes mascotas. ___ son leales y cariñosos. ___ requieren mucho cuidado. ___ son una gran compañía para las familias.",
+            "connectors": ["Además", "Sin embargo", "Por lo tanto"],
+            "questions": [
+              {
+                "question": "¿Qué conector usarías para la segunda oración?",
+                "answer": "Además",
+                "explanation": "'Además' añade información positiva sobre los perros"
+              },
+              {
+                "question": "¿Qué conector usarías para la tercera oración?",
+                "answer": "Sin embargo",
+                "explanation": "'Sin embargo' introduce una consideración importante"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "CreativeWriting",
+          "title": "Escribe un ensayo persuasivo",
+          "data": {
+            "prompt": "Escribe un párrafo persuasivo (4-5 oraciones) sobre por qué es importante reciclar",
+            "guidelines": [
+              "Incluye una oración de introducción",
+              "Presenta 2-3 argumentos",
+              "Usa conectores como 'Además', 'Por lo tanto'",
+              "Termina con una conclusión fuerte"
+            ],
+            "example": "Reciclar es fundamental para proteger nuestro planeta. Además, reduce la contaminación y conserva los recursos naturales. Por lo tanto, todos deberíamos reciclar en casa y en la escuela."
+          }
+        },
+        {
+          "type": "internal",
+          "component": "FillBlank",
+          "title": "Usa conectores correctos",
+          "data": {
+            "instructions": "Elige el conector correcto para cada oración",
+            "items": [
+              {
+                "sentence": "Me gusta la pizza. ___, prefiero la pasta",
+                "options": ["Además", "Sin embargo", "Por lo tanto"],
+                "correct": 1,
+                "explanation": "'Sin embargo' muestra contraste entre las dos preferencias"
+              },
+              {
+                "sentence": "Estudiar es importante. ___, también es importante descansar",
+                "options": ["Además", "Sin embargo", "Por lo tanto"],
+                "correct": 0,
+                "explanation": "'Además' añade información complementaria"
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "✍️",
+      "badgeDescription": "Escritor Avanzado"
+    },
+    {
+      "id": "poesia-01",
+      "title": "Introducción a la Poesía",
+      "goals": [
+        "Identificar elementos poéticos básicos",
+        "Escribir versos simples",
+        "Entender ritmo y rima"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "MCQ",
+          "title": "¿Qué es la rima?",
+          "data": {
+            "questions": [
+              {
+                "question": "¿Cuál de estos pares tiene rima?",
+                "options": ["casa - mesa", "sol - luna", "gato - pato"],
+                "correct": 2,
+                "explanation": "gato y pato terminan con el mismo sonido: -ato"
+              },
+              {
+                "question": "¿Qué es el ritmo en poesía?",
+                "options": [
+                  "La velocidad de lectura",
+                  "El patrón de sílabas",
+                  "El tema del poema"
+                ],
+                "correct": 1,
+                "explanation": "El ritmo es el patrón de sílabas acentuadas y no acentuadas"
+              }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Encuentra las rimas",
+          "data": {
+            "prompt": "Arrastra cada palabra a su pareja que rima",
+            "items": [
+              { "text": "casa", "target": "tasa", "image": "🏠" },
+              { "text": "sol", "target": "col", "image": "☀️" },
+              { "text": "luna", "target": "cuna", "image": "🌙" },
+              { "text": "flor", "target": "amor", "image": "🌸" }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "CreativeWriting",
+          "title": "Escribe tu propio poema",
+          "data": {
+            "prompt": "Escribe un poema corto (4 versos) sobre tu animal favorito",
+            "guidelines": [
+              "Usa rimas simples (AA, BB)",
+              "Cada verso debe tener 4-6 sílabas",
+              "Incluye palabras descriptivas",
+              "Termina con una conclusión"
+            ],
+            "example": "Mi gato es muy suave,\nsiempre quiere que lo alabe,\ncuando juega con la bola,\nme hace reír sin parar."
+          }
+        }
+      ],
+      "badge": "🎭",
+      "badgeDescription": "Poeta Junior"
+    }
+  ],
+  "finalBadge": "🏆",
+  "prerequisites": ["literacy-level2"],
+  "nextLevel": null
+}

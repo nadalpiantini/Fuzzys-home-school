@@ -3,7 +3,7 @@
 
 -- Unicidad: evita duplicados por título+materia+grado
 CREATE UNIQUE INDEX IF NOT EXISTS uq_games_tsg
-  ON games (lower(title), lower(subject), grade_level);
+  ON games (lower(title), subject_id, grade_level);
 
 -- Logs si aún no existen
 CREATE TABLE IF NOT EXISTS brain_logs(
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS brain_config(
 );
 
 -- Índice para config
-CREATE INDEX IF NOT EXISTS idx_brain_config_name ON brain_config(name);
+CREATE INDEX IF NOT EXISTS idx_brain_config_name ON brain_config(config_key);
 
 -- Métricas por juego si quieres contadores rápidos
 CREATE TABLE IF NOT EXISTS game_metrics(
@@ -77,11 +77,11 @@ CREATE INDEX IF NOT EXISTS idx_brain_runs_job_id ON brain_runs(job_id);
 CREATE INDEX IF NOT EXISTS idx_brain_runs_created_at ON brain_runs(created_at);
 
 -- Insert default configuration
-INSERT INTO brain_config (name, value) VALUES
+INSERT INTO brain_config (config_key, config_value) VALUES
   ('default', '{"subjects":["matemáticas"],"gradeLevel":[3,4,5],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":5}'),
   ('rd_primary', '{"subjects":["matemáticas","ciencias"],"gradeLevel":[3,4,5],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":3}'),
   ('rd_secondary', '{"subjects":["matemáticas","lengua","ciencias"],"gradeLevel":[6,7,8],"language":"es","culturalContext":"dominican","difficulty":"adaptive","quantity":4}')
-ON CONFLICT (name) DO NOTHING;
+ON CONFLICT (config_key) DO NOTHING;
 
 -- Function to update brain_config updated_at
 CREATE OR REPLACE FUNCTION update_brain_config_updated_at()

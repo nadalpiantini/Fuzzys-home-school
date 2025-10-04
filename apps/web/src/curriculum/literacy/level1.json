@@ -1,0 +1,157 @@
+{
+  "id": "literacy-level1",
+  "title": "Sonidos Mágicos · Nivel 1",
+  "description": "Aprende los sonidos de las letras con Fuzzy en aventuras interactivas",
+  "ageRange": "5-7",
+  "estimatedDuration": "45 minutos",
+  "chapters": [
+    {
+      "id": "enye-01",
+      "title": "La letra ñ: ña-ñe-ñi-ño-ñu",
+      "goals": [
+        "Reconocer sonido /ɲ/",
+        "Formar sílabas con ñ",
+        "Leer palabras con ñ"
+      ],
+      "sequence": ["FO-5", "MV-6", "LD-7"],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "TrueFalse",
+          "title": "¿Escuchas la ñ?",
+          "data": {
+            "instructions": "Escucha atentamente y decide si la palabra tiene el sonido /ñ/",
+            "items": [
+              { "q": "¿Suena /ñ/ en «niña»?", "answer": true },
+              { "q": "¿Suena /ñ/ en «nido»?", "answer": false },
+              { "q": "¿Suena /ñ/ en «año»?", "answer": true },
+              { "q": "¿Suena /ñ/ en «nube»?", "answer": false },
+              { "q": "¿Suena /ñ/ en «piña»?", "answer": true }
+            ]
+          }
+        },
+        {
+          "type": "internal",
+          "component": "DragDrop",
+          "title": "Une sílabas con imágenes",
+          "data": {
+            "prompt": "Arrastra cada sílaba con ñ hacia su imagen correspondiente",
+            "items": [
+              { "text": "ña", "target": "piñata", "image": "🪅" },
+              { "text": "ñe", "target": "teñir", "image": "🎨" },
+              { "text": "ñi", "target": "niña", "image": "👧" },
+              { "text": "ño", "target": "año", "image": "📅" },
+              { "text": "ñu", "target": "ñu", "image": "🦬" }
+            ]
+          }
+        },
+        {
+          "type": "quiz",
+          "component": "QuizGenerator",
+          "title": "Quiz adaptativo de la ñ",
+          "data": {
+            "subject": "literacy",
+            "grade": 1,
+            "topic": "letter-ñ",
+            "levels": ["remember", "apply"],
+            "questionCount": 5
+          }
+        }
+      ],
+      "badge": "Detective de la Ñ",
+      "badgeDescription": "Has dominado el sonido mágico de la ñ"
+    },
+    {
+      "id": "fluidez-01",
+      "title": "Fluidez: lectura coral y repetida",
+      "goals": [
+        "Aumentar precisión",
+        "Mejorar ritmo de lectura",
+        "Desarrollar confianza"
+      ],
+      "activities": [
+        {
+          "type": "internal",
+          "component": "ShortAnswer",
+          "title": "Práctica de lectura",
+          "data": {
+            "prompt": "Lee la oración en voz alta 3 veces, luego escríbela:",
+            "text": "La niña teje en la caña",
+            "expectedLength": 25
+          }
+        },
+        {
+          "type": "branching",
+          "component": "BranchingScenario",
+          "title": "El mapa de la cañada",
+          "data": {
+            "title": "El mapa de la cañada",
+            "description": "Fuzzy encuentra un mapa misterioso lleno de palabras con ñ. ¡Ayúdalo a explorar!",
+            "startNode": "start",
+            "nodes": [
+              {
+                "id": "start",
+                "content": "Fuzzy encuentra un mapa antiguo con la letra ñ brillando. Hay dos caminos marcados. ¿Qué camino tomar?",
+                "options": [
+                  {
+                    "text": "Ir hacia la montaña del cañón",
+                    "next": "montana",
+                    "points": 10
+                  },
+                  {
+                    "text": "Explorar el cañaveral misterioso",
+                    "next": "canaveral",
+                    "points": 10
+                  }
+                ]
+              },
+              {
+                "id": "montana",
+                "content": "En la montaña, Fuzzy ve un letrero que dice: «Cañón de los ecos». Se escucha: ñaaa... ñeee... ñiii... ¿Continuar explorando?",
+                "options": [
+                  {
+                    "text": "Sí, seguir el eco",
+                    "next": "tesoro",
+                    "points": 20
+                  },
+                  {
+                    "text": "Regresar al inicio",
+                    "next": "start",
+                    "points": 5
+                  }
+                ]
+              },
+              {
+                "id": "canaveral",
+                "content": "Entre las cañas, Fuzzy escucha: «ñee ñee». Es un pequeño ñu perdido. ¿Qué hacer?",
+                "options": [
+                  {
+                    "text": "Ayudar al ñu a encontrar su manada",
+                    "next": "tesoro",
+                    "points": 20
+                  },
+                  {
+                    "text": "Seguir explorando solo",
+                    "next": "start",
+                    "points": 5
+                  }
+                ]
+              },
+              {
+                "id": "tesoro",
+                "content": "¡Fantástico! Fuzzy descubre un tesoro lleno de palabras mágicas con ñ: niña, año, sueño, pequeño, español. ¡Has completado la aventura!",
+                "isEnd": true,
+                "points": 30
+              }
+            ]
+          }
+        }
+      ],
+      "badge": "Lectura con Ritmo",
+      "badgeDescription": "Tu fluidez lectora está mejorando cada día"
+    }
+  ],
+  "finalBadge": "Maestro de Sonidos Nivel 1",
+  "prerequisites": [],
+  "nextLevel": "literacy-level2"
+}

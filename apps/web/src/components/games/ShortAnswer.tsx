@@ -21,7 +21,7 @@ interface ShortAnswerProps {
   placeholder?: string;
 }
 
-export const ShortAnswer: React.FC<ShortAnswerProps> = ({
+const ShortAnswer: React.FC<ShortAnswerProps> = ({
   question,
   onAnswer,
   onNext,
@@ -107,3 +107,5 @@ export const ShortAnswer: React.FC<ShortAnswerProps> = ({
     </Card>
   );
 };
+
+export default ShortAnswer;

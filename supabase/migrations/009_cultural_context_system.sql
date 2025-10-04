@@ -181,16 +181,25 @@ CREATE INDEX IF NOT EXISTS idx_cultural_elements_context ON public.cultural_elem
 CREATE INDEX IF NOT EXISTS idx_cultural_elements_category ON public.cultural_elements(category);
 CREATE INDEX IF NOT EXISTS idx_user_cultural_preferences_user ON public.user_cultural_preferences(user_id);
 
+-- Función para actualizar updated_at
+CREATE OR REPLACE FUNCTION update_cultural_contexts_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
 -- Triggers para updated_at
 DROP TRIGGER IF EXISTS trg_cultural_contexts_u ON public.cultural_contexts;
 CREATE TRIGGER trg_cultural_contexts_u 
   BEFORE UPDATE ON public.cultural_contexts
-  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION update_cultural_contexts_updated_at();
 
 DROP TRIGGER IF EXISTS trg_user_cultural_preferences_u ON public.user_cultural_preferences;
 CREATE TRIGGER trg_user_cultural_preferences_u 
   BEFORE UPDATE ON public.user_cultural_preferences
-  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+  FOR EACH ROW EXECUTE FUNCTION update_cultural_contexts_updated_at();
 
 -- RLS Policies
 ALTER TABLE public.cultural_contexts ENABLE ROW LEVEL SECURITY;

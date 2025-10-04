@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { BookOpen, Gamepad2, Map, Users, Brain, Globe } from 'lucide-react';
+import { BookOpen, Gamepad2, Map, Users, Brain, Globe, Heart } from 'lucide-react';
 import { LanguageToggle } from '@/components/layout/LanguageToggle';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useHookedSystem } from '@/hooks/useHookedSystem';
@@ -98,7 +98,7 @@ export default function HomePage() {
         </div>
 
         {/* Role Selection */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
           <Card
             className="card-minimal group touch-target"
             id="daily-quest-card"
@@ -132,6 +132,28 @@ export default function HomePage() {
                 </h3>
                 <p className="text-sm sm:text-base text-barney-green-700 body-font text-center">
                   {t('home.teacherDescription')}
+                </p>
+                <Button className="btn-cream w-full touch-target">
+                  {t('common.continue')}
+                </Button>
+              </div>
+            </Link>
+          </Card>
+
+          <Card className="card-minimal group touch-target">
+            <Link href="/parent/dashboard" className="block">
+              <div className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-barney-purple-500/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-barney-purple-500/30 transition-colors">
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-barney-purple-700" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-barney-green-800 title-font text-center">
+                  {language === 'es' ? 'Padres' : 'Parents'}
+                </h3>
+                <p className="text-sm sm:text-base text-barney-green-700 body-font text-center">
+                  {language === 'es'
+                    ? 'Monitorea el progreso de tus hijos y recibe reportes semanales'
+                    : 'Monitor your children\'s progress and receive weekly reports'
+                  }
                 </p>
                 <Button className="btn-cream w-full touch-target">
                   {t('common.continue')}

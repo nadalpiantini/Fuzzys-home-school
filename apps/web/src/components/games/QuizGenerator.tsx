@@ -45,7 +45,7 @@ interface QuizGeneratorProps {
   onClose?: () => void;
 }
 
-export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
+const QuizGenerator: React.FC<QuizGeneratorProps> = ({
   onQuizGenerated,
   onClose,
 }) => {
@@ -589,3 +589,5 @@ export const QuizGenerator: React.FC<QuizGeneratorProps> = ({
     </div>
   );
 };
+
+export default QuizGenerator;
