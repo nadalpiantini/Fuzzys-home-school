@@ -386,65 +386,166 @@ export default function LearnPage() {
         </div>
       </div>
 
-      {/* AI Recommendations */}
+      {/* Enhanced AI Recommendations */}
       {aiRecommendations.length > 0 && (
-        <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
-          <div className="flex items-center gap-2 mb-3">
-            <Brain className="w-5 h-5 text-indigo-600" />
-            <h2 className="font-semibold text-indigo-800">
-              🧠 Recomendaciones de Fuzzy
-            </h2>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Recomendaciones Personalizadas de Fuzzy
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Basadas en tu progreso y estilo de aprendizaje
+                </p>
+              </div>
+            </div>
+            {!loadingRecommendations && (
+              <Badge variant="outline" className="text-purple-600 border-purple-300">
+                {aiRecommendations.length} sugerencias
+              </Badge>
+            )}
           </div>
-          <div className="space-y-2">
-            {aiRecommendations.map((rec, i) => (
-              <div
-                key={i}
-                className="p-3 bg-white rounded-lg border border-indigo-100"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-700 mb-1">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {aiRecommendations.map((rec, i) => {
+              const curriculum = curriculumCards.find(c => c.id === rec.curriculumId);
+              const confidencePercent = Math.round((rec.confidence || 0) * 100);
+              
+              return (
+                <Card
+                  key={i}
+                  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2"
+                  style={{
+                    borderColor: rec.suggestedDifficulty === 'hard' 
+                      ? 'rgb(239 68 68)' 
+                      : rec.suggestedDifficulty === 'easy'
+                      ? 'rgb(34 197 94)'
+                      : 'rgb(59 130 246)'
+                  }}
+                >
+                  <CardContent className="p-5 space-y-3">
+                    {/* Header */}
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        {curriculum?.icon && (
+                          <div className={`p-2 rounded-lg ${curriculum.color}`}>
+                            {curriculum.icon}
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900 text-sm">
+                            {curriculum?.title || rec.curriculumId}
+                          </h3>
+                        </div>
+                      </div>
+                      <Badge
+                        variant={
+                          rec.suggestedDifficulty === 'easy'
+                            ? 'default'
+                            : rec.suggestedDifficulty === 'hard'
+                              ? 'destructive'
+                              : 'secondary'
+                        }
+                        className="text-xs"
+                      >
+                        {rec.suggestedDifficulty === 'easy'
+                          ? 'Fácil'
+                          : rec.suggestedDifficulty === 'hard'
+                            ? 'Difícil'
+                            : 'Medio'}
+                      </Badge>
+                    </div>
+
+                    {/* Motivation */}
+                    <p className="text-sm text-gray-700 leading-relaxed">
                       {rec.motivation}
                     </p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <span>📚 {rec.curriculumId}</span>
-                      <span>
-                        🎯 Dificultad:{' '}
-                        <strong>{rec.suggestedDifficulty}</strong>
-                      </span>
-                      <span>
-                        ➡️ Próximo: <strong>{rec.nextChapter}</strong>
-                      </span>
-                      {rec.confidence && (
-                        <span>
-                          🎯 Confianza: {Math.round(rec.confidence * 100)}%
+
+                    {/* Reasoning */}
+                    {rec.reasoning && (
+                      <p className="text-xs text-gray-500 italic">
+                        💡 {rec.reasoning}
+                      </p>
+                    )}
+
+                    {/* Confidence Bar */}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-600 font-medium">Confianza IA</span>
+                        <span className={`font-bold ${
+                          confidencePercent >= 75 ? 'text-green-600' :
+                          confidencePercent >= 50 ? 'text-blue-600' :
+                          'text-orange-600'
+                        }`}>
+                          {confidencePercent}%
                         </span>
-                      )}
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-500 ${
+                            confidencePercent >= 75 ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+                            confidencePercent >= 50 ? 'bg-gradient-to-r from-blue-500 to-indigo-600' :
+                            'bg-gradient-to-r from-orange-500 to-amber-600'
+                          }`}
+                          style={{ width: `${confidencePercent}%` }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="ml-2">
-                    <Badge
-                      variant={
-                        rec.suggestedDifficulty === 'easy'
-                          ? 'default'
-                          : rec.suggestedDifficulty === 'hard'
-                            ? 'destructive'
-                            : 'secondary'
-                      }
-                      className="text-xs"
+
+                    {/* Metrics */}
+                    {rec.metrics && (
+                      <div className="flex items-center gap-3 text-xs text-gray-600 pt-2 border-t">
+                        {rec.metrics.avgScore > 0 && (
+                          <span className="flex items-center gap-1">
+                            📊 {rec.metrics.avgScore}% promedio
+                          </span>
+                        )}
+                        {rec.metrics.chaptersDone > 0 && (
+                          <span className="flex items-center gap-1">
+                            ✅ {rec.metrics.chaptersDone} caps
+                          </span>
+                        )}
+                        {rec.metrics.streakDays > 0 && (
+                          <span className="flex items-center gap-1">
+                            🔥 {rec.metrics.streakDays}d
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Action Button */}
+                    <Button
+                      onClick={() => window.location.href = curriculum?.href || '#'}
+                      className="w-full mt-2 group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-indigo-600 transition-all"
+                      size="sm"
                     >
-                      {rec.suggestedDifficulty === 'easy'
-                        ? 'Fácil'
-                        : rec.suggestedDifficulty === 'hard'
-                          ? 'Difícil'
-                          : 'Medio'}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            ))}
+                      Comenzar Ahora
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
+      )}
+
+      {/* Loading state for recommendations */}
+      {loadingRecommendations && (
+        <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+          <CardContent className="p-8 text-center">
+            <div className="flex items-center justify-center gap-3">
+              <Brain className="w-6 h-6 text-indigo-600 animate-pulse" />
+              <p className="text-indigo-800 font-medium">
+                Fuzzy está analizando tu progreso...
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Stats Cards */}

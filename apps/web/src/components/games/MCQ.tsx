@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Check, X } from 'lucide-react';
+import Image from 'next/image';
 import type { MCQGame } from '@/types/game-types';
 
 interface MCQProps {
@@ -90,7 +91,31 @@ const MCQ: React.FC<MCQProps> = ({
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-4">
-        <div className="text-lg font-medium text-gray-900">{game.stem}</div>
+        <div className="text-lg font-medium text-gray-900 text-center">{game.stem}</div>
+        
+        {/* Visual field for emojis or images */}
+        {game.visual && (
+          <div className="text-center py-6">
+            {game.visual.startsWith('/') ? (
+              // It's an image path
+              <div className="relative w-full max-w-md mx-auto">
+                <Image
+                  src={game.visual}
+                  alt="Visual content"
+                  width={400}
+                  height={300}
+                  className="object-contain rounded-lg"
+                  priority
+                />
+              </div>
+            ) : (
+              // It's emoji or text
+              <div className="text-9xl sm:text-[12rem] lg:text-[16rem] font-bold leading-none">
+                {game.visual}
+              </div>
+            )}
+          </div>
+        )}
 
         {isMultiple && !showFeedback && (
           <p className="text-sm text-gray-500">

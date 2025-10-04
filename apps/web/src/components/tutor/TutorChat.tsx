@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 import {
   Send,
   Mic,
@@ -352,8 +353,14 @@ export const TutorChat: React.FC<TutorChatProps> = ({
       {/* Header */}
       <div className="chat-header bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-            <Bot className="w-6 h-6" />
+          <div className="w-10 h-10 relative">
+            <Image
+              src="/fuzzy_teacher.png"
+              alt="Fuzzy Teacher"
+              fill
+              className="object-contain rounded-full"
+              sizes="40px"
+            />
           </div>
           <div>
             <h3 className="font-semibold text-lg">
@@ -378,8 +385,14 @@ export const TutorChat: React.FC<TutorChatProps> = ({
             }`}
           >
             {message.role === 'assistant' && (
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center">
-                {getMessageIcon(message.type)}
+              <div className="flex-shrink-0 w-8 h-8 relative">
+                <Image
+                  src="/fuzzy_teacher.png"
+                  alt="Fuzzy Teacher"
+                  fill
+                  className="object-contain rounded-full"
+                  sizes="32px"
+                />
               </div>
             )}
 

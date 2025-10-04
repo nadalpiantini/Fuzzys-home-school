@@ -5,8 +5,9 @@ export interface DragDropGame {
   id: string;
   title: string;
   description?: string;
-  items: Array<{ id: string; content: string; targetZone?: string }>;
+  items: Array<{ id: string; content: string; targetZone?: string; text?: string; target?: string; image?: string }>;
   zones: Array<{ id: string; label: string; accepts?: string[] }>;
+  syllableBank?: Array<{ text: string; available: boolean }>;
   correctAnswers?: Record<string, string[]>;
 }
 
@@ -26,6 +27,7 @@ export interface MCQGame {
   description?: string;
   question: string;
   stem?: string;
+  visual?: string;
   options: Array<{ id: string; text: string; correct?: boolean }>;
   choices?: Array<{ id: string; text: string; correct?: boolean }>;
   correctAnswer?: string;

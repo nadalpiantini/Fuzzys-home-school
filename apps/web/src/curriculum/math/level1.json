@@ -32,11 +32,11 @@
           "data": {
             "questions": [
               {
-                "question": "¿Cuántos 🐢 ves?",
-                "visual": "🐢🐢🐢",
+                "question": "¿Cuántas tortugas ves?",
+                "visual": "/turtle_4.png",
                 "options": ["2", "3", "4"],
                 "correct": 1,
-                "explanation": "Cuenta uno por uno: 🐢(1) 🐢(2) 🐢(3)"
+                "explanation": "Cuenta una por una: tortuga(1) tortuga(2) tortuga(3)"
               },
               {
                 "question": "¿Cuántas 🌟 hay?",

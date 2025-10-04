@@ -277,7 +277,7 @@ export default function MCQGame({ gameData, onComplete }: MCQGameProps) {
       {/* Question */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">{currentQuestion.question}</CardTitle>
+          <CardTitle className="text-4xl font-bold text-center">{currentQuestion.question}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -291,7 +291,7 @@ export default function MCQGame({ gameData, onComplete }: MCQGameProps) {
                   key={shuffledIndex}
                   onClick={() => handleAnswerSelect(shuffledIndex)}
                   disabled={showExplanation}
-                  className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                  className={`w-full p-8 text-center rounded-lg border-2 transition-all min-h-[120px] flex items-center justify-center ${
                     isSelected
                       ? showExplanation
                         ? isCorrectAnswer

@@ -37,7 +37,13 @@ export const Hotspot: React.FC<HotspotProps> = ({
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    setClicks([...clicks, { x, y }]);
+    const newClicks = [...clicks, { x, y }];
+    setClicks(newClicks);
+    
+    // Auto-verify after click
+    setTimeout(() => {
+      onAnswer(newClicks);
+    }, 100);
   };
 
   const handleReset = () => {
@@ -160,20 +166,10 @@ export const Hotspot: React.FC<HotspotProps> = ({
         )}
 
         <div className="flex justify-between">
-          {!showFeedback ? (
-            <Button
-              onClick={handleSubmit}
-              disabled={clicks.length === 0}
-              className="ml-auto"
-            >
-              Verificar Respuesta
+          {showFeedback && onNext && (
+            <Button onClick={onNext} className="ml-auto">
+              Siguiente
             </Button>
-          ) : (
-            onNext && (
-              <Button onClick={onNext} className="ml-auto">
-                Siguiente
-              </Button>
-            )
           )}
         </div>
       </div>

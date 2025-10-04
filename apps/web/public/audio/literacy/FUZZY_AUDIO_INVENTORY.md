@@ -2,7 +2,7 @@
 
 ## ✅ **ARCHIVOS DISPONIBLES (21 archivos)**
 
-### **🔤 Palabras con sonido "ñ" (9 archivos):**
+### **🔤 Palabras con sonido 'Ñ' (9 archivos):**
 - ✅ `fuzzy_nina.mp3` - "niña" (girl)
 - ✅ `fuzzy_ano.mp3` - "año" (year)  
 - ✅ `fuzzy_pina.mp3` - "piña" (pineapple)
@@ -12,13 +12,13 @@
 - ✅ `fuzzy_pequeno.mp3` - "pequeño" (small)
 - ✅ `fuzzy_espanol.mp3` - "español" (Spanish)
 
-### **🔍 Palabras SIN sonido "ñ" (4 archivos):**
+### **🔍 Palabras SIN sonido 'Ñ' (4 archivos):**
 - ✅ `fuzzy_nido.mp3` - "nido" (nest)
 - ✅ `fuzzy_nube.mp3` - "nube" (cloud)
 - ✅ `fuzzy_naranja.mp3` - "naranja" (orange)
 - ✅ `fuzzy_noche.mp3` - "noche" (night)
 
-### **🔤 Sílabas con "ñ" (5 archivos):**
+### **🔤 Sílabas con 'Ñ' (5 archivos):**
 - ✅ `fuzzy_nya.mp3` - "ña"
 - ✅ `fuzzy_nye.mp3` - "ñe"
 - ✅ `fuzzy_nyi.mp3` - "ñi"

@@ -1,150 +1,108 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-
-// Import curriculum data
-import literacy1 from '@/curriculum/literacy/level1.json';
-import literacy2 from '@/curriculum/literacy/level2.json';
-import literacy3 from '@/curriculum/literacy/level3.json';
-import math1 from '@/curriculum/math/level1.json';
-import math2 from '@/curriculum/math/level2.json';
-import math3 from '@/curriculum/math/level3.json';
-import science1 from '@/curriculum/science/level1.json';
-import history1 from '@/curriculum/history/level1.json';
-import art1 from '@/curriculum/art/level1.json';
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Users,
+  TrendingUp,
+  Trophy,
+  Calendar,
+  BookOpen,
+  Flame,
+  Star,
+  Clock,
+  Target,
+  AlertCircle,
+  Mail,
+  Download,
+  Plus,
+  Link as LinkIcon,
+} from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 type StudentSummary = {
   studentId: string;
   studentName: string;
   totalPoints: number;
   streakDays: number;
-  chapters: {
-    curriculumId: string;
-    chapterId: string;
-    completed: boolean;
-    score?: number;
-    updatedAt: string;
-  }[];
+  chapters: ChapterProgress[];
+};
+
+type ChapterProgress = {
+  curriculumId: string;
+  chapterId: string;
+  completed: boolean;
+  score?: number;
+  updatedAt: string;
 };
 
 type WeeklyReportData = {
   students: StudentSummary[];
-  recommendations: Record<
-    string,
-    Array<{ curriculumId: string; nextChapter: string }>
-  >;
-};
-
-// Curriculum mapping
-const CURRICULA: Record<string, any> = {
-  'literacy-level1': literacy1,
-  'literacy-level2': literacy2,
-  'literacy-level3': literacy3,
-  'math-level1': math1,
-  'math-level2': math2,
-  'math-level3': math3,
-  'science-level1': science1,
-  'history-level1': history1,
-  'art-level1': art1,
-};
-
-const getCurriculumTitle = (curriculumId: string): string => {
-  const curriculum = CURRICULA[curriculumId];
-  return curriculum?.title || curriculumId;
+  recommendations: Record<string, any[]>;
 };
 
 export default function ParentDashboard() {
-  // In a real app, get parent ID from auth context
-  const parentId =
-    typeof window !== 'undefined'
-      ? (window as any).__user?.id || 'demo-parent-id'
-      : 'demo-parent-id';
-
-  const [data, setData] = useState<WeeklyReportData | null>(null);
+  const { user } = useAuth();
+  const [reportData, setReportData] = useState<WeeklyReportData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `/api/parents/weekly-report?parentId=${parentId}`,
-        );
-        const result = await response.json();
+    if (user?.id) {
+      fetchWeeklyReport();
+    }
+  }, [user]);
 
-        if (result.ok) {
-          setData(result.data);
-        } else {
-          setError(result.error || 'Error al obtener datos');
+  const fetchWeeklyReport = async () => {
+    if (!user?.id) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/parents/weekly-report?parentId=${user.id}`);
+      const result = await response.json();
+
+      if (result.ok && result.data) {
+        setReportData(result.data);
+        if (result.data.students.length > 0 && !selectedStudent) {
+          setSelectedStudent(result.data.students[0].studentId);
         }
-      } catch (err) {
-        console.error('Error fetching parent dashboard data:', err);
-        setError('Error de conexión');
-      } finally {
-        setLoading(false);
       }
-    };
-
-    fetchData();
-  }, [parentId]);
-
-  const computeProgress = (
-    studentId: string,
-    curriculumId: string,
-    chapters: StudentSummary['chapters'],
-  ) => {
-    const curriculum = CURRICULA[curriculumId];
-    const totalChapters = curriculum?.chapters?.length || 1;
-    const completedChapters = chapters.filter(
-      (ch) => ch.curriculumId === curriculumId && ch.completed,
-    ).length;
-
-    return {
-      completed: completedChapters,
-      total: totalChapters,
-      percentage: Math.round((completedChapters / totalChapters) * 100),
-    };
+    } catch (error) {
+      console.error('Error fetching weekly report:', error);
+      toast.error('Error al cargar el reporte semanal');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getNextChapter = (
-    curriculumId: string,
-    chapters: StudentSummary['chapters'],
-  ) => {
-    const curriculum = CURRICULA[curriculumId];
-    if (!curriculum?.chapters) return null;
+  const handleLinkStudent = async () => {
+    toast.info('Funcionalidad de vinculación en desarrollo');
+    // TODO: Implementar modal para vincular estudiante
+  };
 
-    const completedSet = new Set(
-      chapters
-        .filter((ch) => ch.curriculumId === curriculumId && ch.completed)
-        .map((ch) => ch.chapterId),
-    );
+  const handleSendEmail = async () => {
+    toast.info('Enviando reporte por email...');
+    // TODO: Implementar envío de email
+  };
 
-    const nextChapter = curriculum.chapters.find(
-      (ch: any) => !completedSet.has(ch.id),
-    );
-    return nextChapter ? nextChapter.id : null;
+  const handleDownloadPDF = async () => {
+    toast.info('Generando PDF...');
+    // TODO: Implementar generación de PDF
   };
 
   if (loading) {
     return (
-      <div className="container p-6 mx-auto">
-        <div className="animate-pulse">
-          <div className="mb-6 w-1/3 h-8 bg-gray-200 rounded"></div>
-          <div className="space-y-6">
-            {[1, 2].map((i) => (
-              <div key={i} className="p-5 rounded-2xl border">
-                <div className="mb-4 w-1/4 h-6 bg-gray-200 rounded"></div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {[1, 2].map((j) => (
-                    <div key={j} className="p-4 rounded-xl border">
-                      <div className="mb-2 w-1/2 h-4 bg-gray-200 rounded"></div>
-                      <div className="mb-3 h-2 bg-gray-200 rounded"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 w-64 bg-gray-200 rounded"></div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
             ))}
           </div>
         </div>
@@ -152,194 +110,243 @@ export default function ParentDashboard() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="container p-6 mx-auto">
-        <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-          <h2 className="text-lg font-semibold text-red-800">Error</h2>
-          <p className="text-red-600">{error}</p>
-        </div>
-      </div>
-    );
-  }
+  const students = reportData?.students || [];
+  const currentStudent = students.find((s) => s.studentId === selectedStudent);
 
   return (
-    <div className="container p-6 mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">📊 Reporte Semanal</h1>
-        <p className="mt-1 text-gray-600">
-          Progreso y actividad de tus estudiantes
-        </p>
+    <div className="container mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Panel de Padres</h1>
+          <p className="text-gray-600 mt-1">Seguimiento del progreso de tus hijos</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleLinkStudent}>
+            <Plus className="w-4 h-4 mr-2" />
+            Vincular Estudiante
+          </Button>
+          <Button variant="outline" onClick={handleSendEmail}>
+            <Mail className="w-4 h-4 mr-2" />
+            Enviar Reporte
+          </Button>
+          <Button variant="outline" onClick={handleDownloadPDF}>
+            <Download className="w-4 h-4 mr-2" />
+            Descargar PDF
+          </Button>
+        </div>
       </div>
 
-      {!data?.students?.length ? (
-        <div className="p-6 text-center bg-blue-50 rounded-lg border border-blue-200">
-          <div className="mb-4 text-4xl">👨‍👩‍👧‍👦</div>
-          <h3 className="mb-2 text-lg font-semibold text-blue-800">
-            No hay estudiantes vinculados
-          </h3>
-          <p className="mb-4 text-blue-600">
-            Aún no se han configurado vínculos entre padres y estudiantes.
-          </p>
-          <p className="text-sm text-blue-500">
-            Contacta al administrador para configurar los vínculos familiares.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {data.students.map((student) => (
-            <div
-              key={student.studentId}
-              className="p-6 bg-white rounded-2xl border shadow-sm"
-            >
-              {/* Student Header */}
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex gap-3 items-center">
-                  <div className="flex justify-center items-center w-12 h-12 text-lg font-bold text-white bg-gradient-to-br from-blue-400 to-purple-500 rounded-full">
-                    {student.studentName.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {student.studentName}
-                    </h2>
-                    <div className="flex gap-4 items-center text-sm text-gray-600">
-                      <span className="flex gap-1 items-center">
-                        🏆 {student.totalPoints} puntos
-                      </span>
-                      <span className="flex gap-1 items-center">
-                        🔥 {student.streakDays} días seguidos
-                      </span>
+      {/* Empty State */}
+      {students.length === 0 && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Users className="w-16 h-16 text-gray-400 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">No hay estudiantes vinculados</h3>
+            <p className="text-gray-600 mb-4 text-center">
+              Vincula a tus hijos para ver su progreso académico
+            </p>
+            <Button onClick={handleLinkStudent}>
+              <LinkIcon className="w-4 h-4 mr-2" />
+              Vincular Estudiante
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Student Tabs */}
+      {students.length > 0 && (
+        <Tabs value={selectedStudent || ''} onValueChange={setSelectedStudent}>
+          <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${students.length}, 1fr)` }}>
+            {students.map((student) => (
+              <TabsTrigger key={student.studentId} value={student.studentId}>
+                {student.studentName}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          {students.map((student) => (
+            <TabsContent key={student.studentId} value={student.studentId} className="space-y-6">
+              {/* Stats Cards */}
+              <div className="grid gap-4 md:grid-cols-4">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Puntos Totales</CardTitle>
+                    <Trophy className="h-4 w-4 text-yellow-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{student.totalPoints}</div>
+                    <p className="text-xs text-muted-foreground">Esta semana</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Racha Actual</CardTitle>
+                    <Flame className="h-4 w-4 text-orange-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{student.streakDays} días</div>
+                    <p className="text-xs text-muted-foreground">Consecutivos</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Capítulos</CardTitle>
+                    <BookOpen className="h-4 w-4 text-blue-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {student.chapters.filter((c) => c.completed).length}
                     </div>
-                  </div>
-                </div>
+                    <p className="text-xs text-muted-foreground">Completados esta semana</p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Promedio</CardTitle>
+                    <Star className="h-4 w-4 text-purple-600" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {student.chapters.length > 0
+                        ? Math.round(
+                            student.chapters.reduce((sum, c) => sum + (c.score || 0), 0) /
+                              student.chapters.length
+                          )
+                        : 0}
+                      %
+                    </div>
+                    <p className="text-xs text-muted-foreground">De puntuación</p>
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* Progress by Curriculum */}
-              <div className="grid gap-4 mb-6 md:grid-cols-2 lg:grid-cols-3">
-                {Object.keys(CURRICULA).map((curriculumId) => {
-                  const progress = computeProgress(
-                    student.studentId,
-                    curriculumId,
-                    student.chapters,
-                  );
+              {/* Progress Details */}
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Recent Activity */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Clock className="w-5 h-5" />
+                      Actividad Reciente
+                    </CardTitle>
+                    <CardDescription>Últimos 7 días</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {student.chapters.length === 0 ? (
+                      <p className="text-sm text-gray-500 text-center py-4">
+                        No hay actividad esta semana
+                      </p>
+                    ) : (
+                      student.chapters
+                        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                        .slice(0, 5)
+                        .map((chapter, idx) => (
+                          <div key={idx} className="flex items-center justify-between border-b pb-2">
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">
+                                {chapter.curriculumId.includes('math') ? '🔢 Matemáticas' :
+                                 chapter.curriculumId.includes('literacy') ? '📖 Lectoescritura' :
+                                 '🔬 Ciencias'}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {new Date(chapter.updatedAt).toLocaleDateString('es-DO', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                })}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {chapter.completed && (
+                                <Badge variant="default" className="bg-green-500">
+                                  Completado
+                                </Badge>
+                              )}
+                              {chapter.score && (
+                                <span className="text-sm font-semibold">{chapter.score}%</span>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                    )}
+                  </CardContent>
+                </Card>
 
-                  return (
-                    <div
-                      key={curriculumId}
-                      className="p-4 bg-gray-50 rounded-xl border"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-sm font-medium text-gray-900">
-                          {getCurriculumTitle(curriculumId)}
-                        </h3>
-                        <span className="text-sm font-semibold text-gray-700">
-                          {progress.percentage}%
-                        </span>
-                      </div>
+                {/* Subject Progress */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Target className="w-5 h-5" />
+                      Progreso por Materia
+                    </CardTitle>
+                    <CardDescription>Desempeño general</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {['math', 'literacy', 'science'].map((subject) => {
+                      const subjectChapters = student.chapters.filter((c) =>
+                        c.curriculumId.includes(subject)
+                      );
+                      const avgScore = subjectChapters.length > 0
+                        ? Math.round(
+                            subjectChapters.reduce((sum, c) => sum + (c.score || 0), 0) /
+                              subjectChapters.length
+                          )
+                        : 0;
+                      const completedCount = subjectChapters.filter((c) => c.completed).length;
 
-                      <div className="mb-3 w-full h-2 bg-gray-200 rounded-full">
-                        <div
-                          className="h-2 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-300"
-                          style={{ width: `${progress.percentage}%` }}
-                        />
-                      </div>
-
-                      <div className="flex justify-between mb-2 text-xs text-gray-600">
-                        <span>
-                          {progress.completed} / {progress.total} capítulos
-                        </span>
-                      </div>
-
-                      <Link
-                        href={`/learn/${curriculumId.replace('-', '/')}`}
-                        className="text-xs text-emerald-700 underline hover:text-emerald-800"
-                      >
-                        Ver mundo →
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Recent Activity */}
-              <div className="mb-6">
-                <h3 className="flex gap-2 items-center mb-3 font-semibold text-gray-900">
-                  📅 Actividad reciente
-                </h3>
-                <div className="overflow-y-auto space-y-2 max-h-40">
-                  {student.chapters
-                    .sort(
-                      (a, b) =>
-                        new Date(b.updatedAt).getTime() -
-                        new Date(a.updatedAt).getTime(),
-                    )
-                    .slice(0, 8)
-                    .map((chapter, index) => (
-                      <div
-                        key={index}
-                        className="flex gap-3 items-center p-2 text-sm bg-gray-50 rounded-lg"
-                      >
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            chapter.completed ? 'bg-green-500' : 'bg-amber-500'
-                          }`}
-                        />
-                        <span className="flex-1">
-                          <span className="font-medium">
-                            {getCurriculumTitle(chapter.curriculumId)}
-                          </span>
-                          <span className="text-gray-600">
-                            {' '}
-                            - {chapter.chapterId}
-                          </span>
-                        </span>
-                        {typeof chapter.score === 'number' && (
-                          <span className="font-medium text-gray-600">
-                            {chapter.score}%
-                          </span>
-                        )}
-                        <span className="text-xs text-gray-400">
-                          {new Date(chapter.updatedAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    ))}
-                </div>
+                      return (
+                        <div key={subject} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium">
+                              {subject === 'math' ? '🔢 Matemáticas' :
+                               subject === 'literacy' ? '📖 Lectoescritura' :
+                               '🔬 Ciencias'}
+                            </span>
+                            <span className="text-sm text-gray-600">
+                              {completedCount} capítulos · {avgScore}%
+                            </span>
+                          </div>
+                          <Progress value={avgScore} className="h-2" />
+                        </div>
+                      );
+                    })}
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Recommendations */}
-              <div className="p-4 bg-blue-50 rounded-xl">
-                <h3 className="flex gap-2 items-center mb-3 font-semibold text-blue-900">
-                  💡 Recomendaciones
-                </h3>
-                <div className="space-y-2">
-                  {Object.keys(CURRICULA).map((curriculumId) => {
-                    const nextChapter = getNextChapter(
-                      curriculumId,
-                      student.chapters,
-                    );
-                    return (
-                      <div key={curriculumId} className="text-sm">
-                        <span className="font-medium text-blue-800">
-                          {getCurriculumTitle(curriculumId)}:
-                        </span>{' '}
-                        {nextChapter ? (
-                          <span className="text-blue-700">
-                            Siguiente capítulo sugerido:{' '}
-                            <strong>{nextChapter}</strong>
+              {reportData?.recommendations?.[student.studentId] && reportData.recommendations[student.studentId].length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5" />
+                      Recomendaciones
+                    </CardTitle>
+                    <CardDescription>Próximos pasos sugeridos</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {reportData.recommendations[student.studentId].map((rec, idx) => (
+                        <div key={idx} className="flex items-center gap-2 p-2 bg-blue-50 rounded">
+                          <AlertCircle className="w-4 h-4 text-blue-600" />
+                          <span className="text-sm">
+                            Continuar con {rec.curriculumId.includes('math') ? 'Matemáticas' :
+                                           rec.curriculumId.includes('literacy') ? 'Lectoescritura' :
+                                           'Ciencias'}
                           </span>
-                        ) : (
-                          <span className="font-medium text-green-700">
-                            ¡Mundo completado! 🎉
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
           ))}
-        </div>
+        </Tabs>
       )}
     </div>
   );

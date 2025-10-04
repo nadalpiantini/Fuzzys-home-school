@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AudioButtonWithText } from '@/components/ui/AudioButton';
 import { Check, X } from 'lucide-react';
+import Image from 'next/image';
 import type { TrueFalseGame } from '@/types/game-types';
 
 interface TrueFalseProps {
@@ -37,6 +38,10 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
   const handleSelect = (answer: boolean) => {
     if (showFeedback) return;
     setSelectedAnswer(answer);
+    // Auto-verify immediately
+    setTimeout(() => {
+      onAnswer(answer);
+    }, 100);
   };
 
   const handleSubmit = () => {
@@ -62,10 +67,32 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
     return 'opacity-50';
   };
 
+  // Check if this is a letter Ñ test
+  const isLetterNTest = currentQuestion?.q?.includes('Ñ') || 
+                       currentQuestion?.q?.includes('ñ') || 
+                       game.statement?.includes('Ñ') || 
+                       game.statement?.includes('ñ');
+
   return (
     <Card className="p-6 max-w-2xl mx-auto">
       <div className="space-y-6">
-        <div className="text-lg font-medium text-gray-900">
+        {/* Teacher N character for Ñ tests */}
+        {isLetterNTest && (
+          <div className="flex justify-center">
+            <div className="relative w-80 h-80 sm:w-96 sm:h-96">
+              <Image
+                src="/fuzzy_teacher_N.png"
+                alt="Fuzzy Teacher N"
+                fill
+                className="object-contain"
+                priority
+                sizes="(max-width: 640px) 320px, 384px"
+              />
+            </div>
+          </div>
+        )}
+        
+        <div className="text-3xl font-bold text-gray-900 text-center">
           {currentQuestion ? currentQuestion.q : game.statement}
         </div>
         
@@ -84,19 +111,19 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
           <button
             onClick={() => handleSelect(true)}
             disabled={showFeedback}
-            className={`p-6 rounded-lg border-2 transition-all flex flex-col items-center space-y-2 ${getButtonStyle(true)}`}
+            className={`p-12 rounded-lg border-2 transition-all flex flex-col items-center space-y-4 min-h-[120px] ${getButtonStyle(true)}`}
           >
-            <Check className="w-8 h-8" />
-            <span className="text-lg font-medium">Verdadero</span>
+            <Check className="w-16 h-16" />
+            <span className="text-4xl font-bold">Verdadero</span>
           </button>
 
           <button
             onClick={() => handleSelect(false)}
             disabled={showFeedback}
-            className={`p-6 rounded-lg border-2 transition-all flex flex-col items-center space-y-2 ${getButtonStyle(false)}`}
+            className={`p-12 rounded-lg border-2 transition-all flex flex-col items-center space-y-4 min-h-[120px] ${getButtonStyle(false)}`}
           >
-            <X className="w-8 h-8" />
-            <span className="text-lg font-medium">Falso</span>
+            <X className="w-16 h-16" />
+            <span className="text-4xl font-bold">Falso</span>
           </button>
         </div>
 
@@ -114,20 +141,10 @@ const TrueFalse: React.FC<TrueFalseProps> = ({
         )}
 
         <div className="flex justify-between">
-          {!showFeedback ? (
-            <Button
-              onClick={handleSubmit}
-              disabled={selectedAnswer === null}
-              className="ml-auto"
-            >
-              Verificar Respuesta
+          {showFeedback && onNext && (
+            <Button onClick={onNext} className="ml-auto">
+              Siguiente
             </Button>
-          ) : (
-            onNext && (
-              <Button onClick={onNext} className="ml-auto">
-                Siguiente
-              </Button>
-            )
           )}
         </div>
       </div>

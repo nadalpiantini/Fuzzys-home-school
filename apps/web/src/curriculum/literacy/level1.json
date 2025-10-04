@@ -20,13 +20,13 @@
           "component": "TrueFalse",
           "title": "¿Escuchas la ñ?",
           "data": {
-            "instructions": "Escucha atentamente y decide si la palabra tiene el sonido /ñ/",
+            "instructions": "Escucha atentamente y decide si la palabra tiene el sonido 'Ñ'",
             "items": [
-              { "q": "¿Suena /ñ/ en «niña»?", "answer": true },
-              { "q": "¿Suena /ñ/ en «nido»?", "answer": false },
-              { "q": "¿Suena /ñ/ en «año»?", "answer": true },
-              { "q": "¿Suena /ñ/ en «nube»?", "answer": false },
-              { "q": "¿Suena /ñ/ en «piña»?", "answer": true }
+              { "q": "¿Suena 'Ñ' en \"niña\"?", "answer": true },
+              { "q": "¿Suena 'Ñ' en \"nido\"?", "answer": false },
+              { "q": "¿Suena 'Ñ' en \"año\"?", "answer": true },
+              { "q": "¿Suena 'Ñ' en \"nube\"?", "answer": false },
+              { "q": "¿Suena 'Ñ' en \"piña\"?", "answer": true }
             ]
           }
         },
@@ -41,7 +41,15 @@
               { "text": "ñe", "target": "teñir", "image": "🎨" },
               { "text": "ñi", "target": "niña", "image": "👧" },
               { "text": "ño", "target": "año", "image": "📅" },
-              { "text": "ñu", "target": "ñu", "image": "🦬" }
+              { "text": "ñu", "target": "ñu", "image": "🦬" },
+              { "text": "ñe", "target": "señor", "image": "👨" }
+            ],
+            "syllableBank": [
+              { "text": "ña", "available": true },
+              { "text": "ñe", "available": true },
+              { "text": "ñi", "available": true },
+              { "text": "ño", "available": true },
+              { "text": "ñu", "available": true }
             ]
           }
         },

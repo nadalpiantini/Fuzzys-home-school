@@ -83,6 +83,20 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
     onAnswer(currentOrder);
   };
 
+  // Auto-verify when sequence is complete
+  useEffect(() => {
+    if (!showFeedback && items && items.length === safeItems.length) {
+      // Check if all items are in a different order than the shuffled state
+      const isComplete = items.every((item, index) => item?.id !== safeItems[index]?.id);
+      if (isComplete) {
+        // Small delay to ensure UI updates are complete
+        setTimeout(() => {
+          handleSubmit();
+        }, 500);
+      }
+    }
+  }, [items, showFeedback, safeItems]);
+
   const handleReset = () => {
     const shuffled = [...safeItems].sort(() => Math.random() - 0.5);
     setItems(shuffled);
@@ -129,7 +143,7 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
     <Card className="p-6 max-w-4xl mx-auto">
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium text-gray-900">
+          <h3 className="text-3xl font-bold text-gray-900">
             Ordena las imágenes en la secuencia correcta
           </h3>
           {!showFeedback && (
@@ -139,8 +153,8 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
               size="sm"
               className="flex items-center gap-2"
             >
-              <RefreshCw className="w-4 h-4" />
-              Mezclar
+              <RefreshCw className="w-6 h-6" />
+              <span className="text-lg font-bold">Mezclar</span>
             </Button>
           )}
         </div>
@@ -201,16 +215,10 @@ export const ImageSequence: React.FC<ImageSequenceProps> = ({
         )}
 
         <div className="flex justify-between mt-6">
-          {!showFeedback ? (
-            <Button onClick={handleSubmit} className="ml-auto">
-              Verificar Secuencia
+          {showFeedback && onNext && (
+            <Button onClick={onNext} className="ml-auto">
+              Siguiente
             </Button>
-          ) : (
-            onNext && (
-              <Button onClick={onNext} className="ml-auto">
-                Siguiente
-              </Button>
-            )
           )}
         </div>
       </div>

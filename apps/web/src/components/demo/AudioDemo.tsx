@@ -76,7 +76,7 @@ export const AudioDemo: React.FC = () => {
 
           {/* Botones de audio individuales */}
           <div>
-            <h3 className="font-semibold mb-4">Palabras con y sin "ñ"</h3>
+            <h3 className="font-semibold mb-4">Palabras con y sin 'Ñ'</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {DEMO_WORDS.map((word, index) => (
                 <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
@@ -108,21 +108,21 @@ export const AudioDemo: React.FC = () => {
             <h3 className="font-semibold mb-4">Botones con Texto</h3>
             <div className="flex flex-wrap gap-3">
               <AudioButtonWithText
-                text="¿Suena /ñ/ en «niña»?"
+                text="¿Suena 'Ñ' en niña?"
                 showText={true}
                 rate={0.6}
                 volume={0.9}
                 className="bg-blue-50 hover:bg-blue-100"
               />
               <AudioButtonWithText
-                text="¿Suena /ñ/ en «nido»?"
+                text="¿Suena 'Ñ' en nido?"
                 showText={true}
                 rate={0.6}
                 volume={0.9}
                 className="bg-green-50 hover:bg-green-100"
               />
               <AudioButtonWithText
-                text="¿Suena /ñ/ en «año»?"
+                text="¿Suena 'Ñ' en año?"
                 showText={true}
                 rate={0.6}
                 volume={0.9}

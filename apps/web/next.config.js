@@ -1,9 +1,5 @@
-import { withSentryConfig } from '@sentry/nextjs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { withSentryConfig } = require('@sentry/nextjs');
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -162,7 +158,7 @@ const nextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
+module.exports = withSentryConfig(nextConfig, {
   org: 'fuzzy-and-friends',
   project: 'fuzzys-home-school',
   silent: true,

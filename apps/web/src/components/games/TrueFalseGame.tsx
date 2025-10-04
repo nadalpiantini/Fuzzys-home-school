@@ -208,8 +208,8 @@ export default function TrueFalseGame({
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold">{gameData.title}</h1>
-            <p className="text-gray-600">{gameData.description}</p>
+            <h1 className="text-4xl font-bold text-center">{gameData.title}</h1>
+            <p className="text-xl text-gray-600 text-center">{gameData.description}</p>
           </div>
           <div className="text-right">
             <div className="flex items-center gap-2 mb-2">
@@ -240,7 +240,7 @@ export default function TrueFalseGame({
       {/* Question */}
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-lg">{currentQuestion.statement}</CardTitle>
+          <CardTitle className="text-4xl font-bold text-center">{currentQuestion.statement}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -248,7 +248,7 @@ export default function TrueFalseGame({
               <button
                 onClick={() => handleAnswerSelect(true)}
                 disabled={showExplanation}
-                className={`p-6 rounded-lg border-2 transition-all ${
+                className={`p-12 rounded-lg border-2 transition-all min-h-[120px] flex flex-col items-center justify-center ${
                   selectedAnswer === true
                     ? showExplanation
                       ? currentQuestion.correct === true
@@ -283,14 +283,14 @@ export default function TrueFalseGame({
                         <CheckCircle className="h-6 w-6 text-white" />
                       )}
                   </div>
-                  <span className="font-bold text-lg">VERDADERO</span>
+                  <span className="font-bold text-4xl">VERDADERO</span>
                 </div>
               </button>
 
               <button
                 onClick={() => handleAnswerSelect(false)}
                 disabled={showExplanation}
-                className={`p-6 rounded-lg border-2 transition-all ${
+                className={`p-12 rounded-lg border-2 transition-all min-h-[120px] flex flex-col items-center justify-center ${
                   selectedAnswer === false
                     ? showExplanation
                       ? currentQuestion.correct === false
@@ -325,7 +325,7 @@ export default function TrueFalseGame({
                         <XCircle className="h-6 w-6 text-white" />
                       )}
                   </div>
-                  <span className="font-bold text-lg">FALSO</span>
+                  <span className="font-bold text-4xl">FALSO</span>
                 </div>
               </button>
             </div>

@@ -1,12 +1,12 @@
 # Audio Files for Literacy Activities
 
-This directory contains audio files for literacy activities, specifically for the "ñ" sound exercises.
+This directory contains audio files for literacy activities, specifically for the 'Ñ' sound exercises.
 
 ## Required Audio Files
 
 For the literacy level 1 activities, the following audio files should be placed in this directory:
 
-### Words with "ñ" sound:
+### Words with 'Ñ' sound:
 - `nina.mp3` - "niña" (girl)
 - `ano.mp3` - "año" (year)  
 - `pina.mp3` - "piña" (pineapple)
@@ -17,13 +17,13 @@ For the literacy level 1 activities, the following audio files should be placed 
 - `pequeno.mp3` - "pequeño" (small)
 - `espanol.mp3` - "español" (Spanish)
 
-### Words without "ñ" sound (for comparison):
+### Words without 'Ñ' sound (for comparison):
 - `nido.mp3` - "nido" (nest)
 - `nube.mp3` - "nube" (cloud)
 - `naranja.mp3` - "naranja" (orange)
 - `noche.mp3` - "noche" (night)
 
-### Syllables with "ñ":
+### Syllables with 'Ñ':
 - `nya.mp3` - "ña"
 - `nye.mp3` - "ñe"
 - `nyi.mp3` - "ñi"

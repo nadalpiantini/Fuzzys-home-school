@@ -60,6 +60,16 @@ export default function DragDropGame({
     setStartTime(Date.now());
   }, []);
 
+  // Auto-verify when all items are classified
+  useEffect(() => {
+    if (!showResults && draggedItems.length === gameData.items.length) {
+      // Small delay to ensure UI updates are complete
+      setTimeout(() => {
+        handleSubmit();
+      }, 500);
+    }
+  }, [draggedItems.length, gameData.items.length, showResults]);
+
   const handleDragStart = (e: React.DragEvent, item: DragDropItem) => {
     e.dataTransfer.setData('text/plain', JSON.stringify(item));
   };
@@ -323,17 +333,9 @@ export default function DragDropGame({
         </Card>
       </div>
 
-      {/* Submit button */}
-      <div className="flex justify-center mt-6">
-        {!showResults ? (
-          <Button
-            onClick={handleSubmit}
-            disabled={draggedItems.length !== gameData.items.length}
-            size="lg"
-          >
-            Verificar clasificación
-          </Button>
-        ) : (
+      {/* Results section */}
+      {showResults && (
+        <div className="flex justify-center mt-6">
           <div className="text-center space-y-4">
             <div className="text-lg font-semibold">
               Puntuación: {score}/{gameData.items.length} (
@@ -344,8 +346,8 @@ export default function DragDropGame({
               Jugar de nuevo
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

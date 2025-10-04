@@ -27,6 +27,7 @@ import {
 import { useTranslation } from '@/hooks/useTranslation';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 export default function TeacherDashboard() {
   const { t, language } = useTranslation();
@@ -133,14 +134,28 @@ export default function TeacherDashboard() {
       <main className="container mx-auto px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">
-            {t('common.welcome')}, Profesor! 👋
-          </h2>
-          <p className="text-gray-600">
-            {language === 'es'
-              ? 'Gestiona tus clases y crea contenido educativo'
-              : 'Manage your classes and create educational content'}
-          </p>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+              <Image
+                src="/fuzzy_teacher.png"
+                alt="Fuzzy Teacher"
+                fill
+                className="object-contain"
+                priority
+                sizes="(max-width: 640px) 64px, 80px"
+              />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold mb-2">
+                {t('common.welcome')}, Profesor! 👋
+              </h2>
+              <p className="text-gray-600">
+                {language === 'es'
+                  ? 'Gestiona tus clases y crea contenido educativo'
+                  : 'Manage your classes and create educational content'}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}

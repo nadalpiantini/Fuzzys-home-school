@@ -87,6 +87,9 @@ export default function StoryLesson({
     total: number;
     streak: number;
   }>({ total: 0, streak: 0 });
+  const [adaptiveDifficulty, setAdaptiveDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [showDifficultyChange, setShowDifficultyChange] = useState(false);
+  const [difficultyChangeReason, setDifficultyChangeReason] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
 
@@ -219,6 +222,9 @@ export default function StoryLesson({
       // Award points when activity is completed
       if (activityCompleted) {
         await awardPoints(score, timeSpent);
+        
+        // Check adaptive difficulty adjustment after awarding points
+        await checkDifficultyAdjustment(score, timeSpent);
       }
     } catch (error) {
       console.error('Error saving progress:', error);
@@ -237,12 +243,12 @@ export default function StoryLesson({
           ? 'language'
           : 'science';
 
-      // Determinar dificultad (por ahora hardcoded, luego se puede leer del chapter metadata)
-      const difficulty = curriculum.id.includes('level1')
+      // Usar dificultad adaptativa si está disponible, sino inferir del nivel
+      const difficulty = adaptiveDifficulty || (curriculum.id.includes('level1')
         ? 'easy'
         : curriculum.id.includes('level2')
           ? 'medium'
-          : 'hard';
+          : 'hard');
 
       const response = await fetch('/api/points/award', {
         method: 'POST',
@@ -277,6 +283,41 @@ export default function StoryLesson({
       }
     } catch (error) {
       console.error('Error awarding points:', error);
+    }
+  };
+
+
+  // Check and adjust difficulty adaptively
+  const checkDifficultyAdjustment = async (score: number = 0, timeSpent: number = 0) => {
+    if (!childData?.id) return;
+
+    try {
+      const response = await fetch('/api/adaptive/recommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'adjust_difficulty',
+          studentId: childData.id,
+          currentDifficulty: adaptiveDifficulty,
+          recentScore: score,
+          timeSpent,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.ok && result.data.shouldAdjust) {
+        const { newDifficulty, adjustmentReason } = result.data;
+        
+        setAdaptiveDifficulty(newDifficulty);
+        setDifficultyChangeReason(adjustmentReason);
+        setShowDifficultyChange(true);
+
+        // Auto-hide notification after 5 seconds
+        setTimeout(() => setShowDifficultyChange(false), 5000);
+      }
+    } catch (error) {
+      console.error('Error checking difficulty adjustment:', error);
     }
   };
 
@@ -348,6 +389,83 @@ export default function StoryLesson({
     }
   };
 
+  // Debug function to force unlock chapters
+  const forceUnlockChapter = async (chapterId: string) => {
+    if (!childData?.id) return;
+
+    try {
+      const response = await fetch('/api/chapter/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId: childData.id,
+          curriculumId: curriculum.id,
+          chapterId: chapterId,
+          completed: true,
+          score: 100,
+          activityCompleted: true,
+          timeSpent: 300
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.ok) {
+        // Update local state
+        setChapterProgress((prev) => ({
+          ...prev,
+          [chapterId]: {
+            completed: true,
+            score: 100,
+          },
+        }));
+        
+        toast.success(`✅ Capítulo ${chapterId} desbloqueado manualmente`, {
+          duration: 3000,
+        });
+        
+        console.log('🔓 Capítulo desbloqueado:', chapterId);
+      } else {
+        console.error('Error desbloqueando capítulo:', result);
+      }
+    } catch (error) {
+      console.error('Error desbloqueando capítulo:', error);
+    }
+  };
+
+  // Lógica de bloqueo: capítulos posteriores bloqueados si el anterior no está completado
+  const isCurrentChapterLocked = (() => {
+    if (currentChapterIndex === 0) return false; // Primer capítulo nunca está bloqueado
+    const previousChapter = curriculum.chapters[currentChapterIndex - 1];
+    const isLocked = !chapterProgress[previousChapter.id]?.completed;
+    
+    // Debug: mostrar información sobre el bloqueo
+    if (isLocked) {
+      console.log('🔒 Capítulo bloqueado:', {
+        currentChapter: currentChapter.id,
+        previousChapter: previousChapter.id,
+        previousChapterProgress: chapterProgress[previousChapter.id],
+        allProgress: chapterProgress
+      });
+    }
+    
+    return isLocked;
+  })();
+
+  // Expose debug function to window for console access
+  React.useEffect(() => {
+    (window as any).forceUnlockChapter = forceUnlockChapter;
+    (window as any).debugChapterProgress = () => {
+      console.log('📊 Chapter Progress Debug:', {
+        currentChapter: currentChapter.id,
+        currentChapterIndex,
+        chapterProgress,
+        isCurrentChapterLocked,
+        allChapters: curriculum.chapters.map(c => ({ id: c.id, title: c.title }))
+      });
+    };
+  }, [currentChapter.id, currentChapterIndex, chapterProgress, isCurrentChapterLocked, curriculum.chapters]);
+
   // Handle activity completion
   const handleActivityComplete = async (score?: number) => {
     const activityId = `${currentChapter.id}-${currentActivityIndex}`;
@@ -411,13 +529,6 @@ export default function StoryLesson({
     }
   };
 
-  // Lógica de bloqueo: capítulos posteriores bloqueados si el anterior no está completado
-  const isCurrentChapterLocked = (() => {
-    if (currentChapterIndex === 0) return false; // Primer capítulo nunca está bloqueado
-    const previousChapter = curriculum.chapters[currentChapterIndex - 1];
-    return !chapterProgress[previousChapter.id]?.completed;
-  })();
-
   const canGoBack = currentChapterIndex > 0 || currentActivityIndex > 0;
   const canGoForward =
     !isCurrentChapterLocked &&
@@ -443,6 +554,9 @@ export default function StoryLesson({
             )
           }
           disabled={isCompleted}
+          adaptive={true}
+          studentId={childData?.id}
+          curriculumId={curriculum.id}
         />
       );
     }
@@ -476,6 +590,7 @@ export default function StoryLesson({
               question:
                 activity.data.instructions ||
                 'Selecciona la respuesta correcta',
+              visual: activity.data.questions?.[0]?.visual,
               options: activity.data.items || [],
               correctAnswer:
                 activity.data.items?.map((item: any) => item.answer) || [],
@@ -486,12 +601,41 @@ export default function StoryLesson({
           };
 
         case 'DragDrop':
+          // Convert curriculum data to DragDrop format
+          const dragDropData = activity.data;
+          const items = dragDropData.items?.map((item: any, index: number) => ({
+            id: `item-${index}`,
+            content: item.text || item.content || '',
+            text: item.text || '',
+            target: item.target,
+            targetZone: item.target
+          })) || [];
+          
+          const zones = dragDropData.items?.map((item: any, index: number) => ({
+            id: `zone-${index}`,
+            label: `${item.image || '🎯'} ${item.target || ''}`
+          })) || [];
+          
           return {
             game: {
-              instructions: activity.data.prompt || 'Arrastra los elementos',
-              items: activity.data.items || [],
+              id: activity.title || 'dragdrop-activity',
+              title: activity.title || 'Arrastra los elementos',
+              description: dragDropData.prompt || 'Arrastra los elementos',
+              items: items,
+              zones: zones,
+              syllableBank: dragDropData.syllableBank || []
             },
-            onAnswer: (answer: any) => handleActivityComplete(),
+            onAnswer: (answer: any, feedback?: any) => {
+              if (feedback) {
+                // Show feedback to user
+                if (feedback.correct) {
+                  toast.success(feedback.explanation || '¡Perfecto!');
+                } else {
+                  toast.error(feedback.explanation || 'Revisa tus respuestas');
+                }
+              }
+              handleActivityComplete(feedback?.score || 0);
+            },
             onNext: () => handleActivityComplete(),
             disabled: isCompleted,
           };
@@ -796,6 +940,25 @@ export default function StoryLesson({
               <span className="font-medium">
                 ¡Gracias por tu feedback! Fuzzy ajustará tus próximos retos ✨
               </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Adaptive Difficulty Change Notification */}
+      {showDifficultyChange && (
+        <Card className="mt-6 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 animate-pulse">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-center gap-3 text-purple-700">
+              <div className="text-3xl">
+                {adaptiveDifficulty === 'hard' ? '🚀' : adaptiveDifficulty === 'easy' ? '🎯' : '⚡'}
+              </div>
+              <div className="space-y-1">
+                <div className="font-semibold text-lg">
+                  Nivel ajustado: {adaptiveDifficulty === 'hard' ? 'Difícil' : adaptiveDifficulty === 'easy' ? 'Fácil' : 'Moderado'}
+                </div>
+                <div className="text-sm">{difficultyChangeReason}</div>
+              </div>
             </div>
           </CardContent>
         </Card>

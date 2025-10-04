@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import Image from 'next/image';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -289,8 +290,14 @@ export function AITutorChat({
                 )}
               >
                 {message.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-purple-600" />
+                  <div className="w-8 h-8 relative">
+                    <Image
+                      src="/fuzzy_teacher.png"
+                      alt="Fuzzy Teacher"
+                      fill
+                      className="object-contain rounded-full"
+                      sizes="32px"
+                    />
                   </div>
                 )}
 
@@ -320,8 +327,14 @@ export function AITutorChat({
 
             {isTyping && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-purple-600" />
+                <div className="w-8 h-8 relative">
+                  <Image
+                    src="/fuzzy_teacher.png"
+                    alt="Fuzzy Teacher"
+                    fill
+                    className="object-contain rounded-full"
+                    sizes="32px"
+                  />
                 </div>
                 <div className="bg-gray-100 rounded-lg p-3">
                   <div className="flex gap-1">

@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, X, RotateCcw } from 'lucide-react';
+import Image from 'next/image';
 
 interface Question {
   q: string;
   options: string[];
   correct: number[]; // Array de índices de respuestas correctas
+  visual?: string; // Para imágenes o emojis
 }
 
 interface MCQSimpleProps {
@@ -46,8 +48,12 @@ const MCQSimple: React.FC<MCQSimpleProps> = ({
           : [...prev, optionIndex]
       );
     } else {
-      // Solo una respuesta permitida
+      // Solo una respuesta permitida - auto-verify on single answer
       setSelectedAnswers([optionIndex]);
+      // Auto-verify immediately for single answer questions
+      setTimeout(() => {
+        handleSubmitAnswer();
+      }, 100);
     }
   };
 
@@ -68,6 +74,12 @@ const MCQSimple: React.FC<MCQSimpleProps> = ({
     const isCorrect = isCorrectAnswer(selectedAnswers, currentQuestion.correct);
     if (isCorrect) {
       setScore(prev => prev + 1);
+    }
+  };
+
+  const handleMultipleAnswerSubmit = () => {
+    if (selectedAnswers.length > 0) {
+      handleSubmitAnswer();
     }
   };
 
@@ -207,8 +219,32 @@ const MCQSimple: React.FC<MCQSimpleProps> = ({
           {currentQuestion.q}
         </div>
 
+        {/* Visual field for images or emojis */}
+        {currentQuestion.visual && (
+          <div className="text-center py-6">
+            {currentQuestion.visual.startsWith('/') ? (
+              // It's an image path
+              <div className="relative w-full max-w-md mx-auto">
+                <Image
+                  src={currentQuestion.visual}
+                  alt="Visual content"
+                  width={400}
+                  height={300}
+                  className="object-contain rounded-lg"
+                  priority
+                />
+              </div>
+            ) : (
+              // It's emoji or text
+              <div className="text-6xl sm:text-8xl font-bold leading-none">
+                {currentQuestion.visual}
+              </div>
+            )}
+          </div>
+        )}
+
         {hasMultipleCorrect && !showFeedback && (
-          <p className="text-sm text-blue-600 bg-blue-50 p-2 rounded">
+          <p className="text-sm text-blue-600 bg-blue-50 p-2 rounded-none">
             💡 Esta pregunta tiene múltiples respuestas correctas
           </p>
         )}
@@ -219,16 +255,16 @@ const MCQSimple: React.FC<MCQSimpleProps> = ({
               key={index}
               onClick={() => handleOptionSelect(index)}
               disabled={showFeedback}
-              className={`w-full text-left p-4 rounded-lg border-2 transition-all flex items-center justify-between ${getOptionStyle(index)}`}
+              className={`w-full text-center p-4 rounded-none border-2 transition-all flex items-center justify-center min-h-[120px] ${getOptionStyle(index)}`}
             >
-              <span className="font-medium">{option}</span>
-              {getOptionIcon(index)}
+              <span className="text-8xl font-bold">{option}</span>
+              {getOptionIcon(index) && <span className="ml-4">{getOptionIcon(index)}</span>}
             </button>
           ))}
         </div>
 
         {showFeedback && (
-          <div className={`p-4 rounded-lg ${
+          <div className={`p-4 rounded-none ${
             isCorrectAnswer(selectedAnswers, currentQuestion.correct)
               ? 'bg-green-50 text-green-800 border border-green-200'
               : 'bg-red-50 text-red-800 border border-red-200'
@@ -252,22 +288,22 @@ const MCQSimple: React.FC<MCQSimpleProps> = ({
             Puntuación: {score}/{currentQuestionIndex + (showFeedback ? 1 : 0)}
           </div>
 
-          {!showFeedback ? (
+          {!showFeedback && hasMultipleCorrect ? (
             <Button
-              onClick={handleSubmitAnswer}
+              onClick={handleMultipleAnswerSubmit}
               disabled={selectedAnswers.length === 0}
               className="bg-blue-600 hover:bg-blue-700"
             >
               Verificar Respuesta
             </Button>
-          ) : (
+          ) : showFeedback ? (
             <Button
               onClick={handleNextQuestion}
               className="bg-green-600 hover:bg-green-700"
             >
               {isLastQuestion ? 'Finalizar Quiz' : 'Siguiente Pregunta'}
             </Button>
-          )}
+          ) : null}
         </div>
       </CardContent>
     </Card>

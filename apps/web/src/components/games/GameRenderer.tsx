@@ -79,7 +79,7 @@ export default function GameRenderer({
 
   const renderMultipleChoice = () => (
     <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 px-4 sm:px-0">
+      <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 px-4 sm:px-0">
         {game.content.questions?.[0]?.question ||
           'Selecciona la respuesta correcta'}
       </h3>
@@ -89,10 +89,10 @@ export default function GameRenderer({
             <Button
               key={index}
               variant="outline"
-              className="w-full p-3 sm:p-4 text-left justify-start hover:bg-purple-50 touch-target text-sm sm:text-base"
+              className="w-full p-6 sm:p-8 text-left justify-start hover:bg-purple-50 touch-target text-2xl sm:text-3xl font-bold min-h-[80px]"
               onClick={() => handleAnswer(index)}
             >
-              <span className="font-medium mr-2 sm:mr-3">
+              <span className="font-bold mr-4 sm:mr-6 text-3xl">
                 {String.fromCharCode(65 + index)}.
               </span>
               {option}
@@ -105,20 +105,20 @@ export default function GameRenderer({
 
   const renderTrueFalse = () => (
     <div className="space-y-4">
-      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 px-4 sm:px-0">
+      <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 px-4 sm:px-0">
         {game.content.questions?.[0]?.question || 'Verdadero o Falso'}
       </h3>
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
         <Button
           size="lg"
-          className="bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-3 sm:py-4 touch-target text-sm sm:text-base"
+          className="bg-green-600 hover:bg-green-700 text-white px-12 sm:px-16 py-8 sm:py-12 touch-target text-3xl sm:text-4xl font-bold min-h-[100px]"
           onClick={() => handleAnswer(true)}
         >
           ✅ Verdadero
         </Button>
         <Button
           size="lg"
-          className="bg-red-600 hover:bg-red-700 text-white px-6 sm:px-8 py-3 sm:py-4 touch-target text-sm sm:text-base"
+          className="bg-red-600 hover:bg-red-700 text-white px-12 sm:px-16 py-8 sm:py-12 touch-target text-3xl sm:text-4xl font-bold min-h-[100px]"
           onClick={() => handleAnswer(false)}
         >
           ❌ Falso

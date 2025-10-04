@@ -447,12 +447,12 @@ export default function ImageSequenceGame() {
                   onDragStart={(e) => handleDragStart(e, item.id)}
                 >
                   <CardContent className="p-6 text-center">
-                    <div className="absolute top-2 left-2 w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                    <div className="absolute top-2 left-2 w-12 h-12 bg-amber-500 text-white rounded-full flex items-center justify-center text-2xl font-bold">
                       {item.currentPosition}
                     </div>
 
-                    <div className="text-4xl sm:text-5xl mb-3">{item.emoji}</div>
-                    <div className="text-sm font-medium text-gray-800">{item.description}</div>
+                    <div className="text-8xl sm:text-9xl mb-6">{item.emoji}</div>
+                    <div className="text-2xl font-bold text-gray-800">{item.description}</div>
                   </CardContent>
                 </Card>
               </div>
