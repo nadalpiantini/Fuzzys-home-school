@@ -88,8 +88,13 @@ export class AudioService {
       
       // Palabras adicionales del curriculum
       'cañón': 'fuzzy_canon.mp3',
-      'cañaveral': 'fuzzy_canaveral.mp3',
-      'ñu': 'fuzzy_nue.mp3',
+      'cañaveral': 'fuzzy_canaveral.mp3',      
+      // Preguntas completas del curriculum de literacy level 1
+      '¿suena \'ñ\' en "niña"?': 'fuzzy_nina.mp3',
+      '¿suena \'ñ\' en "nido"?': 'fuzzy_nido.mp3',
+      '¿suena \'ñ\' en "año"?': 'fuzzy_ano.mp3',
+      '¿suena \'ñ\' en "nube"?': 'fuzzy_nube.mp3',
+      '¿suena \'ñ\' en "piña"?': 'fuzzy_pina.mp3',
     };
 
     const normalizedText = text.toLowerCase().trim();
