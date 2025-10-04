@@ -31,6 +31,7 @@ import { AnalyticsData, AnalyticsFilters } from '@/services/analytics/types';
 import { ActivityHeatmap } from './ActivityHeatmap';
 import { EngagementChart } from './EngagementChart';
 import { HeatmapChart } from './HeatmapChart';
+import { RadarChart } from './RadarChart';
 
 interface AnalyticsDashboardProps {
   filters?: AnalyticsFilters;
@@ -38,14 +39,17 @@ interface AnalyticsDashboardProps {
   compact?: boolean;
 }
 
-export function AnalyticsDashboard({ 
-  filters = { period: 'week' }, 
+export function AnalyticsDashboard({
+  filters = { period: 'week' },
   showFilters = true,
-  compact = false 
+  compact = false,
 }: AnalyticsDashboardProps) {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
-  const [currentFilters, setCurrentFilters] = useState<AnalyticsFilters>(filters);
+  const [currentFilters, setCurrentFilters] =
+    useState<AnalyticsFilters>(filters);
 
   // Load analytics data
   useEffect(() => {
@@ -83,7 +87,7 @@ export function AnalyticsDashboard({
   const handleDownloadReport = async () => {
     try {
       const report = await AnalyticsService.generateReport(currentFilters);
-      
+
       const blob = new Blob([JSON.stringify(report, null, 2)], {
         type: 'application/json',
       });
@@ -125,7 +129,9 @@ export function AnalyticsDashboard({
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Analíticas en Tiempo Real</h2>
-          <p className="text-gray-600">Monitorea el progreso de tus estudiantes</p>
+          <p className="text-gray-600">
+            Monitorea el progreso de tus estudiantes
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={handleRefresh}>
@@ -140,7 +146,9 @@ export function AnalyticsDashboard({
       </div>
 
       {/* Overview Cards */}
-      <div className={`grid gap-6 ${compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}`}>
+      <div
+        className={`grid gap-6 ${compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}`}
+      >
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
@@ -148,7 +156,9 @@ export function AnalyticsDashboard({
                 <Users className="w-6 h-6 text-fuzzy-purple" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{analyticsData.overview.totalStudents}</p>
+                <p className="text-2xl font-bold">
+                  {analyticsData.overview.totalStudents}
+                </p>
                 <p className="text-sm text-gray-600">Total Estudiantes</p>
               </div>
             </div>
@@ -162,7 +172,9 @@ export function AnalyticsDashboard({
                 <Target className="w-6 h-6 text-fuzzy-green" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{analyticsData.overview.averageScore}%</p>
+                <p className="text-2xl font-bold">
+                  {analyticsData.overview.averageScore}%
+                </p>
                 <p className="text-sm text-gray-600">Promedio General</p>
               </div>
             </div>
@@ -176,7 +188,9 @@ export function AnalyticsDashboard({
                 <TrendingUp className="w-6 h-6 text-fuzzy-blue" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{analyticsData.overview.completionRate}%</p>
+                <p className="text-2xl font-bold">
+                  {analyticsData.overview.completionRate}%
+                </p>
                 <p className="text-sm text-gray-600">Tasa de Completado</p>
               </div>
             </div>
@@ -190,17 +204,20 @@ export function AnalyticsDashboard({
                 <Activity className="w-6 h-6 text-fuzzy-yellow" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{analyticsData.overview.engagementScore}%</p>
+                <p className="text-2xl font-bold">
+                  {analyticsData.overview.engagementScore}%
+                </p>
                 <p className="text-sm text-gray-600">Engagement</p>
               </div>
-            </CardContent>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
       {!compact && (
         <>
-          {/* Charts Section */}
-          <div className="grid md:grid-cols-2 gap-6">
+          {/* Enhanced Charts Section with Radar */}
+          <div className="grid lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -232,6 +249,23 @@ export function AnalyticsDashboard({
             </Card>
           </div>
 
+          {/* Radar Chart Section */}
+          <div className="grid lg:grid-cols-1 gap-6">
+            <RadarChart
+              data={analyticsData.subjectPerformance.map((subject) => ({
+                subject: subject.subjectName,
+                mastery: subject.averageScore,
+                engagement: subject.engagementScore || 75,
+                timeSpent: subject.averageTimeSpent || 120,
+                gamesPlayed: subject.totalGames || 5,
+                difficulty: subject.difficultyLevel || 3,
+                confidence: subject.confidenceScore || 80,
+              }))}
+              title="Análisis Multidimensional por Materia"
+              description="Visualización completa de métricas de aprendizaje por materia"
+            />
+          </div>
+
           {/* Top Students and Activities */}
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
@@ -243,17 +277,24 @@ export function AnalyticsDashboard({
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {analyticsData.topStudents.slice(0, 5).map((student, index) => (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium">{student.studentName}</span>
-                        {student.improvement > 0 && (
-                          <TrendingUp className="w-3 h-3 text-green-600" />
-                        )}
+                  {analyticsData.topStudents
+                    .slice(0, 5)
+                    .map((student, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">
+                            {student.studentName}
+                          </span>
+                          {student.improvement > 0 && (
+                            <TrendingUp className="w-3 h-3 text-green-600" />
+                          )}
+                        </div>
+                        <Badge variant="outline">{student.averageScore}%</Badge>
                       </div>
-                      <Badge variant="outline">{student.averageScore}%</Badge>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>

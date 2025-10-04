@@ -59,6 +59,8 @@ export class AIService {
       model: 'deepseek-chat',
       temperature: 0.7,
       maxTokens: 1000,
+      systemPrompt:
+        'You are an AI tutor helping students learn. Be encouraging, patient, and adapt to their learning style.',
     });
 
     this.tutorEngine = new TutorEngine(deepseekClient);
@@ -197,7 +199,7 @@ export class AIService {
 
       progressData.subjectBreakdown.forEach((subject) => {
         bySubject[subject.subject] = subject.progress;
-        trends[subject.subject] = subject.trend;
+        trends[subject.subject] = subject.trend as 'up' | 'down' | 'stable';
       });
 
       // Generar recomendaciones personalizadas
@@ -246,13 +248,22 @@ export class AIService {
       // Crear perfil de estudiante para el tutor
       const studentProfile = {
         grade: 8, // Nivel por defecto
-        learningStyle:
-          insights.studentProgress.overall > 80 ? 'advanced' : 'intermediate',
-        strengths: insights.studentProgress.bySubject,
-        weaknesses: Object.keys(insights.studentProgress.bySubject).filter(
+        learningStyle: 'visual' as
+          | 'visual'
+          | 'auditory'
+          | 'kinesthetic'
+          | 'reading_writing',
+        currentLevel:
+          insights.studentProgress.overall > 80
+            ? ('advanced' as const)
+            : ('intermediate' as const),
+        strongAreas: Object.keys(insights.studentProgress.bySubject).filter(
+          (subject) => insights.studentProgress.bySubject[subject] >= 70,
+        ),
+        challengeAreas: Object.keys(insights.studentProgress.bySubject).filter(
           (subject) => insights.studentProgress.bySubject[subject] < 70,
         ),
-        preferences: ['visual', 'interactive'],
+        age: 8,
       };
 
       // Iniciar sesión de tutoría
@@ -286,7 +297,9 @@ export class AIService {
       const response = await this.tutorEngine.processQuery(
         sessionId,
         query,
-        context,
+        context
+          ? { concept: context.subject, context: context.learningStyle }
+          : undefined,
       );
 
       // Mejorar respuesta con contexto adicional

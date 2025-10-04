@@ -119,10 +119,12 @@ export class AnalyticsService {
     const completedSessions =
       gameSessions?.filter((s) => s.completed).length || 0;
     const totalTimeSpent =
-      (gameSessions?.reduce((sum, s) => sum + (s.time_spent || 0), 0) || 0) /
-      60; // convert to minutes
+      (gameSessions?.reduce(
+        (sum: number, s: any) => sum + (s.time_spent || 0),
+        0,
+      ) || 0) / 60; // convert to minutes
     const averageScore = gameSessions?.length
-      ? gameSessions.reduce((sum, s) => sum + (s.score || 0), 0) /
+      ? gameSessions.reduce((sum: number, s: any) => sum + (s.score || 0), 0) /
         gameSessions.length
       : 0;
     const completionRate = totalSessions
@@ -163,7 +165,8 @@ export class AnalyticsService {
 
         const scores = sessions?.map((s) => s.score || 0) || [];
         const averageScore = scores.length
-          ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+          ? scores.reduce((sum: number, score: number) => sum + score, 0) /
+            scores.length
           : 0;
         const completionRate = sessions?.length
           ? (sessions.filter((s) => s.completed).length / sessions.length) * 100
@@ -177,7 +180,10 @@ export class AnalyticsService {
           totalStudents: sessions?.length || 0,
           averageTimeSpent: sessions?.length
             ? Math.round(
-                sessions.reduce((sum, s) => sum + (s.time_spent || 0), 0) /
+                sessions.reduce(
+                  (sum: number, s: any) => sum + (s.time_spent || 0),
+                  0,
+                ) /
                   sessions.length /
                   60,
               )
@@ -219,9 +225,9 @@ export class AnalyticsService {
     return (
       activities?.map((activity) => ({
         studentId: activity.player_id,
-        studentName: activity.profiles.full_name,
-        avatarUrl: activity.profiles.avatar_url,
-        action: `Completó ${activity.games.title}`,
+        studentName: activity.profiles?.[0]?.full_name || 'Unknown',
+        avatarUrl: activity.profiles?.[0]?.avatar_url,
+        action: `Completó ${activity.games?.[0]?.title || 'Actividad'}`,
         subject: 'General', // This would come from game-subject relationship
         score: activity.score,
         timeSpent: Math.round((activity.time_spent || 0) / 60),
@@ -258,8 +264,8 @@ export class AnalyticsService {
     return (
       students?.map((student) => ({
         studentId: student.student_id,
-        studentName: student.profiles.full_name,
-        avatarUrl: student.profiles.avatar_url,
+        studentName: student.profiles?.[0]?.full_name || 'Unknown',
+        avatarUrl: student.profiles?.[0]?.avatar_url,
         totalScore: student.total_points,
         gamesPlayed: student.games_played,
         averageScore: student.games_played
@@ -299,7 +305,7 @@ export class AnalyticsService {
         activityId: activity.id,
         activityName: activity.title,
         activityType: activity.type,
-        subject: activity.subjects.name,
+        subject: activity.subjects?.[0]?.name || 'General',
         playCount: activity.play_count,
         averageScore: 85, // This would be calculated from game_sessions
         completionRate: 90, // This would be calculated from game_sessions
@@ -354,7 +360,7 @@ export class AnalyticsService {
       chapterName: chapter.chapterName,
       subject: chapter.subject,
       averageTimeSpent: Math.round(
-        chapter.timeSpent.reduce((sum, time) => sum + time, 0) /
+        chapter.timeSpent.reduce((sum: number, time: number) => sum + time, 0) /
           chapter.timeSpent.length /
           60,
       ),
@@ -445,7 +451,8 @@ export class AnalyticsService {
 
     const uniqueUsers = new Set(sessions?.map((s) => s.player_id) || []);
     const totalTimeSpent =
-      sessions?.reduce((sum, s) => sum + (s.time_spent || 0), 0) || 0;
+      sessions?.reduce((sum: number, s: any) => sum + (s.time_spent || 0), 0) ||
+      0;
     const averageSessionDuration = sessions?.length
       ? totalTimeSpent / sessions.length / 60
       : 0;
@@ -474,8 +481,9 @@ export class AnalyticsService {
       insights.push('Alta tasa de completado en las actividades');
     }
 
-    const topSubject = data.subjectPerformance.reduce((prev, current) =>
-      prev.score > current.score ? prev : current,
+    const topSubject = data.subjectPerformance.reduce(
+      (prev: any, current: any) =>
+        prev.score > current.score ? prev : current,
     );
     insights.push(`${topSubject.subject} es la materia con mejor rendimiento`);
 

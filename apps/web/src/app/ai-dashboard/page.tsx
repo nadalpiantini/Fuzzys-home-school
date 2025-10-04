@@ -22,6 +22,7 @@ import { ParentReportDashboard } from '@/components/parent-reports/ParentReportD
 
 export default function AIDashboardPage() {
   // const { t, language } = useTranslation();
+  const language = 'es'; // Fallback for now
   const router = useRouter();
   const [selectedStudent, setSelectedStudent] = useState('maria-gonzalez');
   const [activeTab, setActiveTab] = useState('ai');
@@ -214,7 +215,42 @@ export default function AIDashboardPage() {
           </TabsContent>
 
           <TabsContent value="reports" className="space-y-6">
-            <ParentReportDashboard studentId={selectedStudent} period="week" />
+            <ParentReportDashboard
+              studentId={selectedStudent}
+              period="week"
+              analyticsData={{
+                studentInfo: {
+                  id: selectedStudent,
+                  name:
+                    students.find((s) => s.id === selectedStudent)?.name ||
+                    'Student',
+                  level:
+                    students.find((s) => s.id === selectedStudent)?.level || 1,
+                  totalPoints:
+                    students.find((s) => s.id === selectedStudent)
+                      ?.totalPoints || 0,
+                  streak:
+                    students.find((s) => s.id === selectedStudent)?.streak || 0,
+                },
+                weeklyData: {
+                  totalTimeSpent: 120,
+                  gamesCompleted: 8,
+                  averageScore: 85,
+                  subjectsStudied: 3,
+                  achievementsEarned: 2,
+                },
+                subjectBreakdown: [],
+                weeklyBreakdown: [],
+                recentAchievements: [],
+                learningPatterns: {
+                  bestTimeOfDay: 'afternoon',
+                  averageSessionLength: 15,
+                  preferredSubjects: ['Math', 'Science'],
+                  strugglingAreas: [],
+                  progressTrend: 'improving' as const,
+                },
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="content" className="space-y-6">

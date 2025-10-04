@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Tipos para personalización avanzada
 export interface PersonalizationSettings {

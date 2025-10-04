@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 
 export interface ChildData {
+  id?: string;
   name: string;
   age: number;
   favoriteColor: string;

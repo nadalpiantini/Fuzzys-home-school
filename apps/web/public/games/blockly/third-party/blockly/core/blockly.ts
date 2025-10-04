@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// @ts-nocheck - Disable TypeScript checking for this third-party file
+
 // Former goog.module ID: Blockly
 
 // Unused import preserved for side-effects. Remove if unneeded.
@@ -15,34 +17,34 @@ import './events/events_ui_base.js';
 // Unused import preserved for side-effects. Remove if unneeded.
 import './events/events_var_create.js';
 
-import {Block} from './block.js';
+import { Block } from './block.js';
 import * as blockAnimations from './block_animations.js';
-import {BlockFlyoutInflater} from './block_flyout_inflater.js';
-import {BlockSvg} from './block_svg.js';
-import {BlocklyOptions} from './blockly_options.js';
-import {Blocks} from './blocks.js';
+import { BlockFlyoutInflater } from './block_flyout_inflater.js';
+import { BlockSvg } from './block_svg.js';
+import { BlocklyOptions } from './blockly_options.js';
+import { Blocks } from './blocks.js';
 import * as browserEvents from './browser_events.js';
 import * as bubbles from './bubbles.js';
-import {MiniWorkspaceBubble} from './bubbles/mini_workspace_bubble.js';
+import { MiniWorkspaceBubble } from './bubbles/mini_workspace_bubble.js';
 import * as bumpObjects from './bump_objects.js';
-import {ButtonFlyoutInflater} from './button_flyout_inflater.js';
+import { ButtonFlyoutInflater } from './button_flyout_inflater.js';
 import * as clipboard from './clipboard.js';
 import * as comments from './comments.js';
 import * as common from './common.js';
-import {ComponentManager} from './component_manager.js';
-import {config} from './config.js';
-import {Connection} from './connection.js';
-import {ConnectionChecker} from './connection_checker.js';
-import {ConnectionDB} from './connection_db.js';
-import {ConnectionType} from './connection_type.js';
+import { ComponentManager } from './component_manager.js';
+import { config } from './config.js';
+import { Connection } from './connection.js';
+import { ConnectionChecker } from './connection_checker.js';
+import { ConnectionDB } from './connection_db.js';
+import { ConnectionType } from './connection_type.js';
 import * as constants from './constants.js';
 import * as ContextMenu from './contextmenu.js';
 import * as ContextMenuItems from './contextmenu_items.js';
-import {ContextMenuRegistry} from './contextmenu_registry.js';
+import { ContextMenuRegistry } from './contextmenu_registry.js';
 import * as Css from './css.js';
-import {DeleteArea} from './delete_area.js';
+import { DeleteArea } from './delete_area.js';
 import * as dialog from './dialog.js';
-import {DragTarget} from './drag_target.js';
+import { DragTarget } from './drag_target.js';
 import * as dragging from './dragging.js';
 import * as dropDownDiv from './dropdowndiv.js';
 import * as Events from './events/events.js';
@@ -79,7 +81,7 @@ import {
   FieldLabelConfig,
   FieldLabelFromJsonConfig,
 } from './field_label.js';
-import {FieldLabelSerializable} from './field_label_serializable.js';
+import { FieldLabelSerializable } from './field_label_serializable.js';
 import {
   FieldNumber,
   FieldNumberConfig,
@@ -99,131 +101,134 @@ import {
   FieldVariableFromJsonConfig,
   FieldVariableValidator,
 } from './field_variable.js';
-import {Flyout} from './flyout_base.js';
-import {FlyoutButton} from './flyout_button.js';
-import {HorizontalFlyout} from './flyout_horizontal.js';
-import {FlyoutItem} from './flyout_item.js';
-import {FlyoutMetricsManager} from './flyout_metrics_manager.js';
-import {FlyoutSeparator} from './flyout_separator.js';
-import {VerticalFlyout} from './flyout_vertical.js';
+import { Flyout } from './flyout_base.js';
+import { FlyoutButton } from './flyout_button.js';
+import { HorizontalFlyout } from './flyout_horizontal.js';
+import { FlyoutItem } from './flyout_item.js';
+import { FlyoutMetricsManager } from './flyout_metrics_manager.js';
+import { FlyoutSeparator } from './flyout_separator.js';
+import { VerticalFlyout } from './flyout_vertical.js';
 import {
   FocusManager,
   ReturnEphemeralFocus,
   getFocusManager,
 } from './focus_manager.js';
-import {CodeGenerator} from './generator.js';
-import {Gesture} from './gesture.js';
-import {Grid} from './grid.js';
+import { CodeGenerator } from './generator.js';
+import { Gesture } from './gesture.js';
+import { Grid } from './grid.js';
 import * as icons from './icons.js';
-import {inject} from './inject.js';
+import { inject } from './inject.js';
 import * as inputs from './inputs.js';
-import {IFlyoutInflater} from './interfaces/i_flyout_inflater.js';
-import {LabelFlyoutInflater} from './label_flyout_inflater.js';
-import {SeparatorFlyoutInflater} from './separator_flyout_inflater.js';
-import {FocusableTreeTraverser} from './utils/focusable_tree_traverser.js';
+import { IFlyoutInflater } from './interfaces/i_flyout_inflater.js';
+import { LabelFlyoutInflater } from './label_flyout_inflater.js';
+import { SeparatorFlyoutInflater } from './separator_flyout_inflater.js';
+import { FocusableTreeTraverser } from './utils/focusable_tree_traverser.js';
 
-import {Input} from './inputs/input.js';
-import {InsertionMarkerPreviewer} from './insertion_marker_previewer.js';
-import {IAutoHideable} from './interfaces/i_autohideable.js';
-import {IBoundedElement} from './interfaces/i_bounded_element.js';
-import {IBubble} from './interfaces/i_bubble.js';
-import {ICollapsibleToolboxItem} from './interfaces/i_collapsible_toolbox_item.js';
-import {IComponent} from './interfaces/i_component.js';
-import {IConnectionChecker} from './interfaces/i_connection_checker.js';
-import {IConnectionPreviewer} from './interfaces/i_connection_previewer.js';
-import {IContextMenu} from './interfaces/i_contextmenu.js';
-import {ICopyData, ICopyable, isCopyable} from './interfaces/i_copyable.js';
-import {IDeletable, isDeletable} from './interfaces/i_deletable.js';
-import {IDeleteArea} from './interfaces/i_delete_area.js';
-import {IDragTarget} from './interfaces/i_drag_target.js';
+import { Input } from './inputs/input.js';
+import { InsertionMarkerPreviewer } from './insertion_marker_previewer.js';
+import { IAutoHideable } from './interfaces/i_autohideable.js';
+import { IBoundedElement } from './interfaces/i_bounded_element.js';
+import { IBubble } from './interfaces/i_bubble.js';
+import { ICollapsibleToolboxItem } from './interfaces/i_collapsible_toolbox_item.js';
+import { IComponent } from './interfaces/i_component.js';
+import { IConnectionChecker } from './interfaces/i_connection_checker.js';
+import { IConnectionPreviewer } from './interfaces/i_connection_previewer.js';
+import { IContextMenu } from './interfaces/i_contextmenu.js';
+import { ICopyData, ICopyable, isCopyable } from './interfaces/i_copyable.js';
+import { IDeletable, isDeletable } from './interfaces/i_deletable.js';
+import { IDeleteArea } from './interfaces/i_delete_area.js';
+import { IDragTarget } from './interfaces/i_drag_target.js';
 import {
   IDragStrategy,
   IDraggable,
   isDraggable,
 } from './interfaces/i_draggable.js';
-import {IDragger} from './interfaces/i_dragger.js';
-import {IFlyout} from './interfaces/i_flyout.js';
-import {IFocusableNode} from './interfaces/i_focusable_node.js';
-import {IFocusableTree} from './interfaces/i_focusable_tree.js';
-import {IHasBubble, hasBubble} from './interfaces/i_has_bubble.js';
-import {IIcon, isIcon} from './interfaces/i_icon.js';
-import {IKeyboardAccessible} from './interfaces/i_keyboard_accessible.js';
-import {IMetricsManager} from './interfaces/i_metrics_manager.js';
-import {IMovable} from './interfaces/i_movable.js';
-import {IObservable, isObservable} from './interfaces/i_observable.js';
-import {IPaster, isPaster} from './interfaces/i_paster.js';
-import {IPositionable} from './interfaces/i_positionable.js';
-import {IRegistrable} from './interfaces/i_registrable.js';
+import { IDragger } from './interfaces/i_dragger.js';
+import { IFlyout } from './interfaces/i_flyout.js';
+import { IFocusableNode } from './interfaces/i_focusable_node.js';
+import { IFocusableTree } from './interfaces/i_focusable_tree.js';
+import { IHasBubble, hasBubble } from './interfaces/i_has_bubble.js';
+import { IIcon, isIcon } from './interfaces/i_icon.js';
+import { IKeyboardAccessible } from './interfaces/i_keyboard_accessible.js';
+import { IMetricsManager } from './interfaces/i_metrics_manager.js';
+import { IMovable } from './interfaces/i_movable.js';
+import { IObservable, isObservable } from './interfaces/i_observable.js';
+import { IPaster, isPaster } from './interfaces/i_paster.js';
+import { IPositionable } from './interfaces/i_positionable.js';
+import { IRegistrable } from './interfaces/i_registrable.js';
 import {
   IRenderedElement,
   isRenderedElement,
 } from './interfaces/i_rendered_element.js';
-import {ISelectable, isSelectable} from './interfaces/i_selectable.js';
-import {ISelectableToolboxItem} from './interfaces/i_selectable_toolbox_item.js';
-import {ISerializable, isSerializable} from './interfaces/i_serializable.js';
-import {IStyleable} from './interfaces/i_styleable.js';
-import {IToolbox} from './interfaces/i_toolbox.js';
-import {IToolboxItem} from './interfaces/i_toolbox_item.js';
+import { ISelectable, isSelectable } from './interfaces/i_selectable.js';
+import { ISelectableToolboxItem } from './interfaces/i_selectable_toolbox_item.js';
+import { ISerializable, isSerializable } from './interfaces/i_serializable.js';
+import { IStyleable } from './interfaces/i_styleable.js';
+import { IToolbox } from './interfaces/i_toolbox.js';
+import { IToolboxItem } from './interfaces/i_toolbox_item.js';
 import {
   IVariableBackedParameterModel,
   isVariableBackedParameterModel,
 } from './interfaces/i_variable_backed_parameter_model.js';
-import {IVariableMap} from './interfaces/i_variable_map.js';
-import {IVariableModel, IVariableState} from './interfaces/i_variable_model.js';
+import { IVariableMap } from './interfaces/i_variable_map.js';
+import {
+  IVariableModel,
+  IVariableState,
+} from './interfaces/i_variable_model.js';
 import * as internalConstants from './internal_constants.js';
-import {LineCursor} from './keyboard_nav/line_cursor.js';
-import {Marker} from './keyboard_nav/marker.js';
+import { LineCursor } from './keyboard_nav/line_cursor.js';
+import { Marker } from './keyboard_nav/marker.js';
 import {
   KeyboardNavigationController,
   keyboardNavigationController,
 } from './keyboard_navigation_controller.js';
-import type {LayerManager} from './layer_manager.js';
+import type { LayerManager } from './layer_manager.js';
 import * as layers from './layers.js';
-import {MarkerManager} from './marker_manager.js';
-import {Menu} from './menu.js';
-import {MenuItem} from './menuitem.js';
-import {MetricsManager} from './metrics_manager.js';
-import {Msg, setLocale} from './msg.js';
-import {Names} from './names.js';
-import {Options} from './options.js';
+import { MarkerManager } from './marker_manager.js';
+import { Menu } from './menu.js';
+import { MenuItem } from './menuitem.js';
+import { MetricsManager } from './metrics_manager.js';
+import { Msg, setLocale } from './msg.js';
+import { Names } from './names.js';
+import { Options } from './options.js';
 import * as uiPosition from './positionable_helpers.js';
 import * as Procedures from './procedures.js';
 import * as registry from './registry.js';
 import * as renderManagement from './render_management.js';
-import {RenderedConnection} from './rendered_connection.js';
+import { RenderedConnection } from './rendered_connection.js';
 import * as blockRendering from './renderers/common/block_rendering.js';
 import * as geras from './renderers/geras/geras.js';
 import * as thrasos from './renderers/thrasos/thrasos.js';
 import * as zelos from './renderers/zelos/zelos.js';
-import {Scrollbar} from './scrollbar.js';
-import {ScrollbarPair} from './scrollbar_pair.js';
+import { Scrollbar } from './scrollbar.js';
+import { ScrollbarPair } from './scrollbar_pair.js';
 import * as serialization from './serialization.js';
 import * as ShortcutItems from './shortcut_items.js';
-import {ShortcutRegistry} from './shortcut_registry.js';
-import {Theme} from './theme.js';
+import { ShortcutRegistry } from './shortcut_registry.js';
+import { Theme } from './theme.js';
 import * as Themes from './theme/themes.js';
-import {ThemeManager} from './theme_manager.js';
-import {ToolboxCategory} from './toolbox/category.js';
-import {CollapsibleToolboxCategory} from './toolbox/collapsible_category.js';
-import {ToolboxSeparator} from './toolbox/separator.js';
-import {Toolbox} from './toolbox/toolbox.js';
-import {ToolboxItem} from './toolbox/toolbox_item.js';
+import { ThemeManager } from './theme_manager.js';
+import { ToolboxCategory } from './toolbox/category.js';
+import { CollapsibleToolboxCategory } from './toolbox/collapsible_category.js';
+import { ToolboxSeparator } from './toolbox/separator.js';
+import { Toolbox } from './toolbox/toolbox.js';
+import { ToolboxItem } from './toolbox/toolbox_item.js';
 import * as Tooltip from './tooltip.js';
 import * as Touch from './touch.js';
-import {Trashcan} from './trashcan.js';
+import { Trashcan } from './trashcan.js';
 import * as utils from './utils.js';
 import * as toolbox from './utils/toolbox.js';
-import {VariableMap} from './variable_map.js';
-import {VariableModel} from './variable_model.js';
+import { VariableMap } from './variable_map.js';
+import { VariableModel } from './variable_model.js';
 import * as Variables from './variables.js';
 import * as VariablesDynamic from './variables_dynamic.js';
 import * as WidgetDiv from './widgetdiv.js';
-import {Workspace} from './workspace.js';
-import {WorkspaceAudio} from './workspace_audio.js';
-import {WorkspaceDragger} from './workspace_dragger.js';
-import {WorkspaceSvg} from './workspace_svg.js';
+import { Workspace } from './workspace.js';
+import { WorkspaceAudio } from './workspace_audio.js';
+import { WorkspaceDragger } from './workspace_dragger.js';
+import { WorkspaceSvg } from './workspace_svg.js';
 import * as Xml from './xml.js';
-import {ZoomControls} from './zoom_controls.js';
+import { ZoomControls } from './zoom_controls.js';
 
 /**
  * Blockly core version.
@@ -445,11 +450,13 @@ export * from './keyboard_nav/workspace_navigation_policy.js';
 export * from './navigator.js';
 export * from './toast.js';
 
+// Re-export types separately for isolatedModules compatibility
+export type { BlocklyOptions } from './blockly_options.js';
+
 // Re-export submodules that no longer declareLegacyNamespace.
 export {
   Block,
   BlockSvg,
-  BlocklyOptions,
   Blocks,
   CollapsibleToolboxCategory,
   ComponentManager,

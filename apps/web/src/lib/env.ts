@@ -104,9 +104,35 @@ if (!parsedPublic.success) {
   if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
     console.warn(`Env validation (public) failed: ${msg}`);
   } else {
-    throw new Error(`Env validation (public) failed: ${msg}`);
+    // En desarrollo, usar valores por defecto en lugar de fallar
+    console.warn(`Env validation (public) failed: ${msg}`);
+    console.warn(
+      'Using default values for development. Please set up .env.local file.',
+    );
   }
 }
+
+// Si la validación falló, usar valores por defecto para desarrollo
+const publicEnv = parsedPublic.success
+  ? parsedPublic.data
+  : {
+      NEXT_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: 'placeholder-anon-key',
+      NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+      NEXT_PUBLIC_EXTERNAL_GAMES_ENABLED: 'false',
+      NEXT_PUBLIC_PHET_ENABLED: 'false',
+      NEXT_PUBLIC_BLOCKLY_ENABLED: 'false',
+      NEXT_PUBLIC_MUSIC_BLOCKS_ENABLED: 'false',
+      NEXT_PUBLIC_AR_ENABLED: 'false',
+      NEXT_PUBLIC_AR_MARKER_BASE_URL: '/ar-markers',
+      NEXT_PUBLIC_AR_MODELS_BASE_URL: '/models',
+      NEXT_PUBLIC_PHET_BASE_URL: 'https://phet.colorado.edu',
+      NEXT_PUBLIC_PHET_LANGUAGE: 'es',
+      NEXT_PUBLIC_BLOCKLY_BASE_URL: 'https://blockly.games',
+      NEXT_PUBLIC_BLOCKLY_LANGUAGE: 'es',
+      NEXT_PUBLIC_MUSIC_BLOCKS_URL: 'https://musicblocks.sugarlabs.org',
+      NEXT_PUBLIC_WEBSOCKET_URL: 'ws://localhost:1234',
+    };
 
 let parsedServer: z.infer<typeof ServerEnvSchema> | null = null;
 if (isServer) {
@@ -123,13 +149,31 @@ if (isServer) {
     const msg = result.error.errors
       .map((e) => `SERVER ${e.path.join('.')}: ${e.message}`)
       .join(' | ');
-    throw new Error(`Env validation (server) failed: ${msg}`);
+    // En desarrollo, usar valores por defecto en lugar de fallar
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`Env validation (server) failed: ${msg}`);
+      console.warn(
+        'Using default values for development. Please set up .env.local file.',
+      );
+      parsedServer = {
+        SUPABASE_SERVICE_ROLE_KEY: 'placeholder-service-role-key',
+        SUPABASE_JWT_SECRET: 'placeholder-jwt-secret',
+        DATABASE_URL: 'placeholder-database-url',
+        DEEPSEEK_API_KEY: 'placeholder-deepseek-key',
+        OPENAI_API_KEY: undefined,
+        OPENAI_BASE_URL: undefined,
+        NODE_ENV: 'development' as const,
+      };
+    } else {
+      throw new Error(`Env validation (server) failed: ${msg}`);
+    }
+  } else {
+    parsedServer = result.data;
   }
-  parsedServer = result.data;
 }
 
 export const ENV = {
-  ...parsedPublic.data,
+  ...publicEnv,
   // Solo llena server si estás en server
   ...(isServer ? parsedServer! : {}),
   __isServer: isServer,

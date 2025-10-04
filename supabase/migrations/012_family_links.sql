@@ -16,7 +16,12 @@ create table if not exists public.family_links (
 -- Enable RLS
 alter table public.family_links enable row level security;
 
--- RLS Policies
+-- RLS Policies (drop if exists first)
+drop policy if exists "Parent can read their links" on public.family_links;
+drop policy if exists "Parent can create links" on public.family_links;
+drop policy if exists "Parent can update their links" on public.family_links;
+drop policy if exists "Parent can delete their links" on public.family_links;
+
 create policy "Parent can read their links"
   on public.family_links
   for select
@@ -38,8 +43,8 @@ create policy "Parent can delete their links"
   using (auth.uid() = parent_id);
 
 -- Create indexes for performance
-create index idx_family_links_parent_id on public.family_links(parent_id);
-create index idx_family_links_student_id on public.family_links(student_id);
+create index if not exists idx_family_links_parent_id on public.family_links(parent_id);
+create index if not exists idx_family_links_student_id on public.family_links(student_id);
 
 -- Grant permissions
 grant all on public.family_links to authenticated;

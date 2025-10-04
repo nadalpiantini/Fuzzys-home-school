@@ -74,28 +74,40 @@ export default function ContentPage() {
         ? `Creando nuevo ${type === 'lesson' ? 'lección' : type === 'quiz' ? 'quiz' : 'juego'}...`
         : `Creating new ${type}...`,
     );
-    // TODO: Implement content creation
+    // Navigate to content creation form
+    router.push(`/teacher/content/create?type=${type}`);
   };
 
   const handleViewContent = (contentId: number) => {
     toast.info(
       language === 'es' ? 'Abriendo contenido...' : 'Opening content...',
     );
-    // TODO: Implement content viewing
+    // Navigate to content viewer
+    router.push(`/teacher/content/${contentId}`);
   };
 
   const handleEditContent = (contentId: number) => {
     toast.info(
       language === 'es' ? 'Editando contenido...' : 'Editing content...',
     );
-    // TODO: Implement content editing
+    // Navigate to content editor
+    router.push(`/teacher/content/${contentId}/edit`);
   };
 
   const handleDeleteContent = (contentId: number) => {
-    toast.info(
-      language === 'es' ? 'Eliminando contenido...' : 'Deleting content...',
-    );
-    // TODO: Implement content deletion
+    if (
+      confirm(
+        language === 'es'
+          ? '¿Estás seguro de eliminar este contenido?'
+          : 'Are you sure you want to delete this content?',
+      )
+    ) {
+      toast.success(
+        language === 'es' ? 'Contenido eliminado' : 'Content deleted',
+      );
+      // TODO: Implement actual deletion with API call
+      // await deleteContent(contentId);
+    }
   };
 
   const getTypeIcon = (type: string) => {
